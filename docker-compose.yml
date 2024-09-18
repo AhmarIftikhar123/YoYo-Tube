@@ -1,0 +1,68 @@
+services:
+
+    php:
+        container_name: php-nginx-template-php
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+        restart: always
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - php
+
+    nginx:
+        container_name: php-nginx-template-nginx
+        image: nginx:alpine
+        restart: always
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/:/etc/nginx/conf.d/
+        networks:
+            - php
+
+    mysql:
+        container_name: php-nginx-template-mysql
+        image: mysql:8.0
+        volumes:
+            - ./storage/mysql:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=mydatabase
+            - MYSQL_USER=user
+            - MYSQL_PASSWORD=password
+        ports:
+            - "3307:3306"
+        networks:
+            - php
+
+    phpmyadmin:
+        container_name: php-nginx-template-phpmyadmin
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        ports:
+            - "8080:80"  # Change the host port if necessary
+        environment:
+            - PMA_HOST=mysql
+            - PMA_PORT=3306
+            - PMA_USER=root
+            - PMA_PASSWORD=root
+        networks:
+            - php
+
+    mailhog:
+        container_name: php-nginx-template-mailhog
+        image: mailhog/mailhog
+        restart: always
+        ports:
+        - "1025:1025"   # SMTP port
+        - "8025:8025"   # Web UI port or HTTP port
+        networks:
+            - php
+
+networks:
+    php:
+        driver: bridge

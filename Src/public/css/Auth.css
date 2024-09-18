@@ -1,0 +1,72 @@
+:root {
+  --dark-bg: #121212;
+  --light-text: #ffffff;
+  --dark-container-bg: #1e1e1e;
+  --dark-border: #444;
+  --light-input-bg: #2e2e2e;
+  --light-button-bg: #444;
+  --link-color: #bb86fc;
+  --hover-button-bg: #555;
+  --focus-bg: #333;
+  --focus-border: #666;
+  --active-tab-bg: #ffffff;
+  --active-tab-text: #000000;
+}
+
+body {
+  background-color: var(--dark-bg);
+  color: var(--light-text);
+  place-items: center;
+  min-height: 100dvh;
+}
+
+.container-md {
+  background-color: var(--dark-container-bg);
+  border-radius: 8px;
+  padding-block: 20px;
+}
+
+.nav-tabs .nav-link {
+  color: var(--light-text);
+  background-color: transparent;
+  border-color: var(--dark-border);
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--active-tab-bg);
+  color: var(--active-tab-text);
+}
+
+.form-control {
+  background-color: var(--light-input-bg);
+  color: var(--light-text) !important;
+  border-color: var(--dark-border);
+  &::placeholder {
+    color: var(--light-text);
+  }
+}
+
+.form-control:focus {
+  background-color: var(--focus-bg);
+  border-color: var(--focus-border);
+  color: var(--light-text);
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background-color: var(--light-button-bg);
+  border-color: var(--dark-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--hover-button-bg);
+}
+
+/* Links */
+.text-decoration-none {
+  color: var(--link-color);
+}
+
+.text-decoration-none:hover {
+  color: var(--light-text);
+}
