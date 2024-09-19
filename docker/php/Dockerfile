@@ -11,17 +11,17 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-# Use the default development configuration
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+# Copy custom php.ini configuration
+COPY php.ini /usr/local/etc/php/
 
 # Installing the PHP extensions for MySQL
 RUN docker-php-ext-install pdo pdo_mysql
 
-#Copying composer from the oficial Docker composer image
+# Copying composer from the official Docker composer image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-#Creating the composer user to run the composer commands and adding the user to the www-data and root group.
+# Creating the composer user to run the composer commands and adding the user to the www-data and root group.
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
-#Creating the user and composer cache folders. And giving permissions
+# Creating the user and composer cache folders. And giving permissions
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user

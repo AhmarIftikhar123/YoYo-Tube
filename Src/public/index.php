@@ -51,6 +51,7 @@ $Router->get("/authentication", [AuthenticationController::class, "load_Authenti
 
 
     ->get("/upload", [UploadController::class, "load_upload_page"])
+    ->post("/upload", [UploadController::class, "upload_video"])
 
     // ->get("/upload", [UploadController::class, "load_upload_page"])
     // ->post("/upload", [UploadController::class, "upload_video"])

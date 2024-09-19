@@ -61,23 +61,24 @@
                 <h2>2. Video Details</h2>
                 <div class="mb-3">
                     <label for="videoTitle" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="videoTitle">
+                    <input type="text" class="form-control" id="videoTitle" name="videoTitle">
                     <small class="text-danger"><?= $this->upload_title_error ?? "" ?></small>
                 </div>
                 <div class="mb-3">
                     <label for="videoDescription" class="form-label">Description</label>
-                    <textarea class="form-control" id="videoDescription" rows="3"></textarea>
+                    <textarea class="form-control" id="videoDescription" rows="3" name="videoDescription"></textarea>
                     <small class="text-danger"><?= $this->upload_description_error ?? "" ?></small>
                 </div>
                 <div class="mb-3">
                     <label for="videoTags" class="form-label">Tags</label>
-                    <input type="text" class="form-control" id="videoTags" placeholder="Enter tags separated by commas">
+                    <input type="text" class="form-control" id="videoTags" name="videoTags"
+                        placeholder="Enter tags separated by commas">
                     <small class="text-danger"><?= $this->upload_tags_error ?? "" ?></small>
                 </div>
                 <div id="selectedTags" class="mb-3"></div>
                 <div class="mb-3">
                     <label for="videoCategory" class="form-label">Category</label>
-                    <select class="form-select" id="videoCategory">
+                    <select class="form-select" id="videoCategory" name="videoCategory">
                         <option value="action" selected>Action (default)</option>
                         <option value="horror">Horror</option>
                         <option value="comedy">Comedy</option>
@@ -91,7 +92,7 @@
             <div class="mb-4">
                 <h2>3. Content Type</h2>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="paidContentSwitch">
+                    <input class="form-check-input" type="checkbox" id="paidContentSwitch" name="isPaid">
                     <label class="form-check-label" for="paidContentSwitch">Paid Content</label>
                 </div>
                 <div id="paidContentNotice" class="alert alert-light mt-2 border-light" style="display: none;">
@@ -104,6 +105,7 @@
     </div>
 
     <script>
+
         // File Drop Area
         const fileDropArea = document.getElementById('fileDropArea');
         const videoFile = document.getElementById('videoFile');
@@ -161,27 +163,6 @@
             }
         }
 
-        // Tags
-        const videoTags = document.getElementById('videoTags');
-        const selectedTags = document.getElementById('selectedTags');
-
-        videoTags.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ',') {
-                e.preventDefault();
-                addTag(this.value.trim());
-                this.value = '';
-            }
-        });
-
-        function addTag(tag) {
-            if (tag && !Array.from(selectedTags.children).some(span => span.textContent === tag)) {
-                const tagElement = document.createElement('span');
-                tagElement.className = 'badge bg-primary tag-badge';
-                tagElement.textContent = tag;
-                selectedTags.appendChild(tagElement);
-            }
-        }
-
         // Paid Content Switch
         const paidContentSwitch = document.getElementById('paidContentSwitch');
         const paidContentNotice = document.getElementById('paidContentNotice');
@@ -189,15 +170,6 @@
         paidContentSwitch.addEventListener('change', function () {
             paidContentNotice.style.display = this.checked ? 'block' : 'none';
         });
-
-        // // Form Submission
-        // const videoUploadForm = document.getElementById('videoUploadForm');
-
-        // videoUploadForm.addEventListener('submit', function (e) {
-        //     e.preventDefault();
-        //     // Here you would typically send the form data to your server
-        //     alert('Video upload simulation complete!');
-        // });
     </script>
 </body>
 
