@@ -18,7 +18,7 @@ class UploadController
                     $uploadModel = new UploadModel();
 
                     /**
-                     * @param array $post $_POST values
+                     * @param array $post_values $_POST values
                      *
                      * @return array{
                      *     "videoTitle" => string,

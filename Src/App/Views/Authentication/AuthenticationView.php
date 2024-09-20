@@ -39,7 +39,7 @@
                               <?= $uri === "/auth/login" || $uri === "/authentication" ? "show active" : "" ?>"
                                         id="login" role="tabpanel" aria-labelledby="login-tab">
                                         <form action="/auth/login" method="POST">
-                                                  <div class="mb-3">
+                                                  <div class="mb-3 form-group">
                                                             <label for="login-email" class="form-label">Email</label>
                                                             <input type="email" class="form-control" id="login-email"
                                                                       name="email" placeholder="Enter your email"
@@ -50,7 +50,7 @@
                                                             </div>
                                                   </div>
 
-                                                  <div class="mb-3">
+                                                  <div class="mb-3 form-group">
                                                             <label for="login-password"
                                                                       class="form-label">Password</label>
                                                             <input type="password" class="form-control"
@@ -60,6 +60,12 @@
                                                             <div class="text-danger mt-2">
                                                                       <?= $this->errors["password"] ?? "" ?>
                                                             </div>
+                                                  </div>
+                                                  <div class="mb-3 form-check">
+                                                            <input type="checkbox" id="remember_me"
+                                                                      class="form-check-input" name="remember_me">
+                                                            <label for="remember_me" class="form-check-label">
+                                                                      Remember Me (Stay login for 7 days )</label>
                                                   </div>
 
                                                   <button type="submit" name="login"
@@ -124,6 +130,14 @@
                                                                       <?= $this->confirm_passwordError ?? "" ?>
                                                             </div>
 
+                                                  </div>
+                                                  <div class="mb-3 form-check">
+                                                            <input type="checkbox" id="remember_me_registeration"
+                                                                      class="form-check-input"
+                                                                      name="remember_me_registeration">
+                                                            <label for="remember_me_registeration"
+                                                                      class="form-check-label">
+                                                                      Remember Me (Stay login for 7 days )</label>
                                                   </div>
 
                                                   <button type="submit"

@@ -13,13 +13,14 @@ class AuthenticationController
           }
 
 
-          public function register(): Views
+          public function register()
           {
                     $inputs = [
                               'username' => filter_input(INPUT_POST, 'username'),
                               'email' => filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL),
                               'password' => filter_input(INPUT_POST, 'password'),
                               'confirm_password' => filter_input(INPUT_POST, 'confirm_password'),
+                              'remember_me_registeration' => filter_input(INPUT_POST, 'remember_me_registeration', FILTER_VALIDATE_BOOL) ? 1 : 0,
                     ];
 
                     $errors = $this->validateRegistrationInputs($inputs);
@@ -40,12 +41,17 @@ class AuthenticationController
                     );
 
                     if ($last_inserted_id) {
-                              setcookie("user_id", $last_inserted_id, time() + (86400 * 30), "/");
-                              return $this->load_Authentication_Page("Authentication/Registered_Sussfully", [
-                                        'username' => $inputs['username'],
-                                        'email' => $inputs['email'],
-                                        'password' => $inputs['password'],
-                              ]);
+                              // Store Cookie & store data in the DB
+                              if ($inputs['remember_me_registeration'] === 1) {
+                                        $is_userInfo_store = $authentication_model->store_user_info($last_inserted_id);
+                              }
+                              if ($is_userInfo_store) {
+                                        return $this->load_Authentication_Page("Authentication/Registered_Sussfully", [
+                                                  'username' => $inputs['username'],
+                                                  'email' => $inputs['email'],
+                                                  'password' => $inputs['password'],
+                                        ]);
+                              }
                     }
           }
 
@@ -55,6 +61,8 @@ class AuthenticationController
                     $errors = [];
                     if (empty($inputs['username'])) {
                               $errors['username'] = 'Username is required';
+                    } else if (!preg_match('/^[A-Z][a-z]+(?:\s[A-Z][a-z]+)*$/', $inputs['username'])) {
+                              $errors['username'] = 'Username should be in format like "Ahmar Iftikhar"';
                     }
 
                     if (empty($inputs['email'])) {
@@ -63,6 +71,8 @@ class AuthenticationController
 
                     if (empty($inputs['password'])) {
                               $errors['password'] = 'Password is required';
+                    } else if (strlen($inputs['password']) < 8) {
+                              $errors['password'] = 'Password should be at least 8 characters';
                     }
 
                     if (empty($inputs['confirm_password'])) {
@@ -77,7 +87,7 @@ class AuthenticationController
 
                     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
                     $password = htmlspecialchars(trim($_POST['password']), ENT_QUOTES);
-
+                    $remember_me = filter_input(INPUT_POST, 'remember_me', FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
                     // Call validation method to check for errors
                     $errors = $this->validateLogin($email, $password);
 
@@ -90,7 +100,7 @@ class AuthenticationController
                     $isAuthenticated = $authentication_model->authenticate($email, $password);
 
                     if ($isAuthenticated) {
-                              setcookie("user_id", $isAuthenticated["id"], time() + (86400 * 30), "/");
+                              $is_userInfo_store = $authentication_model->store_user_info($isAuthenticated['id']);
                               return $this->load_Authentication_Page('Authentication/Login_Successful_View', [
                                         "email" => $email,
                                         "password" => $isAuthenticated['password'],
@@ -123,6 +133,7 @@ class AuthenticationController
 
                     return $errors;
           }
+
 }
 
 
