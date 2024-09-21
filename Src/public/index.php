@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+//  pagination 
+// file premession why video is not getting
+//  login with fb & google 
+//  PHP-FFMPEG to convert videos
+
 use Src\App\{
     App,
     Config
@@ -15,6 +20,7 @@ use Src\App\Controllers\{
     VideoPlayerController
 };
 use Src\App\Controllers\Upload\UploadController;
+use Src\App\Controllers\User\UserVideoController;
 use Src\App\Router;
 use Src\App\Views;
 
@@ -52,6 +58,8 @@ $Router->get("/authentication", [AuthenticationController::class, "load_Authenti
 
     ->get("/upload", [UploadController::class, "load_upload_page"])
     ->post("/upload", [UploadController::class, "upload_video"])
+
+    ->get("/videos", [UserVideoController::class, "load_User_Videos_Page"])
 
     // ->get("/upload", [UploadController::class, "load_upload_page"])
     // ->post("/upload", [UploadController::class, "upload_video"])
