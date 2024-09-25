@@ -1,4 +1,8 @@
-<?php $uri = $_SERVER["REQUEST_URI"]; ?>
+<?php $uri = explode(
+          "?",
+          $_SERVER["REQUEST_URI"]
+)[0];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -148,9 +152,10 @@
 
                     <!-- Social Login Buttons -->
                     <div class="mt-4">
-                              <button class="btn btn-success w-100 mb-2 mx-1">
-                                        <i class="fa-brands fa-google me-2"></i> Continue with Google
-                              </button>
+                              <a href="<?= $this->google_client_config ?? '' ?>"
+                                        class="btn btn-success w-100 mb-2 mx-1">
+                                        <i class="fa-brands fa-google me-2"></i> Continue 'with 'Google
+                              </a>
                               <button class="btn btn-primary w-100 mx-1">
                                         <i class="fa-brands fa-facebook me-2"></i> Continue with Facebook
                               </button>
@@ -161,3 +166,4 @@
 </body>
 
 </html>
+<?php session_write_close(); ?>

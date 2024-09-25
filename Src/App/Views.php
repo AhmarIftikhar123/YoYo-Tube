@@ -32,4 +32,5 @@ class Views
           {
                     return $this->data[$name] ?? "";
           }
+          
 }

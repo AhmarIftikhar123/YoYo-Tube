@@ -10,6 +10,7 @@ class SessionManagment_Model
                     private DB $db
           ) {
           }
+
           public function validate_cookie()
           {
                     $user_id = $token = null;

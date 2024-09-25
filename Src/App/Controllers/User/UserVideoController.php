@@ -11,8 +11,8 @@ class UserVideoController
           {
                     session_start();
                     if (!isset($_SESSION["user_id"])) {
-                              echo "User not found. Redirecting to authentication page in 2 seconds.";
-                              header("Refresh: 2; url=/authentication", true, 302);
+                              echo "User not found. Redirecting to authentication page.";
+                              echo "<script>setTimeout(() => { window.location.href = '/authentication'; }, 2000);</script>";
                               die();
                     }
                     $user_video_model = new UserVideoModel();

@@ -3,12 +3,21 @@ namespace Src\App\Controllers;
 
 use Src\App\Models\Authentication\AuthenticationModel;
 use Src\App\Views;
+use Throwable;
 
 class AuthenticationController
 {
-
+          protected $client;
           public function load_Authentication_Page(string $path = "Authentication/AuthenticationView", array $data = []): Views
           {
+                    if (isset($_GET['code'])) {
+                              $data = $this->handle_google_login();
+                              if (is_array($data)) {
+                                        $path = "Authentication/Login_Successful_View";
+                              }
+                    } else {
+                              $data['google_client_config'] = $this->google_client_config();
+                    }
                     return Views::make($path, $data);
           }
 
@@ -43,7 +52,7 @@ class AuthenticationController
                     if ($last_inserted_id) {
                               // Store Cookie & store data in the DB
                               if ($inputs['remember_me_registeration'] === 1) {
-                                        $is_userInfo_store = $authentication_model->store_user_info($last_inserted_id);
+                                        $is_userInfo_store = $authentication_model->store_user_info($last_inserted_id, $inputs['username']);
                               }
                               if ($is_userInfo_store) {
                                         return $this->load_Authentication_Page("Authentication/Registered_Sussfully", [
@@ -100,7 +109,7 @@ class AuthenticationController
                     $isAuthenticated = $authentication_model->authenticate($email, $password);
 
                     if ($isAuthenticated) {
-                              $is_userInfo_store = $authentication_model->store_user_info($isAuthenticated['id']);
+                              $is_userInfo_store = $authentication_model->store_user_info($isAuthenticated['id'], $isAuthenticated['username']);
                               return $this->load_Authentication_Page('Authentication/Login_Successful_View', [
                                         "email" => $email,
                                         "password" => $isAuthenticated['password'],
@@ -132,6 +141,73 @@ class AuthenticationController
                     }
 
                     return $errors;
+          }
+          public function google_client_config()
+          {
+                    // Initialize Google Client
+                    $this->client = new \Google_Client();
+                    $this->client->setClientId($_ENV['CLIENT_ID']);
+                    $this->client->setClientSecret($_ENV['CLIENT_SECRET']);
+                    $this->client->setRedirectUri('http://localhost:8000/authentication'); // Replace with your callback URL
+                    $this->client->addScope('email');
+                    $this->client->addScope('profile');
+
+                    return $this->client->createAuthUrl();
+          }
+
+          public function handle_google_login()
+          {
+                    // Reinitialize Google Client
+                    $client = new \Google_Client();
+                    $client->setClientId($_ENV['CLIENT_ID']);
+                    $client->setClientSecret($_ENV['CLIENT_SECRET']);
+                    $client->setRedirectUri('http://localhost:8000/authentication');
+                    try {
+                              $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+
+                              if (array_key_exists('error', $token) && $token['error'] === 'invalid_grant') {
+                                        throw new \Exception('Access token not found in response: ' . json_encode($token['error_description']));
+                              }
+                              $client->setAccessToken($token['access_token']);
+
+                              // Get user profile
+                              $google_oauth = new \Google_Service_Oauth2($client);
+                              $google_account_info = $google_oauth->userinfo->get();
+
+                              // Extract user details
+                              $email = $google_account_info->email;
+                              $name = $google_account_info->name;
+                              $profile_pic = $google_account_info->picture;
+
+                              $authentication_model = new AuthenticationModel();
+
+                              $is_user_already_registered = $authentication_model->is_user_already_registered($email);
+
+                              $isAuthenticated = false;
+                              if (!$is_user_already_registered) {
+                                        $isAuthenticated = $authentication_model->google_login($name, $email, $profile_pic);
+                              }
+                              if ($isAuthenticated) {
+                                        $is_userInfo_store = $authentication_model->store_user_info($isAuthenticated, $name);
+                              } else {
+                                        $is_userInfo_store = $authentication_model->store_user_info($is_user_already_registered['id'], $is_user_already_registered['username']);
+                              }
+
+                              if ($is_userInfo_store) {
+                                        $store_profile_img = $authentication_model->store_profile_img($isAuthenticated, $profile_pic);
+                                        if ($store_profile_img) {
+                                                  return [
+                                                            "email" => $email,
+                                                            "password" => null,
+                                                  ];
+                                        }
+                                        throw new \Exception('Failed to store user profile image.');
+                              }
+                    } catch (Throwable $e) {
+                              // Handle error or invalid request
+                              throw $e;
+                    }
+
           }
 
 }

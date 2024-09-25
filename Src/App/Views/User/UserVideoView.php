@@ -1,7 +1,12 @@
 <?php
 $user_video_model = $this->user_video_model;
+
 $user_id = $_SESSION["user_id"];
-$get_user_posts = $user_video_model->get_user_posts($user_id);
+
+$filter_type = isset($_GET["filter"]) ? str_replace(' ', '+', $_GET["filter"]) : "action";
+
+$offset = !isset($_GET["page"]) ? 0 : ((int) $_GET["page"] - 1) * 8;
+$get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filter_type);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,14 +51,14 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
 
             &>.card-title,
             .card-text {
-
                 text-overflow: ellipsis;
                 overflow: hidden;
                 -webkit-line-clamp: 2;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
             }
-            .card-title{
+
+            .card-title {
                 min-height: 3rem;
             }
         }
@@ -80,10 +85,6 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
         .footer {
             background-color: #343a40;
             color: #fff;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
         }
 
         .footer a {
@@ -93,6 +94,18 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
 
         .footer a:hover {
             text-decoration: underline;
+        }
+
+        .page-link {
+            background: black !important;
+            color: white !important;
+            border: gray 1px solid !important;
+
+            &.active {
+                background: white !important;
+                color: black !important;
+                border: gray 1px solid !important;
+            }
         }
     </style>
 </head>
@@ -104,10 +117,10 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
     <!-- Main Content -->
     <div class="container my-5">
         <!-- Filter Panel -->
-        <div class="row mb-4 align-items-center">
+        <form method="get" id="filterForm" class="row mb-4 align-items-center" id="form">
             <div class="col-md-4 mb-4">
                 <select class="form-select" id="categoryFilter">
-                    <option selected>Action (default)</option>
+                    <option selected>Action</option>
                     <option>Comedy</option>
                     <option>Drama</option>
                     <option>Horror</option>
@@ -115,15 +128,17 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
             </div>
             <div class="col-md-4 mb-4">
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="adultContentSwitch">
+                    <input class="form-check-input" <?= $filter_type == "18+" ? "checked" : "" ?> type="checkbox"
+                        id="adultContentSwitch">
                     <label class="form-check-label" for="adultContentSwitch">18+
                         Content</label>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
-                <button class="btn btn-light w-100" id="applyFilters">Apply Filters</button>
+                <a href="/videos?filter=<?= $filter_type ?>" class="btn btn-light w-100" id="applyFilters">Apply
+                    Filters</a>
             </div>
-        </div>
+        </form>
 
         <!-- Video Grid -->
         <div class="row" id="videoGrid">
@@ -133,17 +148,17 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
                 <?php foreach ($get_user_posts as $post): ?>
 
                     <div class="col-md-3 mb-4">
-                        <!-- <video src="<?= $post['file_path'] ?>" class="card-img-top" alt="Awesome Yoyo Tricks"> -->
-                        <div class="card">
+                        <div class="card bg-dark text-white">
+                            <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                                <a href="/videos?id=<?= $post['id'] ?>" target="_blank"
-                                    class="btn btn-light btn-lg rounded-circle">
+                                <a href="/videos/watch?id=<?= $post['id'] ?>&is_paid=<?= $post['is_paid'] ?>"
+                                    target="_blank" class="btn btn-light btn-lg rounded-circle">
                                     <i class="bi bi-play-fill"></i>
                                 </a>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title"><?= $post['title'] ?></h5>
-                                <p class="card-text">
+                                <p class="card-text text-uppercase d-flex gap-2">
                                     <span class="badge bg-secondary"><?= $post['category'] ?></span>
                                     <span
                                         class="badge badge-<?= $post['is_paid'] ? 'paid' : 'free' ?>"><?= $post['is_paid'] ? 'Paid' : 'Free' ?></span>
@@ -155,7 +170,44 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
                 <?php endforeach; ?>
             </div>
         </div>
+        <? $get_all_user_posts = $user_video_model->get_all_user_posts($user_id, $filter_type);
+        $current_page = $_GET['page'] ?? 1;
+        $number_of_pages = ceil(count($get_all_user_posts) / 8);
+        ?>
 
+        <nav aria-label="Video pagination"
+            class="pagination pagination-dark align-items-center justify-content-center ">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a href="/videos?page=<?= $current_page - 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
+                        style="<?= $current_page > 1 ? "" : "display: none" ?>">
+                        <span class="visually-hidden">Previous</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-chevron-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+                        </svg>
+                    </a>
+                </li>
+                <?php for ($i = 1; $i <= $number_of_pages; $i++): ?>
+                    <li class="page-item" aria-current="page">
+                        <a href="/videos?page=<?= $i ?>&filter=<?= $filter_type ?>"
+                            class="page-link <?= $i == $current_page ? "active" : "" ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+                <li class="page-item">
+                    <a href="/videos?page=<?= $current_page + 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
+                        style="<?= $current_page < $number_of_pages ? "" : "display: none" ?>">
+                        <span class="visually-hidden">Next</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
     <!-- Footer -->
     <footer class="footer mt-5 py-3">
@@ -184,83 +236,23 @@ $get_user_posts = $user_video_model->get_user_posts($user_id);
 
     <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script>
-                    let currentPage = 1;
-                    const videosPerPage = 8;
+    <script>
+        const adultContentSwitch = $('#adultContentSwitch')
+        $('#categoryFilter').on('change', function () {
+            if (adultContentSwitch.prop('checked')) return;
+            const filter = $(this).val().toLowerCase();
+            $('#applyFilters').attr("href", `/videos?filter=${filter}`);
+        });
 
-                    // Function to generate a single video card
-                    function generateVideoCard(video) {
-                              return `
-                    <div class="col-md-3 mb-4">
-                        <div class="card">
-                            <img src="${video.thumbnail}" class="card-img-top" alt="${video.title}">
-                            <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                                <button class="btn btn-primary btn-lg rounded-circle">
-                                    <i class="bi bi-play-fill"></i>
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">${video.title}</h5>
-                                <p class="card-text">
-                                    <span class="badge bg-secondary">${video.category}</span>
-                                    <span class="badge ${video.paid ? 'badge-paid' : 'badge-free'}">${video.paid ? 'Paid' : 'Free'}</span>
-                                </p>
-                                <div class="star-rating">
-                                    ${'★'.repeat(video.rating)}${'☆'.repeat(5 - video.rating)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                    }
-
-                    // Function to load videos
-                    function loadVideos(page) {
-                              // This is where you would typically make an AJAX call to your backend
-                              // For this example, we'll use dummy data
-                              const dummyVideos = [
-                                        { title: "Awesome Yoyo Tricks", thumbnail: "https://via.placeholder.com/300x200", category: "Entertainment", paid: false, rating: 4 },
-                                        { title: "Pro Yoyo Competition", thumbnail: "https://via.placeholder.com/300x200", category: "Sports", paid: true, rating: 5 },
-                                        { title: "Learn Basic Yoyo Skills", thumbnail: "https://via.placeholder.com/300x200", category: "Education", paid: false, rating: 3 },
-                                        { title: "Yoyo History Documentary", thumbnail: "https://via.placeholder.com/300x200", category: "Documentary", paid: true, rating: 4 },
-                                        { title: "Extreme Yoyo Stunts", thumbnail: "https://via.placeholder.com/300x200", category: "Action", paid: false, rating: 5 },
-                                        { title: "Yoyo Meditation Techniques", thumbnail: "https://via.placeholder.com/300x200", category: "Lifestyle", paid: true, rating: 3 },
-                                        { title: "DIY Yoyo Crafting", thumbnail: "https://via.placeholder.com/300x200", category: "DIY", paid: false, rating: 4 },
-                                        { title: "Yoyo Physics Explained", thumbnail: "https://via.placeholder.com/300x200", category: "Science", paid: true, rating: 5 }
-                              ];
-
-                              const startIndex = (page - 1) * videosPerPage;
-                              const endIndex = startIndex + videosPerPage;
-                              const pageVideos = dummyVideos.slice(startIndex, endIndex);
-
-                              let videoHTML = '';
-                              pageVideos.forEach(video => {
-                                        videoHTML += generateVideoCard(video);
-                              });
-
-                              if (page === 1) {
-                                        $('#videoGrid').html(videoHTML);
-                              } else {
-                                        $('#videoGrid').append(videoHTML);
-                              }
-
-                    }
-
-                    // Initial load
-                    loadVideos(currentPage);
-
-                    // Apply Filters button click event
-                    $('#applyFilters').on('click', function () {
-                              const category = $('#categoryFilter').val(); const adultContent = $('#adultContentSwitch').is(':checked');
-
-                              // Here you would typically send these filters to your backend
-                              // For this example, we'll just reset the video grid
-                              currentPage = 1;
-                              loadVideos(currentPage);
-
-                              console.log('Filters applied:', { category, adultContent });
-                    });
-          </script> -->
+        adultContentSwitch.on('change', function () {
+            if ($(this).prop('checked')) {
+                $('#applyFilters').attr("href", `/videos?filter=18+`);
+            } else {
+                const filter = $('#categoryFilter').val().toLowerCase();
+                $('#applyFilters').attr("href", `/videos?filter=${filter}`);
+            }
+        })
+    </script>
 </body>
 
 </html>

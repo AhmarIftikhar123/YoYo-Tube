@@ -48,7 +48,7 @@
                                                   class="text-light"><?= htmlspecialchars($this->email); ?></span></p>
                               <p><strong class="text-info">Password:</strong>
                                         <span id="user-password" class="text-light">
-                                                  <?= htmlspecialchars(substr($this->password, 0, 15)); ?>...
+                                                  <?= isset($this->password) ? htmlspecialchars(substr($this->password, 0, 15)) . '...' : 'Password not visible if you login using google or facebook account' ?>
                                         </span>
                               </p>
                     </div>

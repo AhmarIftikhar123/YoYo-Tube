@@ -52,7 +52,7 @@
                 <div class="file-drop-area" id="fileDropArea">
                     <p class="m-0">Drag and drop your video file here or click to select</p>
                     <input type="file" id="videoFile" accept="video/*" name="video" style="display: none;">
-                    <small class="text-danger"><?= $this->upload_video_error ?? "" ?></small>
+                    <small class="text-danger" id="uploadError"><?= $this->upload_video_error ?? "" ?></small>
                 </div>
             </div>
 
@@ -156,6 +156,7 @@
                 const file = files[0];
                 if (file.type.startsWith('video/')) {
                     // Here you would typically handle the file, e.g., prepare it for upload
+                    $('#uploadError').text('');
                     console.log('Video file selected:', file.name);
                 } else {
                     alert('Please select a valid video file.');

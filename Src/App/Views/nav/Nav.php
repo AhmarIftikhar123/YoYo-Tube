@@ -6,11 +6,6 @@
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>YoYo Tube Navigation</title>
           <style>
-                    body {
-                              background-color: #121212;
-                              color: #e0e0e0;
-                    }
-
                     .navbar {
                               background-color: #1f1f1f;
                     }
@@ -70,6 +65,14 @@
                                                   </li>
                                                   <li class="nav-item text-center">
                                                             <a class="nav-link px-2" href="#" id="admin">Admin</a>
+                                                  </li>
+                                                  <li class="nav-item text-center">
+                                                            <div class="form-check form-switch">
+                                                                      <input class="form-check-input" type="checkbox"
+                                                                                id="darkModeToggle">
+                                                                      <label class="form-check-label"
+                                                                                for="darkModeToggle">Dark Mode</label>
+                                                            </div>
                                                   </li>
                                         </ul>
                               </div>

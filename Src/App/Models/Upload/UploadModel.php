@@ -1,5 +1,6 @@
 <?php
 namespace Src\App\Models\Upload;
+use Exception;
 use Src\App\Modle;
 
 class UploadModel extends Modle
@@ -84,28 +85,89 @@ class UploadModel extends Modle
     public function upload_video(string $videoName, string $videoTmpName)
     {
         // assume userName is "Ahmar"
-        $userName = "Ahmar";
+        session_start();
+        $userName = $_SESSION["username"];
+        if (empty($userName)) {
+            error_log("Username not found we redirecting to authentication page");
+            echo "<script>settimeout(() => { window.location.href = '/authentication'; }, 2000); </script>";
+            die();
+        }
+        $main_dir = STORAGE_DIR . "/" . $userName;
 
-        $storage_dir = STORAGE_DIR . "/" . $userName;
+        $sub_dir = $main_dir . "/" . explode(".", $videoName)[0];
 
-        if (!is_dir($storage_dir)) {
-            mkdir($storage_dir, 755, true);
+        // string(13) "storage/Ahmar"
+        // string(48) "storage/Ahmar/Dharia-Sugar-and-Brownies-(Lyrics)" string(14)
+        // string(87) "storage/Ahmar/Dharia-Sugar-and-Brownies-(Lyrics)/Dharia-Sugar-and-Brownies-(Lyrics).mp4"
+        // "/tmp/php4dZqSY"
+
+        if (!is_dir($sub_dir)) {
+            if (!mkdir($sub_dir, 755, true)) {
+                error_log("Failed to create directory: " . $sub_dir);
+                die();
+            }
         }
 
-        $videoDestination = $storage_dir . "/" . $videoName;
+        $videoDestination = $sub_dir . "/" . $videoName;
+
+        $thumbnailFile_path = $this->gen_thumbnail_and_store($videoTmpName, $sub_dir, $videoName);
 
         if (move_uploaded_file($videoTmpName, $videoDestination)) {
-            return $videoDestination;
+            session_write_close();
+            return [
+                "vidoe_destination" => $videoDestination,
+                "thumbnail_path" => $thumbnailFile_path
+            ];
         }
         return [
             'upload_video_error' => 'Failed to upload video'
         ];
     }
+
+
+
+    public function gen_thumbnail_and_store(string $inputFile, string $files_destination, string $videoName)
+    {
+        ini_set('max_execution_time', 300); // Set to 5 minutes
+        // Sanitize video name
+        $videoName = explode(".", $videoName)[0];
+
+        // Paths for output files
+        $thumbnailFile = $files_destination . '/' . $videoName . '.jpg';
+
+        // FFmpeg command template
+        $ffmpegCommand = 'ffmpeg -i %s -ss 00:00:05 -vframes 1 %s 2>&1';
+
+        if (file_exists($thumbnailFile)) {
+            unlink($thumbnailFile);
+        }
+        // Function to execute a command and handle errors
+        function executeCommand(string $command): void
+        {
+            try {
+                exec($command, $output, $returnVar);
+                if ($returnVar !== 0) {
+                    throw new Exception("Command failed with exit code $returnVar");
+                }
+            } catch (\Throwable $e) {
+                echo "Error executing command: $command\n";
+                echo "Output: " . implode("\n", $output) . "\n";
+                throw $e;
+            }
+        }
+
+        // Capture thumbnail at 5 seconds
+        $thumbnailCommand = sprintf($ffmpegCommand, escapeshellarg($inputFile), escapeshellarg($thumbnailFile));
+        executeCommand($thumbnailCommand);
+        return $thumbnailFile;
+    }
+
+
     public function add_video_to_database(array $video_data)
     {
         $stmt = $this->db->prepare(
             "
-                        INSERT INTO videos (user_id, title, description, file_path, category, tags, is_paid, created_at, updated_at)
+                        INSERT INTO videos (user_id, title, description, file_path, category, tags, is_paid, created_at, updated_at,thumbnail_path)
                         VALUES (
                             :user_id,
                             :title,
@@ -115,13 +177,14 @@ class UploadModel extends Modle
                             :tags,
                             :is_paid,
                             CURRENT_TIMESTAMP, 
-                            CURRENT_TIMESTAMP
+                            CURRENT_TIMESTAMP,
+                            :thumbnail_path
                         )
                         "
         );
 
         // assume user id is 1 
-        $userId = 1;
+        $userId = $_SESSION["user_id"];
         $isInserted = $stmt->execute([
             ':user_id' => $userId,
             ':title' => $video_data['title'],
@@ -129,7 +192,8 @@ class UploadModel extends Modle
             ':file_path' => $video_data['file_path'],
             ':category' => $video_data['category'],
             ':tags' => json_encode($video_data['videoTags']),
-            ':is_paid' => $video_data['is_paid']
+            ':is_paid' => $video_data['is_paid'],
+            ':thumbnail_path' => $video_data['thumbnail_path']
         ]);
 
         return $isInserted ? $this->db->lastInsertId() : ["upload_video_error" => "Failed to upload video"];
