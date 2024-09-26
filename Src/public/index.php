@@ -17,6 +17,7 @@ use Src\App\Controllers\{
     Reset_Password_Controller,
     VideoPlayerController
 };
+use Src\App\Controllers\Home\HomeController;
 use Src\App\Controllers\Upload\UploadController;
 use Src\App\Controllers\User\UserVideoController;
 use Src\App\Controllers\User\WatchVideoController;
@@ -44,7 +45,10 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '../../..');
 $dotenv->load();
 
 $Router = new Router();
-$Router->get("/authentication", [AuthenticationController::class, "load_Authentication_Page"])
+$Router
+    ->get("/home", [HomeController::class, "load_home_page"])
+
+    ->get("/authentication", [AuthenticationController::class, "load_Authentication_Page"])
     ->post("/auth/register", [AuthenticationController::class, "register"])
 
     ->get("/auth/forgot-password", [Forgat_Password_Controller::class, "load_Forgat_Password_Page"])
@@ -63,6 +67,7 @@ $Router->get("/authentication", [AuthenticationController::class, "load_Authenti
 
 
     ->get("/videos/watch", [WatchVideoController::class, "load_video_watch_page"])
+    ->get("/home/watch", [WatchVideoController::class, "load_video_watch_page"])
 
 
     /*        Panding      */

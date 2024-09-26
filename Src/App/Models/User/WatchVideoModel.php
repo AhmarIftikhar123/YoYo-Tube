@@ -26,7 +26,7 @@ class WatchVideoModel extends Modle
           }
           public function get_lates_videos(){
                     try{
-                              $sql = "SELECT * FROM videos ORDER BY created_at DESC LIMIT 4";
+                              $sql = "SELECT * FROM videos ORDER BY created_at DESC LIMIT 6";
                               $stmt = $this->db->prepare($sql);
                               $stmt->execute();
                               return $stmt->fetchAll();

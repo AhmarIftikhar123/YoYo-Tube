@@ -19,8 +19,28 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
     <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: #fff;
+            --card-text: #333;
+            --footer-bg: #343a40;
+            --footer-text: #fff;
+        }
+
+        .dark-mode {
+            --bg-color: #333;
+            --text-color: #f8f9fa;
+            --card-bg: #444;
+            --card-text: #f8f9fa;
+            --footer-bg: #222;
+            --footer-text: #f8f9fa;
+        }
+
         body {
-            background-color: #f8f9fa;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .navbar-brand {
@@ -31,6 +51,8 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
 
         .card {
             transition: transform 0.2s;
+            background-color: var(--card-bg);
+            color: var(--card-text);
         }
 
         .card:hover {
@@ -48,7 +70,6 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
         }
 
         .card-body {
-
             &>.card-title,
             .card-text {
                 text-overflow: ellipsis;
@@ -83,12 +104,12 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
         }
 
         .footer {
-            background-color: #343a40;
-            color: #fff;
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
         }
 
         .footer a {
-            color: #fff;
+            color: var(--footer-text);
             text-decoration: none;
         }
 
@@ -97,15 +118,32 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
         }
 
         .page-link {
-            background: black !important;
-            color: white !important;
+            background: var(--card-bg) !important;
+            color: var(--text-color) !important;
             border: gray 1px solid !important;
 
             &.active {
-                background: white !important;
-                color: black !important;
+                background: var(--text-color) !important;
+                color: var(--bg-color) !important;
                 border: gray 1px solid !important;
             }
+        }
+
+        .form-select, .form-check-input {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--text-color);
+        }
+
+        .btn-light {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--text-color);
+        }
+
+        .btn-light:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
         }
     </style>
 </head>
@@ -148,7 +186,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
                 <?php foreach ($get_user_posts as $post): ?>
 
                     <div class="col-md-3 mb-4">
-                        <div class="card bg-dark text-white">
+                        <div class="card">
                             <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">
                                 <a href="/videos/watch?id=<?= $post['id'] ?>&is_paid=<?= $post['is_paid'] ?>"
@@ -237,7 +275,31 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
     <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const adultContentSwitch = $('#adultContentSwitch')
+        const adultContentSwitch = $('#adultContentSwitch');
+        const darkModeToggle = $('#darkModeToggle');
+
+        // Function to set the dark mode
+        function setDarkMode(isDark) {
+            if (isDark) {
+                $('body').addClass('dark-mode');
+            } else {
+                $('body').removeClass('dark-mode');
+            }
+            localStorage.setItem('darkMode', isDark);
+        }
+
+        // Check for saved dark mode preference
+        const savedDarkMode = localStorage.getItem('darkMode');
+        if (savedDarkMode !== null) {
+            setDarkMode(savedDarkMode === 'true');
+            darkModeToggle.prop('checked', savedDarkMode === 'true');
+        }
+
+        // Dark mode toggle event
+        darkModeToggle.on('change', function() {
+            setDarkMode(this.checked);
+        });
+
         $('#categoryFilter').on('change', function () {
             if (adultContentSwitch.prop('checked')) return;
             const filter = $(this).val().toLowerCase();
@@ -251,7 +313,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
                 const filter = $('#categoryFilter').val().toLowerCase();
                 $('#applyFilters').attr("href", `/videos?filter=${filter}`);
             }
-        })
+        });
     </script>
 </body>
 

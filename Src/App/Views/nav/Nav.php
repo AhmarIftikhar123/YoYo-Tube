@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>YoYo Tube Navigation</title>
+<?php
+$is_user_registered = $_COOKIE['user_name'] ?? "" ?>
           <style>
                     .navbar {
                               background-color: #1f1f1f;
@@ -35,9 +30,6 @@
                               }
                     }
           </style>
-</head>
-
-<body>
           <nav class="navbar navbar-expand-lg navbar-dark">
                     <div class="container">
                               <a class="navbar-brand" href="">YoYo Tube</a>
@@ -48,6 +40,7 @@
                               </button>
                               <div class="collapse navbar-collapse" id="navbarNav">
                                         <ul class="navbar-nav gap-4 ms-auto align-items-center">
+                                        <?php if ($is_user_registered) : ?>
                                                   <li class="nav-item text-center">
                                                             <a class="nav-link px-2" href="#" id="uploadVideo">Upload
                                                                       Video</a>
@@ -66,11 +59,16 @@
                                                   <li class="nav-item text-center">
                                                             <a class="nav-link px-2" href="#" id="admin">Admin</a>
                                                   </li>
+                                                  <?php else : ?>
+                                                  <li class="nav-item text-center">
+                                                            <a class="nav-link px-2" href="/authentication" id="admin">Log-In</a>
+                                                  </li>
+                                                  <?php endif; ?>
                                                   <li class="nav-item text-center">
                                                             <div class="form-check form-switch">
                                                                       <input class="form-check-input" type="checkbox"
                                                                                 id="darkModeToggle">
-                                                                      <label class="form-check-label"
+                                                                      <label class="form-check-label text-white"
                                                                                 for="darkModeToggle">Dark Mode</label>
                                                             </div>
                                                   </li>
@@ -81,7 +79,7 @@
 
           <script>
                     $('.nav-link').click(function (e) {
-                              e.preventDefault();
+                              // e.preventDefault()
                               $('.nav-link').removeClass('active');
                               $(this).addClass('active');
                     });
@@ -101,6 +99,3 @@
                     //           }
                     // });
           </script>
-</body>
-
-</html>
