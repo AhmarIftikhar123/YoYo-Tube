@@ -43,12 +43,12 @@
     <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
 
     <div class="container mt-2">
-        <h1 class="mb-4">Add new Post</h1>
+        <h1 class="mb-4 text-center text-uppercase">Add a new Post</h1>
 
         <form id="videoUploadForm" method="post" action="/upload" enctype="multipart/form-data">
             <!-- Video Upload Section -->
             <div class="mb-4">
-                <h2>1. Upload Video</h2>
+                <h2>Upload Video</h2>
                 <div class="file-drop-area" id="fileDropArea">
                     <p class="m-0">Drag and drop your video file here or click to select</p>
                     <input type="file" id="videoFile" accept="video/*" name="video" style="display: none;">
@@ -58,7 +58,7 @@
 
             <!-- Video Details Section -->
             <div class="mb-4">
-                <h2>2. Video Details</h2>
+                <h2>Video Details</h2>
                 <div class="mb-3">
                     <label for="videoTitle" class="form-label">Title</label>
                     <input type="text" class="form-control" id="videoTitle" name="videoTitle">

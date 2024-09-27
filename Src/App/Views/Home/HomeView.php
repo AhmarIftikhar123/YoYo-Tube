@@ -152,9 +152,9 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
     <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
 
     <!-- Main Content -->
-    <div class="container my-5">
+    <div class="container my-3">
         <!-- Filter Panel -->
-        <form method="get" id="filterForm" class="row mb-4 align-items-center" id="form">
+        <form method="get" id="filterForm" class="row mb-2 align-items-center" id="form">
             <div class="col-md-4 mb-4">
                 <select class="form-select" id="categoryFilter">
                     <option selected>Action</option>
@@ -178,13 +178,11 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
         </form>
 
         <!-- Video Grid -->
-        <div class="row" id="videoGrid">
-            <!-- Video cards will be dynamically inserted here -->
-
+        <!-- Video cards will be dynamically inserted here -->
             <div id="videoGrid" class="row">
                 <?php foreach ($current_post_info as $post): ?>
 
-                    <div class="col-md-3 mb-4">
+                    <div class="col-md-3 mb-2">
                         <div class="card">
                             <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">

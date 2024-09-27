@@ -52,7 +52,7 @@
                                         </span>
                               </p>
                     </div>
-                    <a href="/" class="btn btn-light fw-bold mt-3 w-100" id="go-home-btn">Home Page</a>
+                    <a href="/home" class="btn btn-light fw-bold mt-3 w-100" id="go-home-btn">Home Page</a>
           </div>
 
           <!-- Bootstrap JS and jQuery -->

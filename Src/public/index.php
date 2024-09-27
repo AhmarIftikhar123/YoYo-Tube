@@ -13,11 +13,11 @@ use Src\App\Controllers\{
     PaymentController,
     AdminController,
     AuthenticationController,
-    ProfileController,
     Reset_Password_Controller,
     VideoPlayerController
 };
 use Src\App\Controllers\Home\HomeController;
+use Src\App\Controllers\Profile\ProfileController;
 use Src\App\Controllers\Upload\UploadController;
 use Src\App\Controllers\User\UserVideoController;
 use Src\App\Controllers\User\WatchVideoController;
@@ -69,12 +69,11 @@ $Router
     ->get("/videos/watch", [WatchVideoController::class, "load_video_watch_page"])
     ->get("/home/watch", [WatchVideoController::class, "load_video_watch_page"])
 
+    // Profile 
+    ->get("/profile", [ProfileController::class, "load_profile_page"])
+    ->post("/profile", [ProfileController::class, "updateProfile"])
 
     /*        Panding      */
-    // ->post("/auth/login", [AuthenticationController::class, "login"])
-    // ->post("/auth/register", [AuthenticationController::class, "register"])
-    // Payment Routes:
-
     ->get("/payment", [PaymentController::class, "load_Payment_Page"])
 
     // Admin Routes:
@@ -85,8 +84,6 @@ $Router
     // ->get("/admin/videos", [AdminController::class, "listVideos"])
     // ->post("/admin/videos/block/{id}", [AdminController::class, "blockVideo"])
 
-    // User Profile Routes:
-    ->get("/profile", [ProfileController::class, "View_Profile"])
 
     /*        Panding      */
     // ->post("/profile/update", [ProfileController::class, "updateProfile"])
