@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-
-//  login with fb & google 
-//  PHP-FFMPEG to convert videos
+// pagination in admin & userViews
+// Make /admin/posts page dynamic
+//  login with fb
 
 use Src\App\{
     App,
@@ -11,11 +11,12 @@ use Src\App\{
 use Src\App\Controllers\{
     Forgat_Password_Controller,
     PaymentController,
-    AdminController,
     AuthenticationController,
     Reset_Password_Controller,
     VideoPlayerController
 };
+use Src\App\Controllers\Admin\AdminController;
+use Src\App\Controllers\FacebookLoginController;
 use Src\App\Controllers\Home\HomeController;
 use Src\App\Controllers\Profile\ProfileController;
 use Src\App\Controllers\Upload\UploadController;
@@ -28,6 +29,9 @@ use Src\App\Views;
 // /var/www/src
 define('APP_ROOT', dirname(__DIR__));
 
+// /var/www/src/controllers
+define('CONTROLLERS', dirname(__DIR__) . '/Controllers');
+
 // /var/www
 define("BASE_ROOT", dirname(APP_ROOT));
 
@@ -36,6 +40,8 @@ define("STORAGE_DIR", APP_ROOT . "/storage");
 
 // var/www/src/app/Views
 define("VIEWS_PATH", BASE_ROOT . "/src/app/Views");
+
+define("BASE_URL" , "http://localhost:8000");
 
 // importing Autoloader
 require_once BASE_ROOT . '/vendor/autoload.php';
@@ -59,6 +65,8 @@ $Router
 
     ->post("/auth/login", [AuthenticationController::class, "login"])
 
+    ->get("/facebook-login", [FacebookLoginController::class, "facebook_login"])
+
 
     ->get("/upload", [UploadController::class, "load_upload_page"])
     ->post("/upload", [UploadController::class, "upload_video"])
@@ -78,6 +86,9 @@ $Router
 
     // Admin Routes:
     ->get("/admin", [AdminController::class, "load_Dashboard"])
+    ->get("/admin/posts", [AdminController::class, "load_user_posts"])
+    ->post("/admin/action", [AdminController::class, "admin_action"])
+
 
     /*        Panding      */
     // ->get("/admin/users", [AdminController::class, "listUsers"])

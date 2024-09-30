@@ -156,9 +156,10 @@
                                         class="btn btn-success w-100 mb-2 mx-1">
                                         <i class="fa-brands fa-google me-2"></i> Continue 'with 'Google
                               </a>
-                              <button class="btn btn-primary w-100 mx-1">
+                              <a class="btn btn-primary w-100 mx-1"
+                                        href="<?= $this->facebook_client_config ?? '' ?>">
                                         <i class="fa-brands fa-facebook me-2"></i> Continue with Facebook
-                              </button>
+                              </a>
                     </div>
           </div>
 

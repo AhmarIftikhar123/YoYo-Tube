@@ -95,12 +95,12 @@ session_write_close();
                     <li class="nav-item text-center">
                         <a class="nav-link px-2" href="/profile" id="profile">Update Profile</a>
                     </li>
-                    <form action="<?= $post_data_address ?>" method="GET">
-                        <li class="nav-item text-center">
+                    <li class="nav-item text-center">
+                        <form action="<?= $post_data_address ?>" method="GET" class="mb-0">
                             <button type="submit" id="admin" name="logout" value="true" class="nav-link px-2">Log
                                 Out</button>
-                        </li>
-                    </form>
+                        </form>
+                    </li>
                 <?php else: ?>
                     <li class="nav-item text-center">
                         <a class="nav-link px-2" href="/authentication" id="admin">Log-In</a>
@@ -141,9 +141,11 @@ session_write_close();
     // Save theme preference
     $('#darkModeToggle').change(function () {
         if (this.checked) {
+            $('body').addClass('dark-theme');
             localStorage.setItem('theme', 'dark');
         } else {
             localStorage.setItem('theme', 'light');
+            $('body').removeClass('dark-theme');
         }
     });
 </script>

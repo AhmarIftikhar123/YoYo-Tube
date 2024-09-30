@@ -1,6 +1,7 @@
 <?php
 namespace Src\App\Controllers;
 
+use Facebook\Facebook;
 use Src\App\Models\Authentication\AuthenticationModel;
 use Src\App\Views;
 use Throwable;
@@ -17,6 +18,7 @@ class AuthenticationController
                               }
                     } else {
                               $data['google_client_config'] = $this->google_client_config();
+                              $data['facebook_client_config'] = $this->facebook_client_config();
                     }
                     return Views::make($path, $data);
           }
@@ -148,7 +150,8 @@ class AuthenticationController
                     $this->client = new \Google_Client();
                     $this->client->setClientId($_ENV['CLIENT_ID']);
                     $this->client->setClientSecret($_ENV['CLIENT_SECRET']);
-                    $this->client->setRedirectUri('http://localhost:8000/authentication'); // Replace with your callback URL
+                    $this->client->setRedirectUri('http://localhost:8000/authentication');
+
                     $this->client->addScope('email');
                     $this->client->addScope('profile');
 
@@ -208,6 +211,26 @@ class AuthenticationController
                               throw $e;
                     }
 
+          }
+          public function facebook_client_config()
+          {
+                    ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+                    $fb = new Facebook([
+                              'app_id' => $_ENV['FB_CLIENT_ID'],
+                              'app_secret' => $_ENV['FB_CLIENT_SECRET'],
+                              'default_graph_version' => 'v15.0',
+                    ]);
+
+                    // Generate state and store it in session
+                    $state = bin2hex(random_bytes(16));
+                    session_start();
+                    $_SESSION['FBRLH_state'] = $state;
+                    session_write_close();
+                    $helper = $fb->getRedirectLoginHelper();
+                    $permissions = ['email'];
+                    $loginUrl = $helper->getLoginUrl($_ENV['FB_REDIRECT_URL'], $permissions);
+
+                    return $loginUrl;
           }
 
 }

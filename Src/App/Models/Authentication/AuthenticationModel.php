@@ -32,6 +32,10 @@ class AuthenticationModel extends Modle
             if (!$row) {
                 throw new \Exception("User not found");
             }
+            if ($row['is_blocked']) {
+                $this->rm_session_cookies();
+                throw new \Exception("User is not active or Blocked by the Admin");
+            }
             if (!$password) {
                 return $row;
             }
@@ -41,6 +45,13 @@ class AuthenticationModel extends Modle
             return $row;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
+        }
+    }
+    public function rm_session_cookies()
+    {
+        session_destroy();
+        foreach ($_COOKIE as $cookie_name => $cookie_value) {
+            setcookie($cookie_name, '', time() - 3600, '/');
         }
     }
 
@@ -78,7 +89,7 @@ class AuthenticationModel extends Modle
         }
     }
 
-    public function google_login(string $username, string $email,string $profile_img)
+    public function google_login(string $username, string $email, string $profile_img)
     {
         try {
             $stmt = $this->db->prepare("INSERT INTO users (username, email,created_at,profile_img) VALUES (:username, :email, NOW() ,:profile_img)");

@@ -25,7 +25,7 @@
                     <h3 class="display-7 mb-4 fw-bolder">Error : <?= $this->message ?></h3>
                     <p class="lead mb-8">Oops! The page you're looking for doesn't exist.</p>
                     <p class="lead mb-8 text-italic"></p>
-                    <a href="/" class="btn btn-light fw-bold">Go back home</a>
+                    <a href="/home" class="btn btn-light fw-bold">Go back home</a>
           </div>
 
           <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
