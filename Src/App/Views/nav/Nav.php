@@ -1,7 +1,9 @@
 <!-- logout Logic  -->
 <?php
 if ($_SERVER['REQUEST_METHOD'] === "GET" & isset($_GET['logout'])) {
-    session_start();
+    if (!session_id()) {
+        session_start();
+    }
     session_destroy();
     foreach ($_COOKIE as $cookie_name => $cookie_value) {
         setcookie($cookie_name, "", time() - 3600, "/"); // Expire the cookie
@@ -12,7 +14,8 @@ $post_data_address = explode("?", $_SERVER['REQUEST_URI'])[0];
 $user = [
     'username' => $_SESSION["username"] ?? "",
     'email' => $_SESSION["email"] ?? "",
-    'profile_image' => $_SESSION["profile_img"] ?? ""
+    'profile_image' => $_SESSION["profile_img"] ?? "",
+    'role' => $_SESSION["role"] ?? "",
 ];
 session_write_close();
 ?>
@@ -94,6 +97,9 @@ session_write_close();
                     </li>
                     <li class="nav-item text-center">
                         <a class="nav-link px-2" href="/profile" id="profile">Update Profile</a>
+                    </li>
+                    <li class="nav-item text-center" style="<?= $user['role'] === 1 ? "" : "display: none" ?>">
+                        <a class="nav-link px-2" href="/admin" id="profile">Admin</a>
                     </li>
                     <li class="nav-item text-center">
                         <form action="<?= $post_data_address ?>" method="GET" class="mb-0">
