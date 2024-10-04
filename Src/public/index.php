@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+// pagination in admin & userViews & make ajax request on click
 //  login with fb
 
 use Src\App\{
@@ -82,10 +83,9 @@ $Router
     ->get("/payment", [PaymentController::class, "load_Payment_Page"])
 
     // Admin Routes:
-    ->get("/admin", [AdminController::class, "load_Admin_Dashboard"])
-    ->post("/admin/action", [AdminController::class, "update_user_status"])
+    ->get("/admin", [AdminController::class, "load_Dashboard"])
     ->get("/admin/posts", [AdminController::class, "load_user_posts"])
-    ->post("/admin/posts/action", [AdminController::class, "update_video_status"])
+    ->post("/admin/action", [AdminController::class, "admin_action"])
 
     // Paymetn Routes:
     ->get("/payment/process", [PaymentController::class, "processPayment"])

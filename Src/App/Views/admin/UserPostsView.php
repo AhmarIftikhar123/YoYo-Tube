@@ -1,8 +1,6 @@
 <?php
-$SingleUserPost = $this->posts;
-$AllUserPosts = $this->all_posts;
-$username = $this->username ?? "";
-$user_id = $this->user_id ?? "";
+$AllUserPosts = $this->posts;
+$username = $this->username;
 ?>
 
 <!DOCTYPE html>
@@ -38,11 +36,6 @@ $user_id = $this->user_id ?? "";
                               transition: background-color 0.3s, color 0.3s;
                     }
 
-                    h6 strong {
-                              color: var(--bg-color);
-                              background-color: var(--text-color);
-                    }
-
                     .card {
                               transition: background-color 0.3s;
                     }
@@ -68,29 +61,6 @@ $user_id = $this->user_id ?? "";
                               --bs-table-bg: #3e444c !important;
                     }
 
-                    tr td a {
-                              background-color: var(--bg-color) !important;
-                              color: var(--text-color) !important;
-                              border-color: var(--text-color) !important;
-                              transition: opacity .2s ease-in-out;
-
-                              &:hover {
-                                        opacity: .75;
-                              }
-                    }
-
-                    .page-link {
-                              background: var(--card-bg) !important;
-                              color: var(--text-color) !important;
-                              border: gray 1px solid !important;
-
-                              &.active {
-                                        background: var(--text-color) !important;
-                                        color: var(--bg-color) !important;
-                                        border: gray 1px solid !important;
-                              }
-                    }
-
                     .btn-outline-primary:hover {
                               color: var(--bg-color);
                               background-color: var(--text-color);
@@ -102,133 +72,90 @@ $user_id = $this->user_id ?? "";
           <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
           <div class="container mt-4">
                     <h1 class="mb-4">User Management</h1>
-                    <h6 class="mb-4">User Name <strong class="fst-italic rounded" style="padding: 0.25rem .5rem;"
-                                        id="username"><?= $username ?></strong></h6>
-                    <?php if (empty($SingleUserPost)): ?>
-                              <?= "<h3 class='card-title text-center text-danger'>No Record Found</h3>" ?>
-                    <?php else: ?>
-                              <div class="card mb-2">
-                                        <div class="card-body">
-                                                  <div class="table-responsive">
-                                                            <table class="table table-hover ">
-                                                                      <thead>
+                    <h6 class="mb-4">User Name <strong class="bg-dark text-white fst-italic"
+                                        style="padding: 0.25rem .5rem;"><?= $username ?></strong></h6>
+                    <div class="card">
+                              <div class="card-body">
+                                        <div class="table-responsive">
+                                                  <table class="table table-hover">
+                                                            <thead>
+                                                                      <tr>
+                                                                                <th>#</th>
+                                                                                <th>Title</th>
+                                                                                <th>Catogery</th>
+                                                                                <th>Is Paid</th>
+                                                                                <th>Updated At</th>
+                                                                                <th>Action</th>
+                                                                                <th>View</th>
+                                                                      </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                      <?php foreach ($AllUserPosts as $Post): ?>
+                                                                                <?php $is_for_public = $Post['for_public'] == 1 ? 'Block' : 'Un-Block'; ?>
                                                                                 <tr>
-                                                                                          <th>#</th>
-                                                                                          <th>Title</th>
-                                                                                          <th>Catogery</th>
-                                                                                          <th>Is Paid</th>
-                                                                                          <th>Updated At</th>
-                                                                                          <th>Action</th>
-                                                                                          <th>View</th>
+                                                                                          <td><?= $Post['id'] ?></td>
+                                                                                          <td><?= substr($Post['title'], 0, 20) ?>...
+                                                                                          </td>
+                                                                                          <td><?= $Post['category'] ?></td>
+                                                                                          <td><?= $Post['is_paid'] ?>
+                                                                                          <td><?= $Post['updated_at'] ?>
+                                                                                          </td>
+                                                                                          </td>
+                                                                                          <td>
+                                                                                                    <button class="btn btn-sm btn-outline-danger action-btn"
+                                                                                                              data-action="<?= $is_for_public ?>"><?= $is_for_public ?></button>
+                                                                                                    <button class="btn btn-sm btn-outline-danger action-btn"
+                                                                                                              data-action="delete">Delete</button>
+                                                                                          </td>
+                                                                                          <td>
+                                                                                                    <a class="btn btn-sm btn-outline-primary reported-posts-btn"
+                                                                                                              target="_blank"
+                                                                                                              href="/home/watch?id=<?= $Post['id'] ?>&is_paid=<?= $Post['is_paid'] ?>">Check
+                                                                                                              Out</a>
+                                                                                          </td>
                                                                                 </tr>
-                                                                      </thead>
-                                                                      <tbody>
-                                                                                <?php foreach ($SingleUserPost as $Post): ?>
-                                                                                          <?php $is_for_public = $Post['for_public'] == 1 ? 'Block' : 'Un-Block'; ?>
-                                                                                          <tr>
-                                                                                                    <td><?= $Post['id'] ?></td>
-                                                                                                    <td><?= substr($Post['title'], 0, 20) ?>...
-                                                                                                    </td>
-                                                                                                    <td><?= $Post['category'] ?></td>
-                                                                                                    <td><?= $Post['is_paid'] ?>
-                                                                                                    <td><?= $Post['updated_at'] ?>
-                                                                                                    </td>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                              <button class="btn btn-sm btn-outline-<?= $is_for_public !== "Block" ? "success" : "danger" ?> action-btn"
-                                                                                                                        data-action="<?= $is_for_public ?>"><?= $is_for_public ?></button>
-                                                                                                              <button class="btn btn-sm btn-outline-danger action-btn"
-                                                                                                                        data-action="delete">Delete</button>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                              <a class="btn btn-sm btn-outline-primary reported-posts-btn"
-                                                                                                                        target="_blank"
-                                                                                                                        href="/home/watch?id=<?= $Post['id'] ?>&is_paid=<?= $Post['is_paid'] ?>">Check
-                                                                                                                        Out</a>
-                                                                                                    </td>
-                                                                                          </tr>
-                                                                                <?php endforeach; ?>
-                                                                      </tbody>
-                                                            </table>
-                                                  </div>
+                                                                      <?php endforeach; ?>
+                                                            </tbody>
+                                                  </table>
                                         </div>
-                              <?php endif; ?>
+                              </div>
                     </div>
-                    <?php
-                    $number_of_pages = ceil(count($AllUserPosts) / 8);
-                    $current_page = $_GET['page'] ?? 1;
-                    ?>
-                    <nav aria-label="Video pagination"
-                              class="pagination pagination-dark align-items-center justify-content-center ">
-                              <ul class="pagination">
-                                        <li class="page-item">
-                                                  <a href="/admin/posts?user_id=<?= $user_id ?>&username=<?= $username ?>&page=<?= $current_page - 1 ?>"
-                                                            class="page-link" tabindex="-1" aria-disabled="true"
-                                                            style="<?= $current_page > 1 ? "" : "display: none" ?>">
-                                                            <span class="visually-hidden">Previous</span>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                      height="16" fill="currentColor"
-                                                                      class="bi bi-chevron-left" viewBox="0 0 16 16">
-                                                                      <path fill-rule="evenodd"
-                                                                                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                                                            </svg>
-                                                  </a>
-                                        </li>
-                                        <?php for ($i = 1; $i <= $number_of_pages; $i++): ?>
-                                                  <li class="page-item" aria-current="page">
-                                                            <a href="/admin/posts?user_id=<?= $user_id ?>&username=<?= $username ?>&page=<?= $i ?>"
-                                                                      class="page-link <?= $i == $current_page ? "active" : "" ?>"><?= $i ?></a>
-                                                  </li>
-                                        <?php endfor; ?>
-                                        <li class="page-item">
-                                                  <a href="/admin/posts?user_id=<?= $user_id ?>&username=<?= $username ?>&page=<?= $current_page + 1 ?>"
-                                                            class="page-link" tabindex="-1" aria-disabled="true"
-                                                            style="<?= $current_page < $number_of_pages ? "" : "display: none" ?>">
-                                                            <span class="visually-hidden">Next</span>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                      height="16" fill="currentColor"
-                                                                      class="bi bi-chevron-right" viewBox="0 0 16 16">
-                                                                      <path fill-rule="evenodd"
-                                                                                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                                                            </svg>
-                                                  </a>
-                                        </li>
-                              </ul>
-                    </nav>
           </div>
 
-          <script>
+          <!-- <script>
                     // Action buttons
                     $('.action-btn').click(function () {
                               const action = $(this).data('action');
-                              const video_id = $(this).closest('tr').find('td:nth-child(1)').text();
-                              const username = $('#username').text();
+                              const userName = $(this).closest('tr').find('td:nth-child(2)').text();
+                              const user_id = $(this).closest('tr').find('td:nth-child(1)').text();
                               let message = '';
                               const button = $(this);  // Store reference to the clicked button
                               switch (action) {
                                         case 'Block':
-                                                  message = `Are you sure you want to Block video ${video_id} of User: ${username} ?`;
+                                                  message = `Are you sure you want to block ${userName}?`;
                                                   break;
                                         case 'Un-Block':
-                                                  message = `Are you sure you want to Un-block video ${video_id} of User: ${username} ?`;
+                                                  message = `Are you sure you want to unblock ${userName}?`;
                                                   break;
-                                        case 'delete':
-                                                  message = `Are you sure you want to delete video ${video_id} of User: ${username} ?`;
+                                        case 'Delete':
+                                                  message = `Are you sure you want to delete ${userName}?`;
                                                   break;
                               }
 
                               if (confirm(message)) {
                                         $.ajax({
-                                                  url: '<?= BASE_URL . "/admin/posts/action"; ?>',  // Make sure this route is correctly set up
+                                                  url: '<?= BASE_URL . "/admin/action"; ?>',  // Make sure this route is correctly set up
                                                   type: 'POST',
-                                                  ContentType: 'Application/json',
-                                                  data: { action: action, video_id: video_id },
+                                                  data: {
+                                                            action: action,
+                                                            user_id: user_id
+                                                  },
                                                   success: function (response) {
                                                             if (response.success) {
-                                                                      alert(`Video ${video_id} has been ${action}d`);
+                                                                      alert(`${userName} has been ${action}d`);
                                                                       // Remove the row from the table if the action is Delete
                                                                       const tr = button.closest('tr');
-                                                                      if (action === "delete") {
+                                                                      if (action === "Delete") {
                                                                                 tr.remove();  // Use stored reference to the button
                                                                       } else {
                                                                                 // Toggle the active class for the row to change the background color
@@ -239,13 +166,16 @@ $user_id = $this->user_id ?? "";
                                                                                 // Update the button text to the opposite action
                                                                                 const updated_action = action === "Block" ? "Un-Block" : "Block";
                                                                                 button.text(`${updated_action}`);
-                                                                                button.attr('data-action', updated_action);
 
                                                                                 // Update the status tag in the table row
-                                                                                if (button.hasClass("btn-outline-success")) {
-                                                                                          button.removeClass("btn-outline-success").addClass("btn-outline-danger");
+                                                                                const statusTag = button.closest('tr').find('td:nth-child(5) span');
+                                                                                if (statusTag.hasClass("bg-success")) {
+                                                                                          statusTag.removeClass("bg-success").addClass("bg-danger");
+                                                                                          statusTag.text("Blocked");
                                                                                 } else {
-                                                                                          button.removeClass("btn-outline-danger").addClass("btn-outline-success");
+                                                                                          statusTag.removeClass("bg-danger").addClass("bg-success");
+                                                                                          statusTag.text("Active");
+
                                                                                 }
 
                                                                                 // Animate the row to fade back in after 1 second
@@ -255,16 +185,16 @@ $user_id = $this->user_id ?? "";
                                                                                 }, 1000);
                                                                       }
                                                             } else {
-                                                                      alert(`${response.message} ${response.video_id}`);
+                                                                      alert(`Failed to ${action} user ${userName}.`);
                                                             }
                                                   },
                                                   error: function (res) {
-                                                            alert(`Error: ${res.message} ${res.video_id}`);
+                                                            alert(`Error: ${res.responseText}`);
                                                   }
                                         });
                               }
                     });
-          </script>
+          </script> -->
 </body>
 
 </html>

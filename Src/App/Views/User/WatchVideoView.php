@@ -132,7 +132,7 @@ $lates_videos_info = $this->latest_videos_info;
 
 <body>
     <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
-    <div class="container mt-3">
+    <div class="container mt-5">
         <h1 class="mb-4">YoYo Tube Video Player
         </h1>
         <div class="row">

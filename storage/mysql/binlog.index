@@ -31,9 +31,12 @@
 ./binlog.000057
 ./binlog.000058
 ./binlog.000059
+<<<<<<< HEAD
 ./binlog.000060
 ./binlog.000061
 ./binlog.000062
 ./binlog.000063
 ./binlog.000064
 ./binlog.000065
+=======
+>>>>>>> parent of bbd3d4e (Admin Panel Compleated)

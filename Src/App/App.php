@@ -43,7 +43,6 @@ class App
                               $_SESSION["username"] = $is_valid_cookie_data["username"];
                               $_SESSION["email"] = $is_valid_cookie_data["email"];
                               $_SESSION["profile_img"] = $is_valid_cookie_data["profile_img"];
-                              $_SESSION["role"] = $is_valid_cookie_data["role"];
                               session_write_close();
                     }
           }
