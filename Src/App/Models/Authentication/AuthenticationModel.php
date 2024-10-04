@@ -83,7 +83,7 @@ class AuthenticationModel extends Modle
         $stmt = $this->db->prepare("UPDATE users SET profile_img = :profile_img WHERE id = :user_id");
         try {
 
-            return $stmt->execute(['user_id' => $user_id, 'profile_img' => $profile_img]);
+            return $stmt->execute(['profile_img' => $profile_img, 'user_id' => $user_id,]);
         } catch (\PDOException $e) {
             throw $e;
         }

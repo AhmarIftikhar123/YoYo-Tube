@@ -55,7 +55,7 @@ class AdminModel extends Modle
     $sql = match ($action) {
       "Block" => "UPDATE users SET is_blocked = 1 WHERE id = :user_id",
       "Un-Block" => "UPDATE users SET is_blocked = 0 WHERE id = :user_id",
-      "Delete" => "DELETE FROM users WHERE id = :user_id",
+      "delete" => "DELETE FROM users WHERE id = :user_id"
     };
     try {
       $stmt = $this->db->prepare($sql);

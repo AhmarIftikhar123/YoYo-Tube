@@ -4,108 +4,114 @@
 <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Payment</title>
+          <title>Access Denied - Premium Subscription Required</title>
           <?php include dirname(__DIR__) . "/partials/Bootstrap_css.php"; ?>
+          <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
+          <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
           <style>
+                    :root {
+                              --bg-color: #f8f9fa;
+                              --text-color: #212529;
+                              --card-bg: #ffffff;
+                              --btn-primary-bg: #0d6efd;
+                              --btn-primary-color: #ffffff;
+                    }
+
+                    .dark-theme {
+                              --bg-color: #212529;
+                              --text-color: #f8f9fa;
+                              --card-bg: #343a40;
+                              --btn-primary-bg: #0d6efd;
+                              --btn-primary-color: #ffffff;
+                    }
+
                     body {
-                              background-color: #121212;
-                              /* Dark background */
-                              color: #e0e0e0;
-                              /* Light text color */
-                              display: grid;
-                              place-items: center;
-                              min-height: 100dvh;
+                              background-color: var(--bg-color);
+                              color: var(--text-color);
+                              transition: background-color 0.3s, color 0.3s;
                     }
 
-
-                    .container-custom {
-                              max-width: 600px;
-                              margin: 0 auto;
-                              padding: 2rem 1rem;
-                              background-color: #1e1e1e;
-                              /* Darker container background */
-                              border-radius: 8px;
-                              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    .card {
+                              background-color: var(--card-bg);
+                              transition: background-color 0.3s;
                     }
 
-                    .form-control {
-                              background-color: #333;
-                              /* Dark input background */
-                              color: #e0e0e0;
-                              /* Light input text color */
-                              border: 1px solid #444;
-                              /* Input border */
+                    .btn-primary {
+                              background-color: var(--btn-primary-bg);
+                              color: var(--btn-primary-color);
                     }
 
-                    .form-control::placeholder {
-                              color: #888;
-                              /* Placeholder text color */
-                    }
-
-                    .btn-custom {
-                              background-color: #007bff;
-                              /* Bootstrap primary color */
-                              border-color: #007bff;
-                    }
-
-                    .btn-custom:hover {
-                              background-color: #0056b3;
-                              /* Darker blue on hover */
-                              border-color: #0056b3;
-                    }
-
-                    .form-label {
-                              color: #e0e0e0;
-                              /* Label text color */
+                    .modal-content {
+                              background-color: var(--card-bg);
+                              color: var(--text-color);
                     }
           </style>
 </head>
 
 <body>
-          <div class="container container-custom">
-                    <h1 class="text-2xl font-bold mb-6">Payment</h1>
-                    <form class="space-y-6">
-                              <div class="mb-3">
-                                        <label for="card-number" class="form-label">Card Number</label>
-                                        <input type="text" id="card-number" class="form-control"
-                                                  placeholder="1234 5678 9012 3456" required />
-                              </div>
-                              <div class="row mb-3">
-                                        <div class="col">
-                                                  <label for="expiry-date" class="form-label">Expiry Date</label>
-                                                  <input type="text" id="expiry-date" class="form-control"
-                                                            placeholder="MM/YY" required />
+          <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
+          <div class="container mt-5">
+                    <div class="row justify-content-center">
+                              <div class="col-md-8">
+                                        <div class="text-center mb-5">
+                                                  <h1 class="display-4">Access Denied</h1>
+                                                  <p class="lead">This content requires a premium subscription to view.
+                                                  </p>
                                         </div>
-                                        <div class="col">
-                                                  <label for="cvv" class="form-label">CVV</label>
-                                                  <input type="text" id="cvv" class="form-control" placeholder="123"
-                                                            required />
+
+                                        <div class="card mb-5">
+                                                  <div class="row g-0">
+                                                            <div class="col-md-4">
+                                                                      <img src="https://via.placeholder.com/300x200"
+                                                                                class="img-fluid rounded-start"
+                                                                                alt="Video Thumbnail">
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                      <div class="card-body">
+                                                                                <h5 class="card-title">Exclusive Video
+                                                                                          Title</h5>
+                                                                                <p class="card-text">By Creator Name</p>
+                                                                                <p class="card-text"><small
+                                                                                                    class="text-muted">Premium
+                                                                                                    content</small></p>
+                                                                      </div>
+                                                            </div>
+                                                  </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                                  <p class="mb-3">Get premium access for only $20 per month!</p>
+                                                  <button class="btn btn-light btn-lg" id="subscribeBtn">Get Premium
+                                                            Subscription</button>
                                         </div>
                               </div>
-                              <div class="mb-3">
-                                        <label for="name" class="form-label">Name on Card</label>
-                                        <input type="text" id="name" class="form-control" placeholder="John Doe"
-                                                  required />
-                              </div>
-                              <div class="mb-3">
-                                        <label for="amount" class="form-label">Amount</label>
-                                        <input type="number" id="amount" class="form-control" placeholder="0.00"
-                                                  required />
-                              </div>
-                              <div class="mb-3">
-                                        <label for="currency" class="form-label">Currency</label>
-                                        <select id="currency" class="form-select">
-                                                  <option value="" disabled selected>Select currency</option>
-                                                  <option value="usd">USD</option>
-                                                  <option value="eur">EUR</option>
-                                                  <option value="gbp">GBP</option>
-                                        </select>
-                              </div>
-                              <button type="submit" class="btn btn-custom w-100">
-                                        Pay Now
-                              </button>
-                    </form>
+                    </div>
           </div>
-          <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
+          <!-- <script>
+        $(document).ready(function() {
+            var stripe = Stripe('your_stripe_publishable_key');
+
+            $('#subscribeBtn').click(function() {
+                // Redirect to Stripe Checkout
+                stripe.redirectToCheckout({
+                    lineItems: [{
+                        price: 'your_stripe_price_id', // Replace with your actual Stripe Price ID
+                        quantity: 1
+                    }],
+                    mode: 'subscription',
+                    successUrl: 'https://your-website.com/success',
+                    cancelUrl: 'https://your-website.com/canceled',
+                }).then(function (result) {
+                    if (result.error) {
+                        // If `redirectToCheckout` fails due to a browser or network
+                        // error, display the localized error message to your customer.
+                        var displayError = document.getElementById('error-message');
+                        displayError.textContent = result.error.message;
+                    }
+                });
+            });
+        });
+    </script> -->
+</body>
 
 </html>

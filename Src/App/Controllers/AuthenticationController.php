@@ -190,14 +190,14 @@ class AuthenticationController
                               if (!$is_user_already_registered) {
                                         $isAuthenticated = $authentication_model->google_login($name, $email, $profile_pic);
                               }
-                              if ($isAuthenticated) {
-                                        $is_userInfo_store = $authentication_model->store_user_info($isAuthenticated, $name);
+                              if ($is_user_already_registered) {
+                                        $is_userInfo_store = $authentication_model->store_user_info($is_user_already_registered['id'], $name);
                               } else {
                                         $is_userInfo_store = $authentication_model->store_user_info($is_user_already_registered['id'], $is_user_already_registered['username']);
                               }
 
                               if ($is_userInfo_store) {
-                                        $store_profile_img = $authentication_model->store_profile_img($isAuthenticated, $profile_pic);
+                                        $store_profile_img = $authentication_model->store_profile_img($is_user_already_registered['id'], $profile_pic);
                                         if ($store_profile_img) {
                                                   return [
                                                             "email" => $email,

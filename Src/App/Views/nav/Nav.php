@@ -4,7 +4,9 @@ if ($_SERVER['REQUEST_METHOD'] === "GET" & isset($_GET['logout'])) {
     if (!session_id()) {
         session_start();
     }
-    session_destroy();
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_destroy();
+    }
     foreach ($_COOKIE as $cookie_name => $cookie_value) {
         setcookie($cookie_name, "", time() - 3600, "/"); // Expire the cookie
     }
@@ -75,7 +77,7 @@ session_write_close();
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-        <a class="navbar-brand" href="">YoYo Tube</a>
+        <a class="navbar-brand" href="/">YoYo Tube</a>
         <button class="navbar-toggler border-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -92,7 +94,7 @@ session_write_close();
                             Videos</a>
                     </li>
                     <li class="nav-item text-center">
-                        <a class="nav-link px-2" href="/home" id="searchVideos">Search
+                        <a class="nav-link px-2" href="/" id="searchVideos">Search
                             Videos</a>
                     </li>
                     <li class="nav-item text-center">

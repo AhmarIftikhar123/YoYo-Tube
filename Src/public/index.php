@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-// pagination in admin & userViews & make ajax request on click
 //  login with fb
 
 use Src\App\{
@@ -14,15 +13,16 @@ use Src\App\Controllers\{
     Reset_Password_Controller,
     VideoPlayerController
 };
-use Src\App\Controllers\Admin\AdminController;
-use Src\App\Controllers\FacebookLoginController;
-use Src\App\Controllers\Home\HomeController;
-use Src\App\Controllers\Profile\ProfileController;
-use Src\App\Controllers\Upload\UploadController;
-use Src\App\Controllers\User\UserVideoController;
-use Src\App\Controllers\User\WatchVideoController;
-use Src\App\Router;
-use Src\App\Views;
+use Src\App\Controllers\{
+    Admin\AdminController,
+    FacebookLoginController,
+    Home\HomeController,
+    Profile\ProfileController,
+    Upload\UploadController,
+    User\UserVideoController,
+    User\WatchVideoController
+};
+use Src\App\{Router, Views};
 
 
 // /var/www/src
@@ -40,7 +40,7 @@ define("STORAGE_DIR", APP_ROOT . "/storage");
 // var/www/src/app/Views
 define("VIEWS_PATH", BASE_ROOT . "/src/app/Views");
 
-define("BASE_URL" , "http://localhost:8000");
+define("BASE_URL", "http://localhost:8000");
 
 // importing Autoloader
 require_once BASE_ROOT . '/vendor/autoload.php';
@@ -51,8 +51,6 @@ $dotenv->load();
 
 $Router = new Router();
 $Router
-    ->get("/home", [HomeController::class, "load_home_page"])
-
     ->get("/authentication", [AuthenticationController::class, "load_Authentication_Page"])
     ->post("/auth/register", [AuthenticationController::class, "register"])
 
@@ -89,12 +87,9 @@ $Router
     ->get("/admin/posts", [AdminController::class, "load_user_posts"])
     ->post("/admin/posts/action", [AdminController::class, "update_video_status"])
 
-
-    /*        Panding      */
-    // ->get("/admin/users", [AdminController::class, "listUsers"])
-    // ->get("/admin/videos", [AdminController::class, "listVideos"])
-    // ->post("/admin/videos/block/{id}", [AdminController::class, "blockVideo"])
-
+    // Paymetn Routes:
+    ->get("/payment/process", [PaymentController::class, "processPayment"])
+    ->post("/payment/callback", [PaymentController::class, "paymentCallback"])
 
     /*        Panding      */
     // ->post("/profile/update", [ProfileController::class, "updateProfile"])
