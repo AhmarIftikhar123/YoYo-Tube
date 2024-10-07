@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-// pagination in admin & userViews & make ajax request on click
+// Make /admin/posts page dynamic
 //  login with fb
 
 use Src\App\{
@@ -9,12 +9,11 @@ use Src\App\{
 };
 use Src\App\Controllers\{
     Forgat_Password_Controller,
-    PaymentController,
     AuthenticationController,
     Reset_Password_Controller,
-    VideoPlayerController
 };
 use Src\App\Controllers\{
+    Payment\PaymentController,
     Admin\AdminController,
     FacebookLoginController,
     Home\HomeController,
@@ -52,6 +51,7 @@ $dotenv->load();
 
 $Router = new Router();
 $Router
+    ->get("/home", [HomeController::class, "load_home_page"])
     ->get("/authentication", [AuthenticationController::class, "load_Authentication_Page"])
     ->post("/auth/register", [AuthenticationController::class, "register"])
 
@@ -81,22 +81,17 @@ $Router
 
     /*        Panding      */
     ->get("/payment", [PaymentController::class, "load_Payment_Page"])
+    ->post("/payment", [PaymentController::class, "processPayment"])
 
     // Admin Routes:
     ->get("/admin", [AdminController::class, "load_Dashboard"])
     ->get("/admin/posts", [AdminController::class, "load_user_posts"])
-    ->post("/admin/action", [AdminController::class, "admin_action"])
+    ->post("/admin/action", [AdminController::class, "admin_action"]);
 
-    // Paymetn Routes:
-    ->get("/payment/process", [PaymentController::class, "processPayment"])
-    ->post("/payment/callback", [PaymentController::class, "paymentCallback"])
 
-    /*        Panding      */
-    // ->post("/profile/update", [ProfileController::class, "updateProfile"])
-    // ->post("/profile/avatar", [ProfileController::class, "updateAvatar"])
-
-    // Videos Routes:
-    ->get("/video", [VideoPlayerController::class, "load_video_Player"]);
+/*        Panding      */
+// ->post("/profile/update", [ProfileController::class, "updateProfile"])
+// ->post("/profile/avatar", [ProfileController::class, "updateAvatar"])
 
 /*        Panding      */
 // ->post("/videos/{id}/pay", [PaymentController::class, "processPayment"])

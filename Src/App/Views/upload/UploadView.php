@@ -48,7 +48,6 @@
         <form id="videoUploadForm" method="post" action="/upload" enctype="multipart/form-data">
             <!-- Video Upload Section -->
             <div class="mb-4">
-                <h2>Upload Video</h2>
                 <div class="file-drop-area" id="fileDropArea">
                     <p class="m-0">Drag and drop your video file here or click to select</p>
                     <input type="file" id="videoFile" accept="video/*" name="video" style="display: none;">
@@ -58,7 +57,6 @@
 
             <!-- Video Details Section -->
             <div class="mb-4">
-                <h2>Video Details</h2>
                 <div class="mb-3">
                     <label for="videoTitle" class="form-label">Title</label>
                     <input type="text" class="form-control" id="videoTitle" name="videoTitle">
@@ -90,10 +88,25 @@
 
             <!-- Content Type Section -->
             <div class="mb-4">
-                <h2>3. Content Type</h2>
+                <h5>3. Content Type</h5>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="paidContentSwitch" name="isPaid">
                     <label class="form-check-label" for="paidContentSwitch">Paid Content</label>
+                </div>
+                <div class="mb-3" id="prizeSection" style="display: none;">
+                    <label for="price" class="form-label">Prize</label>
+                    <input type="text" class="form-control" id="price" name="price"
+                        placeholder="Enter Prize Default is $0.00" list="prizeDetails">
+                    <datalist id="prizeDetails">
+                        <option value="$5.00"></option>
+                        <option value="$10.00"></option>
+                        <option value="$20.00"></option>
+                        <option value="$30.00"></option>
+                        <option value="$40.00"></option>
+                        <option value="$50.00"></option>
+                        <option value="$100.00"></option>
+                    </datalist>
+                    <small class="text-danger"><?= $this->price_error ?? "" ?></small>
                 </div>
                 <div id="paidContentNotice" class="alert alert-light mt-2 border-light" style="display: none;">
                     Users will need to make a payment to view this content.
@@ -165,11 +178,13 @@
         }
 
         // Paid Content Switch
-        const paidContentSwitch = document.getElementById('paidContentSwitch');
-        const paidContentNotice = document.getElementById('paidContentNotice');
+        const paidContentSwitch = $('#paidContentSwitch');
 
-        paidContentSwitch.addEventListener('change', function () {
-            paidContentNotice.style.display = this.checked ? 'block' : 'none';
+        paidContentSwitch.on('change', function () {
+            $display = this.checked ? 'block' : 'none';
+            $("#prizeSection").css("display", $display);
+            $("#paidContentNotice").css("display", $display);
+            $('#price').prop('required', this.checked);
         });
     </script>
 </body>

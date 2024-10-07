@@ -135,6 +135,23 @@
                                                             </div>
 
                                                   </div>
+
+                                                  <div class="mb-3">
+                                                            <label for="confirm-password"
+                                                                      class="form-label">Role</label>
+                                                            <input type="text" class="form-control" id="role"
+                                                                      name="role" placeholder="Role Default is User"
+                                                                      list="role-list">
+                                                            <datalist id="role-list">
+                                                                      <option value="admin"></option>
+                                                                      <option value="user"></option>
+                                                            </datalist>
+                                                            <!-- Error Message for Confirm Password -->
+                                                            <div class="text-danger mt-2">
+                                                                      <?= $this->confirm_passwordError ?? "" ?>
+                                                            </div>
+
+                                                  </div>
                                                   <div class="mb-3 form-check">
                                                             <input type="checkbox" id="remember_me_registeration"
                                                                       class="form-check-input"
@@ -156,8 +173,7 @@
                                         class="btn btn-success w-100 mb-2 mx-1">
                                         <i class="fa-brands fa-google me-2"></i> Continue 'with 'Google
                               </a>
-                              <a class="btn btn-primary w-100 mx-1"
-                                        href="<?= $this->facebook_client_config ?? '' ?>">
+                              <a class="btn btn-primary w-100 mx-1" href="<?= $this->facebook_client_config ?? '' ?>">
                                         <i class="fa-brands fa-facebook me-2"></i> Continue with Facebook
                               </a>
                     </div>

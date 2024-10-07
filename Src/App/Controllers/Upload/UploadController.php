@@ -66,9 +66,9 @@ class UploadController
                               'videoDescription' => $post_values['videoDescription'],
                               'videoTags' => $post_values['videoTags'],
                               "category" => $post_values['videoCategory'],
-                              "is_paid" => $post_values['isPaid']
+                              "is_paid" => $post_values['isPaid'],
+                              "price" => explode("$",$post_values['price'])[1],
                     ];
-
                     $is_video_uploaded_success = $uploadModel->add_video_to_database($video_data);
                     if (is_string($is_video_uploaded_success)) {
                               return $this->load_upload_page("upload/UploadSuccessView", data: ["file_name" => $video_info['name'], "video_category" => $post_values['videoCategory']]);

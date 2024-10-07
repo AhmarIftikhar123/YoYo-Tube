@@ -40,8 +40,8 @@
                                         <?= htmlspecialchars($this->video_category) ?? "" ?></span></p>
 
                     <div>
-                              <a href="/user-posts" class="btn btn-light btn-custom">See Your Posts</a>
-                              <a href="/" class="btn btn-secondary btn-custom">Go to Home Page</a>
+                              <a href="/videos" class="btn btn-light btn-custom">See Your Posts</a>
+                              <a href="/home" class="btn btn-secondary btn-custom">Go to Home Page</a>
                     </div>
           </div>
 

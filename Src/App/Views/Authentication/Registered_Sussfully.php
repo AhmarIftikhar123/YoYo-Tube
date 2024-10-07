@@ -69,7 +69,7 @@
                                                                                 <?= htmlspecialchars($this->password) ?>
                                                                       </p>
                                                             </div>
-                                                            <a href="/" class="btn btn-light fw-bold mt-4"
+                                                            <a href="/home" class="btn btn-light fw-bold mt-4"
                                                                       id="goHomeBtn">Go to Home</a>
                                                   </div>
                                         </div>

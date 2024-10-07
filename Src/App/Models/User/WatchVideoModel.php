@@ -6,10 +6,8 @@ class WatchVideoModel extends Modle
 
           public function is_valid_user($data)
           {
-                    if (!isset($_SESSION['user_id'])) {
-                              die("User not found.
-                     Redirecting to authentication page.
-                      <script>setTimeout(() => { window.location.href = '/authentication'; }, 2000);</script>"); // check if user is logged in or false;
+                    if (!static::$user_registered) {
+                        $this->redirect_user_to_login();
                     }
                     if (isset($data['id']) && isset($data['is_paid'])) {
                               try{

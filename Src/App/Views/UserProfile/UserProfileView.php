@@ -111,7 +111,7 @@
 </head>
 <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
 <?php
-$profile_img = $_SESSION['profile_img'] ?? "";
+$profile_img = $_SESSION['profile_img'] ?? "https://via.placeholder.com/150";
 $username = $_SESSION['username'] ?? "";
 $success = $this->message ?? "";
 session_write_close();
@@ -137,7 +137,7 @@ session_write_close();
 
                                         <!-- Profile Picture -->
                                         <div class="text-center mb-4">
-                                                  <img src="<?= $profile_img ?? "https://via.placeholder.com/150" ?>"
+                                                  <img src="<?= $profile_img  ?>"
                                                   alt="Profile Picture" class="profile-picture" id="profilePicture">
                                         <div class="mt-2">
                                                   <div class="file-input-wrapper">

@@ -1,6 +1,7 @@
 <?php
 namespace Src\App\Controllers;
 
+use Exception;
 use Facebook\Facebook;
 use Src\App\Models\Authentication\AuthenticationModel;
 use Src\App\Views;
@@ -32,8 +33,11 @@ class AuthenticationController
                               'password' => filter_input(INPUT_POST, 'password'),
                               'confirm_password' => filter_input(INPUT_POST, 'confirm_password'),
                               'remember_me_registeration' => filter_input(INPUT_POST, 'remember_me_registeration', FILTER_VALIDATE_BOOL) ? 1 : 0,
+                              "role" => filter_input(INPUT_POST, 'role') === "admin" ? 1 : 0
                     ];
-
+                    if ($inputs['role'] === 1) {
+                              throw new Exception("You can't register as Admin.Please contact the Website Owner for Admin access.");
+                    }
                     $errors = $this->validateRegistrationInputs($inputs);
                     if (!empty($errors)) {
                               return $this->load_Authentication_Page("Authentication/AuthenticationView", [
@@ -48,7 +52,8 @@ class AuthenticationController
                     $last_inserted_id = $authentication_model->login(
                               $inputs['username'],
                               $inputs['email'],
-                              $inputs['password']
+                              $inputs['password'],
+                              $inputs['role']
                     );
 
                     if ($last_inserted_id) {
@@ -189,14 +194,13 @@ class AuthenticationController
                               $isAuthenticated = false;
                               if (!$is_user_already_registered) {
                                         $isAuthenticated = $authentication_model->google_login($name, $email, $profile_pic);
-                              }
-                              if ($is_user_already_registered) {
-                                        $is_userInfo_store = $authentication_model->store_user_info($is_user_already_registered['id'], $name);
+                              } elseif (is_array($is_user_already_registered)) {
+                                        $isAuthenticated = $authentication_model->store_user_info($is_user_already_registered['id'], $name);
                               } else {
-                                        $is_userInfo_store = $authentication_model->store_user_info($is_user_already_registered['id'], $is_user_already_registered['username']);
+                                        throw new \Exception('Failed to store user information.');
                               }
 
-                              if ($is_userInfo_store) {
+                              if ($isAuthenticated) {
                                         $store_profile_img = $authentication_model->store_profile_img($is_user_already_registered['id'], $profile_pic);
                                         if ($store_profile_img) {
                                                   return [

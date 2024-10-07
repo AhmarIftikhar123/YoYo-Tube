@@ -4,17 +4,18 @@ use Src\App\Modle;
 
 class AuthenticationModel extends Modle
 {
-    public function login(string $username, string $email, string $password)
+    public function login(string $username, string $email, string $password,$role = 0)
     {
         try {
             $stmt = $this->db->prepare("
-                                  INSERT INTO users (username, email, password, created_at)
-                                  VALUES (:username, :email, :password, NOW())
+                                  INSERT INTO users (username, email, password, created_at,role)
+                                  VALUES (:username, :email, :password, NOW(),:role)
                               ");
             $stmt->execute([
                 "username" => $username,
                 "email" => $email,
                 "password" => password_hash($password, PASSWORD_DEFAULT),
+                "role" => $role
             ]);
             return $this->db->lastInsertId();
         } catch (\PDOException $e) {
@@ -111,7 +112,7 @@ class AuthenticationModel extends Modle
             $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
             $stmt->execute(['email' => $email]);
             $row = $stmt->fetch();
-            return $row ? $row : false;
+            return !empty($row) ? $row : false;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

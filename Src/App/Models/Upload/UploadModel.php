@@ -18,11 +18,17 @@ class UploadModel extends Modle
                 // Sanitize the rest of the values as strings
                 $sanitizedData[$key] = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             }
+            if ($key === "price" && is_float($value || is_int($value))) {
+                $sanitizedData[$key] = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            }
         }
         // Ensure that 'isPaid' is set to 0 if not present in the post data
         if (!array_key_exists('isPaid', $postData)) {
             $sanitizedData['isPaid'] = 0;
         }
+        if (!array_key_exists('price', $postData) || !is_numeric($sanitizedData['price'])) {
+            $sanitizedData['price'] = "$0";
+        } 
         return $sanitizedData;
     }
 
@@ -85,14 +91,16 @@ class UploadModel extends Modle
     public function upload_video(string $videoName, string $videoTmpName)
     {
         // assume userName is "Ahmar"
-        session_start();
+        if (!session_id()) {
+            session_start();
+        }
         $userName = $_SESSION["username"];
         if (empty($userName)) {
             error_log("Username not found we redirecting to authentication page");
             echo "<script>settimeout(() => { window.location.href = '/authentication'; }, 2000); </script>";
             die();
         }
-        $main_dir = STORAGE_DIR . "/" . $userName;
+        $main_dir = STORAGE_DIR . "/" . explode(" ", $userName)[0];
 
         $sub_dir = $main_dir . "/" . explode(".", $videoName)[0];
 
@@ -165,37 +173,47 @@ class UploadModel extends Modle
 
     public function add_video_to_database(array $video_data)
     {
-        $stmt = $this->db->prepare(
-            "
-                        INSERT INTO videos (user_id, title, description, file_path, category, tags, is_paid, created_at, updated_at,thumbnail_path)
-                        VALUES (
-                            :user_id,
-                            :title,
-                            :description,
-                            :file_path,
-                            :category,
-                            :tags,
-                            :is_paid,
-                            CURRENT_TIMESTAMP, 
-                            CURRENT_TIMESTAMP,
-                            :thumbnail_path
-                        )
-                        "
-        );
+        try {
+            $stmt = $this->db->prepare(
+                "
+                            INSERT INTO videos (user_id, title, description, file_path, category, tags, is_paid, created_at, updated_at,thumbnail_path,price)
+                            VALUES (
+                                :user_id,
+                                :title,
+                                :description,
+                                :file_path,
+                                :category,
+                                :tags,
+                                :is_paid,
+                                CURRENT_TIMESTAMP, 
+                                CURRENT_TIMESTAMP,
+                                :thumbnail_path,
+                                :price
+                            )
+                            "
+            );
 
-        // assume user id is 1 
-        $userId = $_SESSION["user_id"];
-        $isInserted = $stmt->execute([
-            ':user_id' => $userId,
-            ':title' => $video_data['title'],
-            ':description' => $video_data['videoDescription'],
-            ':file_path' => $video_data['file_path'],
-            ':category' => $video_data['category'],
-            ':tags' => json_encode($video_data['videoTags']),
-            ':is_paid' => $video_data['is_paid'],
-            ':thumbnail_path' => $video_data['thumbnail_path']
-        ]);
-
-        return $isInserted ? $this->db->lastInsertId() : ["upload_video_error" => "Failed to upload video"];
+            // assume user id is 1 
+            $userId = $_SESSION["user_id"];
+            if (!$userId) {
+                throw new Exception("User id not found");
+            }
+            $isInserted = $stmt->execute([
+                ':user_id' => $userId,
+                ':title' => $video_data['title'],
+                ':description' => $video_data['videoDescription'],
+                ':file_path' => explode("/src", $video_data['file_path'])[1],
+                ':category' => $video_data['category'],
+                ':tags' => json_encode($video_data['videoTags']),
+                ':is_paid' => $video_data['is_paid'],
+                ':thumbnail_path' => explode("/src", $video_data['thumbnail_path'])[1],
+                ':price' => $video_data['price']
+            ]);
+            return $isInserted ? $this->db->lastInsertId() : ["upload_video_error" => "Failed to upload video"];
+        } catch (\Throwable $e) {
+            return [
+                'upload_video_error' => "Failed to upload video. Error: " . $e->getMessage()
+            ];
+        }
     }
 }

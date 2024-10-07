@@ -22,7 +22,7 @@
 
 <body class="text-white bg-dark row align-items-center justify-content-center overflow-hidden" style="height: 100vh;">
           <div class="container container-custom">
-                    <h3 class="display-7 mb-4 fw-bolder">Error : <?= $this->message ?></h3>
+                    <h3 class="display-7 mb-4 fw-bolder fs-5">Error : <?= $this->message ?></h3>
                     <p class="lead mb-8">Oops! The page you're looking for doesn't exist.</p>
                     <p class="lead mb-8 text-italic"></p>
                     <a href="/home" class="btn btn-light fw-bold">Go back home</a>

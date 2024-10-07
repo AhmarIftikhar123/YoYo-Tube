@@ -35,7 +35,7 @@ services:
             - MYSQL_USER=user
             - MYSQL_PASSWORD=password
         ports:
-            - "3307:3306"
+            - "3306:3306"
         networks:
             - php
 
@@ -50,6 +50,8 @@ services:
             - PMA_PORT=3306
             - PMA_USER=root
             - PMA_PASSWORD=root
+        depends_on:
+            - mysql    
         networks:
             - php
 
