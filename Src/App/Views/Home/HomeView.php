@@ -69,6 +69,7 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
         }
 
         .card-body {
+
             &>.card-title,
             .card-text {
                 text-overflow: ellipsis;
@@ -128,7 +129,8 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
             }
         }
 
-        .form-select, .form-check-input {
+        .form-select,
+        .form-check-input {
             background-color: var(--card-bg);
             color: var(--text-color);
             border-color: var(--text-color);
@@ -179,71 +181,70 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
 
         <!-- Video Grid -->
         <!-- Video cards will be dynamically inserted here -->
-            <div id="videoGrid" class="row">
-                <?php foreach ($current_post_info as $post): ?>
+        <div id="videoGrid" class="row">
+            <?php foreach ($current_post_info as $post): ?>
 
-                    <div class="col-md-3 mb-2">
-                        <div class="card">
-                            <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
-                            <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                                <a href="/home/watch?id=<?= $post['id'] ?>&is_paid=<?= $post['is_paid'] ?>"
-                                    target="_blank" class="btn btn-light btn-lg rounded-circle">
-                                    <i class="bi bi-play-fill"></i>
-                                </a>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $post['title'] ?></h5>
-                                <p class="card-text text-uppercase d-flex gap-2">
-                                    <span class="badge bg-secondary"><?= $post['category'] ?></span>
-                                    <span
-                                        class="badge badge-<?= $post['is_paid'] ? 'paid' : 'free' ?>"><?= $post['is_paid'] ? 'Paid' : 'Free' ?></span>
-                                </p>
-                                <p class="card-text"><?= $post['description'] ?></p>
-                            </div>
+                <div class="col-md-3 mb-2">
+                    <div class="card">
+                        <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
+                        <div class="card-img-overlay d-flex align-items-center justify-content-center">
+                            <a href="/videos/watch?video_id=<?= $post['id'] ?>&user_id=<?= $post['user_id'] ?>&is_paid=<?= $post['is_paid'] ?>"
+                                target="_blank" class="btn btn-light btn-lg rounded-circle">
+                                <i class="bi bi-play-fill"></i>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"><?= $post['title'] ?></h5>
+                            <p class="card-text text-uppercase d-flex gap-2">
+                                <span class="badge bg-secondary"><?= $post['category'] ?></span>
+                                <span
+                                    class="badge badge-<?= $post['is_paid'] ? 'paid' : 'free' ?>"><?= $post['is_paid'] ? 'Paid' : 'Free' ?></span>
+                            </p>
+                            <p class="card-text"><?= $post['description'] ?></p>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-        <?php
-        $all_posts_info = !isset($filter_type) ? $HomeModel->get_all_posts_info() : $HomeModel->get_all_posts_info($filter_type);
-        $current_page = $_GET['page'] ?? 1;
-        $number_of_pages = ceil(count($all_posts_info) / 8);
-        ?>
+    </div>
+    <?php
+    $all_posts_info = !isset($filter_type) ? $HomeModel->get_all_posts_info() : $HomeModel->get_all_posts_info($filter_type);
+    $current_page = $_GET['page'] ?? 1;
+    $number_of_pages = ceil(count($all_posts_info) / 8);
+    ?>
 
-        <nav aria-label="Video pagination"
-            class="pagination pagination-dark align-items-center justify-content-center ">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a href="/home?page=<?= $current_page - 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
-                        style="<?= $current_page > 1 ? "" : "display: none" ?>">
-                        <span class="visually-hidden">Previous</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-chevron-left" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                        </svg>
-                    </a>
+    <nav aria-label="Video pagination" class="pagination pagination-dark align-items-center justify-content-center ">
+        <ul class="pagination">
+            <li class="page-item">
+                <a href="/home?page=<?= $current_page - 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
+                    style="<?= $current_page > 1 ? "" : "display: none" ?>">
+                    <span class="visually-hidden">Previous</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-chevron-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+                    </svg>
+                </a>
+            </li>
+            <?php for ($i = 1; $i <= $number_of_pages; $i++): ?>
+                <li class="page-item" aria-current="page">
+                    <a href="/home?page=<?= $i ?>&filter=<?= $filter_type ?>"
+                        class="page-link <?= $i == $current_page ? "active" : "" ?>"><?= $i ?></a>
                 </li>
-                <?php for ($i = 1; $i <= $number_of_pages; $i++): ?>
-                    <li class="page-item" aria-current="page">
-                        <a href="/home?page=<?= $i ?>&filter=<?= $filter_type ?>"
-                            class="page-link <?= $i == $current_page ? "active" : "" ?>"><?= $i ?></a>
-                    </li>
-                <?php endfor; ?>
-                <li class="page-item">
-                    <a href="/home?page=<?= $current_page + 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
-                        style="<?= $current_page < $number_of_pages ? "" : "display: none" ?>">
-                        <span class="visually-hidden">Next</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                        </svg>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            <?php endfor; ?>
+            <li class="page-item">
+                <a href="/home?page=<?= $current_page + 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
+                    style="<?= $current_page < $number_of_pages ? "" : "display: none" ?>">
+                    <span class="visually-hidden">Next</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </nav>
     </div>
     <!-- Footer -->
     <footer class="footer mt-5 py-3">
@@ -294,7 +295,7 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
         }
 
         // Dark mode toggle event
-        darkModeToggle.on('change', function() {
+        darkModeToggle.on('change', function () {
             setDarkMode(this.checked);
         });
 

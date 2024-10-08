@@ -4,6 +4,7 @@ $lates_videos_info = $this->latest_videos_info;
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -201,7 +202,7 @@ $lates_videos_info = $this->latest_videos_info;
                     <?php foreach ($lates_videos_info as $video): ?>
                         <div class="card mb-3">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                                <a href="/videos/watch?id=<?= $video['id'] ?>&is_paid=<?= $video['is_paid'] ?>"
+                                <a href="/videos/watch?video_id=<?= $video['id'] ?>&user_id=<?= $video['user_id'] ?>&is_paid=<?= $video['is_paid'] ?>"
                                     target="_blank" class="btn btn-light btn-lg rounded-circle" aria-label="Play video">
                                     <i class="bi bi-play-fill"></i>
                                 </a>

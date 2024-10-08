@@ -4,7 +4,7 @@ use Src\App\Modle;
 
 class AuthenticationModel extends Modle
 {
-    public function login(string $username, string $email, string $password,$role = 0)
+    public function login(string $username, string $email, string $password, $role = 0)
     {
         try {
             $stmt = $this->db->prepare("
@@ -79,12 +79,12 @@ class AuthenticationModel extends Modle
         setcookie('user_name', $user_name, time() + 86400, '/');
     }
 
-    public function store_profile_img($user_id, $profile_img)
+    public function store_profile_img($email, $profile_img)
     {
-        $stmt = $this->db->prepare("UPDATE users SET profile_img = :profile_img WHERE id = :user_id");
+        $stmt = $this->db->prepare("UPDATE users SET profile_img = :profile_img WHERE email = :email");
         try {
 
-            return $stmt->execute(['profile_img' => $profile_img, 'user_id' => $user_id,]);
+            return $stmt->execute(['profile_img' => $profile_img, 'email' => $email,]);
         } catch (\PDOException $e) {
             throw $e;
         }

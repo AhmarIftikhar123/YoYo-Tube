@@ -174,7 +174,7 @@ class AuthenticationController
                               $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
 
                               if (array_key_exists('error', $token) && $token['error'] === 'invalid_grant') {
-                                        throw new \Exception('Access token not found in response: ' . json_encode($token['error_description']));
+                                        throw new Exception('Access token not found in response: ' . json_encode($token['error_description']));
                               }
                               $client->setAccessToken($token['access_token']);
 
@@ -194,21 +194,21 @@ class AuthenticationController
                               $isAuthenticated = false;
                               if (!$is_user_already_registered) {
                                         $isAuthenticated = $authentication_model->google_login($name, $email, $profile_pic);
-                              } elseif (is_array($is_user_already_registered)) {
+                              } elseif ($is_user_already_registered) {
                                         $isAuthenticated = $authentication_model->store_user_info($is_user_already_registered['id'], $name);
-                              } else {
-                                        throw new \Exception('Failed to store user information.');
-                              }
 
+                              } else {
+                                        throw new Exception('Failed to store user information.');
+                              }
                               if ($isAuthenticated) {
-                                        $store_profile_img = $authentication_model->store_profile_img($is_user_already_registered['id'], $profile_pic);
+                                        $store_profile_img = $authentication_model->store_profile_img($email, $profile_pic);
                                         if ($store_profile_img) {
                                                   return [
                                                             "email" => $email,
                                                             "password" => null,
                                                   ];
                                         }
-                                        throw new \Exception('Failed to store user profile image.');
+                                        throw new Exception('Failed to store user profile image.');
                               }
                     } catch (Throwable $e) {
                               // Handle error or invalid request

@@ -70,6 +70,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
         }
 
         .card-body {
+
             &>.card-title,
             .card-text {
                 text-overflow: ellipsis;
@@ -129,7 +130,8 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
             }
         }
 
-        .form-select, .form-check-input {
+        .form-select,
+        .form-check-input {
             background-color: var(--card-bg);
             color: var(--text-color);
             border-color: var(--text-color);
@@ -189,7 +191,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
                         <div class="card">
                             <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                                <a href="/videos/watch?id=<?= $post['id'] ?>&is_paid=<?= $post['is_paid'] ?>"
+                                <a href="/videos/watch?video_id=<?= $post['id'] ?>&user_id=<?= $post['user_id'] ?>&is_paid=<?= $post['is_paid'] ?>"
                                     target="_blank" class="btn btn-light btn-lg rounded-circle">
                                     <i class="bi bi-play-fill"></i>
                                 </a>
@@ -296,7 +298,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
         }
 
         // Dark mode toggle event
-        darkModeToggle.on('change', function() {
+        darkModeToggle.on('change', function () {
             setDarkMode(this.checked);
         });
 

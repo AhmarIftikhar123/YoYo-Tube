@@ -3,7 +3,7 @@ namespace Src\App;
 abstract class Modle
 {
           protected DB $db;
-          protected static bool $user_registered;
+          public static bool $user_registered;
           public function __construct()
           {
                     $this->db = App::$db;

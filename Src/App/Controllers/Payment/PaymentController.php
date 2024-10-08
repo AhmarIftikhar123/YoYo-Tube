@@ -16,25 +16,63 @@ class PaymentController
           }
           public function processPayment()
           {
-                    \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']); // Replace with your secret key
+                    \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
                     $payment_method_id = $_POST['payment_method_id'];
-
+                    $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                    $user_id = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+                    $video_id = filter_input(INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT);
                     try {
-                              // Create a PaymentIntent
+                              // Create PaymentIntent
                               $paymentIntent = \Stripe\PaymentIntent::create([
-                                        'amount' => 1000, // Amount in cents (e.g., $10.00)
+                                        'amount' => $price * 100, // Amount in cents
                                         'currency' => 'usd',
                                         'payment_method' => $payment_method_id,
                                         'confirmation_method' => 'manual',
                                         'confirm' => true,
-                                        'return_url' => BASE_URL . '/payment'
+                                        'return_url' => BASE_URL . '/videos/watch'
                               ]);
 
-                              echo 'Payment successful! Payment Intent ID: ' . $paymentIntent->id;
+                              // Retrieve payment details
+                              $transaction_id = $paymentIntent->id;
+                              $payment_amount = $paymentIntent->amount / 100; // Convert to dollars
+                              $payment_method_details = \Stripe\PaymentMethod::retrieve($paymentIntent->payment_method);
+                              $payment_method_type = $payment_method_details->type;
+                              $card_brand = $payment_method_details->card->brand ?? null;
+                              $last4 = $payment_method_details->card->last4 ?? null;
+                              $payment_status = $paymentIntent->status;
+                              $payment_date = date('Y-m-d H:i:s', $paymentIntent->created);
+
+                              // Store payment details in database
+                              $this->PaymentModel->store_payments_record(
+                                        $user_id,
+                                        $video_id,
+                                        $transaction_id,
+                                        $payment_amount,
+                                        $payment_method_type,
+                                        $card_brand,
+                                        $last4,
+                                        $payment_status,
+                                        $payment_date
+                              );
+                              header("Content-Type: application/json");
+                              echo json_encode([
+                                        'transaction_id' => $transaction_id,
+                                        'payment_amount' => $payment_amount,
+                                        'payment_method_type' => $payment_method_type,
+                                        'card_brand' => $card_brand,
+                                        'last4' => $last4,
+                                        'payment_status' => $payment_status,
+                                        'payment_date' => $payment_date
+                              ]);
+
                     } catch (\Stripe\Exception\ApiErrorException $e) {
                               // Handle error
-                              echo 'Payment failed: ' . $e->getMessage();
+                              echo json_encode([
+                                        'error' => 'Payment failed: ' . $e->getMessage()
+                              ]);
                     }
           }
+
+
 }

@@ -24,7 +24,13 @@ use Src\App\Controllers\{
 };
 use Src\App\{Router, Views};
 
-
+if (!session_status()) {
+    session_start();
+}
+define("USER_ID", $_SESSION['user_id'] ?? $_COOKIE['user_id']);
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
+}
 // /var/www/src
 define('APP_ROOT', dirname(__DIR__));
 
