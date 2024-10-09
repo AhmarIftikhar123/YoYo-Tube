@@ -30,17 +30,20 @@ class AuthenticationModel extends Modle
             $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
             $stmt->execute(['email' => $email]);
             $row = $stmt->fetch();
+
+            $is_blocked = $row['is_blocked'] ?? false;
+            $stored_password = $password ?? false;
             if (!$row) {
                 throw new \Exception("User not found");
             }
-            if ($row['is_blocked']) {
+            if ($is_blocked) {
                 $this->rm_session_cookies();
                 throw new \Exception("User is not active or Blocked by the Admin");
             }
             if (!$password) {
                 return $row;
             }
-            if (!password_verify($password, $row['password'])) {
+            if (!password_verify($password, $stored_password)) {
                 throw new \Exception("Password is incorrect");
             }
             return $row;
@@ -50,7 +53,9 @@ class AuthenticationModel extends Modle
     }
     public function rm_session_cookies()
     {
-        session_destroy();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
         foreach ($_COOKIE as $cookie_name => $cookie_value) {
             setcookie($cookie_name, '', time() - 3600, '/');
         }
@@ -74,13 +79,16 @@ class AuthenticationModel extends Modle
 
     private function store_data_in_cookie(string $user_id, string $token, string $user_name)
     {
-        setcookie('user_id', $user_id, time() + 86400, '/');
-        setcookie('token', $token, time() + 86400, '/');
-        setcookie('user_name', $user_name, time() + 86400, '/');
+        setcookie('user_id', $user_id, time() + 86400 * 7, '/');
+        setcookie('token', $token, time() + 86400 * 7, '/');
+        setcookie('user_name', $user_name, time() + 86400 * 7, '/');
     }
 
     public function store_profile_img($email, $profile_img)
     {
+        $image_data = file_get_contents($profile_img);
+        $profile_img = base64_encode($image_data);
+
         $stmt = $this->db->prepare("UPDATE users SET profile_img = :profile_img WHERE email = :email");
         try {
 

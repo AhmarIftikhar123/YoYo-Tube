@@ -227,9 +227,13 @@ class AuthenticationController
 
                     // Generate state and store it in session
                     $state = bin2hex(random_bytes(16));
-                    session_start();
+                    if (!session_status()) {
+                              session_start();
+                    }
                     $_SESSION['FBRLH_state'] = $state;
-                    session_write_close();
+                    if (session_status() === PHP_SESSION_ACTIVE) {
+                              session_write_close();
+                    }
                     $helper = $fb->getRedirectLoginHelper();
                     $permissions = ['email'];
                     $loginUrl = $helper->getLoginUrl($_ENV['FB_REDIRECT_URL'], $permissions);

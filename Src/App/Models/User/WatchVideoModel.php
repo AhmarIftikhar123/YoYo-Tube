@@ -57,22 +57,22 @@ class WatchVideoModel extends Modle
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':video_id', $video_id);
             $stmt->bindParam(':user_id', $user_id);
-            $stmt->execute();
+            $stmt->execute();   
             return $stmt->rowCount() > 0;
         } catch (\PDOException $e) {
             throw $e;
         }
     }
-    public function is_video_owner($video_info)
+    public function is_video_owner($video_info , $appUser_id)
     {
-        $sql = "SELECT * FROM videos WHERE id = :video_id AND user_id = :user_id";
+        $sql = "SELECT user_id FROM videos WHERE id = :video_id AND user_id = :user_id";
         try {
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':video_id', $video_info['video_id']);
             $stmt->bindParam(':user_id', $video_info['user_id']);
             $stmt->execute();
-            $row = $stmt->fetch();
-            return $row['user_id'] == $_COOKIE['user_id'];
+            $user_id = $stmt->fetch();
+            return $user_id == $appUser_id ?? $_COOKIE['user_id'];
         } catch (\PDOException $e) {
             throw $e;
         }

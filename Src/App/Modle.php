@@ -9,24 +9,31 @@ abstract class Modle
                     $this->db = App::$db;
                     static::$user_registered = $this->is_user_registered();
           }
-          protected function redirect_user_to_login()
+          public function redirect_user_to_login()
           {
-                    echo "User not found. Redirecting to authentication page...";
-                    echo "<script>setTimeout(() => { window.location.href = '/authentication'; }, 2000);</script>";
+                    // Set the headers for delayed redirection using the Refresh header
+                    header('Refresh: 2; url=/authentication');
+
+                    echo "User not found. Redirecting to authentication page in 2 seconds..." . "</br>";
+
+                    // Provide a fallback for users without JavaScript
+                    echo "If you are not redirected, click <a class='fw-bold' href='/authentication'>here</a>.";
                     exit();
           }
+
           private function is_user_registered()
           {
-                    if (!session_id()) {
+                    if (session_status() === PHP_SESSION_NONE) {
                               session_start();
                     }
+                    $is_user_registered = isset($_SESSION['user_id']);
 
-                    $isRegistered = isset($_SESSION['user_id']);
-
-                    if (session_id()) {
+                    if (session_status() === PHP_SESSION_ACTIVE) {
                               session_write_close();
                     }
 
-                    return $isRegistered;
+                    // Return whether the user is registered or not
+                    return $is_user_registered;
           }
+
 }

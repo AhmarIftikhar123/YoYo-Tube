@@ -156,5 +156,9 @@ session_write_close();
             localStorage.setItem('theme', 'light');
             $('body').removeClass('dark-theme');
         }
+        const isOnPaymentPage = localStorage.getItem('isOnPaymentPage');
+        if (isOnPaymentPage) {
+            updateCardStyles();
+        }
     });
 </script>
