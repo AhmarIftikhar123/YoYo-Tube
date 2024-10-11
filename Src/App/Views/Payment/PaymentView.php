@@ -344,9 +344,12 @@ if (session_status() === PHP_SESSION_ACTIVE) {
     // This is used to determine whether to update card styles on theme change
     localStorage.setItem('isOnPaymentPage', 'true');
 
-    // Reset flag when user leaves the page
-    window.on('beforeunload', function () {
-        localStorage.setItem('isOnPaymentPage', 'false');
+    $(window).on('beforeunload', function () {
+        try {
+            localStorage.removeItem('isOnPaymentPage');
+        } catch (error) {
+            console.log('Error removing isOnPaymentPage from localStorage:', error);
+        }
     });
 </script>
 

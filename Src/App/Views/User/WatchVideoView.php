@@ -8,7 +8,7 @@ $lates_videos_info = $this->latest_videos_info;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoYo Tube Video Player</title>
+    <title>YoYo Tube </title>
     <?php include dirname(__DIR__) . "/partials/Bootstrap_css.php"; ?>
     <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
     <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
@@ -21,11 +21,14 @@ $lates_videos_info = $this->latest_videos_info;
             --secondary-color: #4ecdc4;
             --text-color: #333;
             --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .video-container {
@@ -120,6 +123,67 @@ $lates_videos_info = $this->latest_videos_info;
         .dark-mode {
             --text-color: #f8f9fa;
             --bg-color: #333;
+            --card-bg: #444;
+            --border-color: #555;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        .like-dislike-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .like-dislike-btn.active {
+            color: var(--primary-color);
+        }
+
+        .comment-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .comment {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 0;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .btn-primary {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            border: 1px solid var(--text-color) !important;
+
+            &:hover {
+                background-color: var(--text-color) !important;
+                color: var(--bg-color) !important;
+                border-color: var(--text-color) !important;
+
+            }
+        }
+
+        .form-control {
+            &:focus {
+                border: 1px solid var(--text-color) !important;
+                box-shadow: 0 0 0 .125rem var(--text-color);
+                color: var(--text-color) !important;
+                background-color: var(--bg-color) !important;
+
+                &::placeholder {
+                    color: var(--text-color) !important;
+                }
+            }
         }
 
         @media (max-width: 768px) {
@@ -134,8 +198,6 @@ $lates_videos_info = $this->latest_videos_info;
 <body>
     <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
     <div class="container mt-5">
-        <h1 class="mb-4">YoYo Tube Video Player
-        </h1>
         <div class="row">
             <div class="col-md-8">
                 <div class="video-container mb-4">
@@ -144,28 +206,31 @@ $lates_videos_info = $this->latest_videos_info;
                             type="video/mp4">
                     </video>
                     <div class="controls">
+
                         <div class="seek-bar">
                             <div class="seek-bar-progress"></div>
                         </div>
-                        <button id="playPauseBtn"><i class="fas fa-play"></i></button>
-                        <button id="stopBtn"><i class="fas fa-stop"></i></button>
-                        <button id="muteBtn"><i class="fas fa-volume-up"></i></button>
-                        <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
-                        <select id="qualitySelect" class="form-select d-inline-block w-auto">
-                            <option value="240">240p</option>
-                            <option value="360">360p</option>
-                            <option value="480">480p</option>
-                        </select>
-                    </div>
-                    <div class="paywall d-none">
-                        <h2>Premium Content</h2>
-                        <p>Please subscribe to access this video.</p>
-                        <button class="btn btn-primary">Subscribe Now</button>
-                    </div>
-                    <div class="age-verification d-none">
-                        <h2>Age Restricted Content</h2>
-                        <p>You must be 18+ to view this video.</p>
-                        <button class="btn btn-primary">Verify Age</button>
+                        <div class="row">
+                            <div class="col-8">
+                                <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+                                <button id="stopBtn"><i class="fas fa-stop"></i></button>
+                                <button id="muteBtn"><i class="fas fa-volume-up"></i></button>
+                                <span class="like-dislike-container ">
+                                    <button class="like-dislike-btn me-0" id="likeBtn"><i class="fas fa-thumbs-up"></i>
+                                        <span id="likeCount">0</span></button>
+                                    <button class="like-dislike-btn" id="dislikeBtn"><i class="fas fa-thumbs-down"></i>
+                                        <span id="dislikeCount">0</span></button>
+                                </span>
+                            </div>
+                            <div class="col-4 d-flex align-items-center justify-content-end gap-2">
+                                <select id="qualitySelect" class="form-sm-select d-inline-block w-auto">
+                                    <option value="240">240p</option>
+                                    <option value="360">360p</option>
+                                    <option value="480">480p</option>
+                                </select>
+                                <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -184,16 +249,34 @@ $lates_videos_info = $this->latest_videos_info;
                     } else
                         echo $tags ?>
                             </span></p>
-                        <div class="yoyo-rating">
-                            <i class="fas fa-yoyo"></i>
-                            <i class="fas fa-yoyo"></i>
-                            <i class="fas fa-yoyo"></i>
-                            <i class="far fa-yoyo"></i>
-                            <i class="far fa-yoyo"></i>
-                            <span>(3.0)</span>
+                        <button id="reportBtn" class="btn btn-light mt-2 d-block ms-auto">Report Video</button>
+                    </div>
+
+                    <div class="comment-section">
+                        <h3>Comments</h3>
+                        <form id="commentForm" class="mb-3">
+                            <div class="mb-3">
+                                <textarea class="form-control" id="commentText" rows="3"
+                                    placeholder="Add a comment..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Post</button>
+                        </form>
+                        <div id="commentList">
+                            <!-- Existing comments -->
+                            <div class="comment">
+                                <p><strong>JohnDoe</strong>: Great video! Very informative.</p>
+                                <small>2 hours ago</small>
+                            </div>
+                            <div class="comment">
+                                <p><strong>Jane123</strong>: I learned a lot from this. Thanks for sharing!</p>
+                                <small>1 day ago</small>
+                            </div>
+                            <div class="comment">
+                                <p><strong>TechEnthusiast</strong>: Could you make a follow-up video on advanced techniques?
+                                </p>
+                                <small>3 days ago</small>
+                            </div>
                         </div>
-                        <button id="reportBtn" class="btn btn-warning mt-2">Report
-                            Video</button>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -219,97 +302,202 @@ $lates_videos_info = $this->latest_videos_info;
                                 </div>
                             </div>
                         </div>
-
                     <?php endforeach; ?>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        if ($('#darkModeToggle').prop('checked')) {
-            $('body').addClass('dark-mode');
-        }
-        const video = $('#videoPlayer')[0];
-        const seekBar = $('.seek-bar')[0];
-        const seekBarProgress = $('.seek-bar-progress')[0];
-        let isPlaying = false;
+        $(document).ready(function () {
+            if ($('#darkModeToggle').prop('checked')) {
+                $('body').addClass('dark-mode');
+            }
+            const video = $('#videoPlayer')[0];
+            const seekBar = $('.seek-bar')[0];
+            const seekBarProgress = $('.seek-bar-progress')[0];
+            let isPlaying = false;
 
-        // Play/Pause button
-        $('#playPauseBtn').click(function () {
-            if (isPlaying) {
+            // Play/Pause button
+            $('#playPauseBtn').click(function () {
+                if (isPlaying) {
+                    video.pause();
+                    $(this).html('<i class="fas fa-play"></i>');
+                } else {
+                    video.play();
+                    $(this).html('<i class="fas fa-pause"></i>');
+                }
+                isPlaying = !isPlaying;
+            });
+
+            // Stop button
+            $('#stopBtn').click(function () {
                 video.pause();
-                $(this).html('<i class="fas fa-play"></i>');
-            } else {
-                video.play();
-                $(this).html('<i class="fas fa-pause"></i>');
+                video.currentTime = 0;
+                isPlaying = false;
+                $('#playPauseBtn').html('<i class="fas fa-play"></i>');
+            });
+
+            // Mute/Unmute button
+            $('#muteBtn').click(function () {
+                video.muted = !video.muted;
+                $(this).html(video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>');
+            });
+
+            // Fullscreen button
+            $('#fullscreenBtn').click(function () {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.mozRequestFullScreen) {
+                    video.mozRequestFullScreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
+            });
+
+            // Quality switcher
+            $('#qualitySelect').change(function () {
+                const quality = $(this).val();
+                // In a real implementation, you would switch the video source here
+                console.log(`Switching to ${quality}p quality`);
+            });
+
+            // Seek bar functionality
+            video.addEventListener('timeupdate', function () {
+                const value = (100 / video.duration) * video.currentTime;
+                seekBarProgress.style.width = value + '%';
+            });
+
+            seekBar.addEventListener('click', function (e) {
+                const seekTime = (e.offsetX / this.offsetWidth) * video.duration;
+                video.currentTime = seekTime;
+            });
+
+            // Report button
+            $('#reportBtn').click(function () {
+                alert('Thank you for reporting this video. We will review it shortly.');
+            });
+            // Simulated playback stats tracking
+
+            // Utility function to debounce the button clicks
+            function debounce(func, delay) {
+                let timer;
+                return function (...args) {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => func.apply(this, args), delay);
+                };
             }
-            isPlaying = !isPlaying;
-        });
 
-        // Stop button
-        $('#stopBtn').click(function () {
-            video.pause();
-            video.currentTime = 0;
-            isPlaying = false;
-            $('#playPauseBtn').html('<i class="fas fa-play"></i>');
-        });
+            let likeCount = parseInt($('#likeCount').text(), 10);
+            let dislikeCount = parseInt($("#dislikeCount").text(), 10);
 
-        // Mute/Unmute button
-        $('#muteBtn').click(function () {
-            video.muted = !video.muted;
-            $(this).html(video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>');
-        });
+            $('#likeBtn').on("click", debounce(function () {
+                if ($(this).hasClass('active')) {
+                    // Remove like if already active
+                    $(this).removeClass('active');
+                    // Prevent negative count
+                    likeCount = Math.max(likeCount - 1, 0);
+                    sendDataToServer(1, "DELETE"); // Remove the like from db
+                } else {
+                    // Add like, remove dislike if active
+                    likeCount++;
+                    $(this).addClass('active');
 
-        // Fullscreen button
-        $('#fullscreenBtn').click(function () {
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
-            } else if (video.mozRequestFullScreen) {
-                video.mozRequestFullScreen();
-            } else if (video.webkitRequestFullscreen) {
-                video.webkitRequestFullscreen();
-            } else if (video.msRequestFullscreen) {
-                video.msRequestFullscreen();
+                    if ($('#dislikeBtn').hasClass('active')) {
+                        $('#dislikeBtn').removeClass('active');
+                        dislikeCount = Math.max(dislikeCount - 1, 0); // Prevent negative count
+                    }
+                    sendDataToServer(1, "INSERT"); // Add the like
+                }
+                updateLikeDislikeCounts();
+            }, 300)); // 500ms debounce delay
+
+            $('#dislikeBtn').on("click", debounce(function () {
+                if ($(this).hasClass('active')) {
+                    // Remove dislike if already active
+                    $(this).removeClass('active');
+                    dislikeCount = Math.max(dislikeCount - 1, 0); // Prevent negative count
+                    sendDataToServer(0, "DELETE"); // Remove the dislike
+                } else {
+                    // Add dislike, remove like if active
+                    dislikeCount++;
+                    $(this).addClass('active');
+
+                    if ($('#likeBtn').hasClass('active')) {
+                        $('#likeBtn').removeClass('active');
+                        likeCount = Math.max(likeCount - 1, 0); // Prevent negative count
+                        // sendDataToServer(1, "DELETE"); // Remove like if active
+                    }
+                    sendDataToServer(0, "INSERT"); // Add the dislike
+                }
+                updateLikeDislikeCounts();
+            }, 300)); // 500ms debounce delay
+
+
+            function updateLikeDislikeCounts() {
+                $('#likeCount').text(likeCount);
+                $('#dislikeCount').text(dislikeCount);
+            }
+            function sendDataToServer(like_status, action) {
+                $.ajax({
+                    url: "<?= BASE_URL . '/' . 'videos/watch/likes' ?>",
+                    type: "POST",
+                    data: {
+                        video_id: "<?= $this->current_video_info['id'] ?>",
+                        like_status: like_status,
+                        action: action
+                    },
+                    success: function (data) {
+                        console.log('Server Response:', data); // Handle the response
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error); // Handle errors
+                    }
+                });
+            }
+
+            // Comment functionality
+            $('#commentForm').submit(function (e) {
+                e.preventDefault();
+                const commentText = $('#commentText').val().trim();
+                if (commentText) {
+                    addComment(commentText);
+                    $('#commentText').val('');
+                }
+            });
+
+            function addComment(commenttext) {
+                const commentHtml = `
+                    <div class="comment">
+                        <p><strong>CurrentUser</strong>: ${commenttext}</p>
+                        <small>Just now</small>
+                    </div>
+                `;
+                $('#commentList').prepend(commentHtml);
+                saveCommentToDatabase(commenttext);
+            }
+            function saveCommentToDatabase(commenttext) {
+                $.ajax({
+                    url: "<?= BASE_URL . "/" . "videos/watch/comments" ?>",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        video_id: "<?= $this->current_video_info['id'] ?>",
+                        comment: commenttext
+                    },
+                    success: function (data) {
+                        if (!data.success) {
+                            console.error(data.error);
+                        }
+                        console.log('Server Response:', data.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                })
             }
         });
-
-        // Quality switcher
-        $('#qualitySelect').change(function () {
-            const quality = $(this).val();
-            // In a real implementation, you would switch the video source here
-            console.log(`Switching to ${quality}p quality`);
-        });
-
-        // Seek bar functionality
-        video.addEventListener('timeupdate', function () {
-            const value = (100 / video.duration) * video.currentTime;
-            seekBarProgress.style.width = value + '%';
-        });
-
-        seekBar.addEventListener('click', function (e) {
-            const seekTime = (e.offsetX / this.offsetWidth) * video.duration;
-            video.currentTime = seekTime;
-        });
-
-        // Report button
-        $('#reportBtn').click(function () {
-            alert('Thank you for reporting this video. We will review it shortly.');
-        });
-
-        // Dark mode toggle
-        $('#darkModeToggle').change(function () {
-            $('body').toggleClass('dark-mode');
-        });
-        // Simulated playback stats tracking
-        setInterval(() => {
-            console.log(`Current playback time: ${video.currentTime}`);
-        }, 5000);
-
-        // Simulated content access control
-        // Uncomment these lines to test the paywall or age verification overlay
-        // $('.paywall').removeClass('d-none');
-        // $('.age-verification').removeClass('d-none');
     </script>
 </body>
 

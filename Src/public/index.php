@@ -74,6 +74,9 @@ $Router
     ->get("/videos/watch", [WatchVideoController::class, "load_video_watch_page"])
     ->get("/home/watch", [WatchVideoController::class, "load_video_watch_page"])
 
+    ->post("/videos/watch/likes", [WatchVideoController::class, "like_dislike_video"])
+    ->post("/videos/watch/comments", [WatchVideoController::class, "video_comments"])
+
     // Profile 
     ->get("/profile", [ProfileController::class, "load_profile_page"])
     ->post("/profile", [ProfileController::class, "updateProfile"])

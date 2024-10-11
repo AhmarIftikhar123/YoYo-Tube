@@ -28,6 +28,12 @@ session_write_close();
 <?php $is_user_registered = $_COOKIE['user_name'] ?? "" ?>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+    body {
+        font-family: 'Oswald', sans-serif !important;
+    }
+    
     .navbar {
         background-color: #1f1f1f;
     }
@@ -41,7 +47,11 @@ session_write_close();
         color: #e0e0e0 !important;
         transition: color 0.3s ease;
     }
-
+    .form-check-input{
+        &:checked{
+            background-color: #ff6b6b;
+        }
+    }
     .nav-link:hover,
     .nav-link.active {
         color: #000 !important;
@@ -150,13 +160,14 @@ session_write_close();
     // Save theme preference
     $('#darkModeToggle').change(function () {
         if (this.checked) {
-            $('body').addClass('dark-theme');
+            $('body').addClass('dark-theme dark-mode');
             localStorage.setItem('theme', 'dark');
         } else {
             localStorage.setItem('theme', 'light');
-            $('body').removeClass('dark-theme');
-        }
-        const isOnPaymentPage = localStorage.getItem('isOnPaymentPage');
+            $('body').removeClass('dark-theme dark-mode');
+        };
+
+        const isOnPaymentPage = localStorage.getItem('isOnPaymentPage')
         if (isOnPaymentPage) {
             updateCardStyles();
         }
