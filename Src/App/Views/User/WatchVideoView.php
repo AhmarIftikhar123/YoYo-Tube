@@ -1,6 +1,10 @@
 <?php
 $tags = json_decode($this->current_video_info['tags']);
 $lates_videos_info = $this->latest_videos_info;
+$comments = $this->comments;
+$username = $_COOKIE['user_name'];
+$is_user_like = !empty($this->is_user_like_video['is_liked']) ? "active" : "";
+$is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_user_like_video['is_liked'] === 0) ? "active" : "";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +27,30 @@ $lates_videos_info = $this->latest_videos_info;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --border-color: #dee2e6;
+            --modal-bg: #ffffff;
+            --modal-text: #212529;
+            --modal-header-bg: #f8f9fa;
+            --modal-header-text: #212529;
+            --loader-color: rgba(0, 0, 0, 0.5);
+            /* Light theme for toast */
+            --toast-bg: var(--card-bg);
+            --toast-text: var(--text-color);
+            --toast-header-bg: var(--modal-header-bg);
+            --toast-header-text: var(--modal-header-text);
+
+        }
+
+        .dark-mode {
+            --modal-bg: #343a40;
+            --modal-text: #f8f9fa;
+            --modal-header-bg: #212529;
+            --modal-header-text: #f8f9fa;
+            --loader-color: rgba(255, 255, 255, 0.5);
+            /* Dark theme for toast */
+            --toast-bg: var(--modal-bg);
+            --toast-text: var(--modal-text);
+            --toast-header-bg: var(--modal-header-bg);
+            --toast-header-text: var(--modal-header-text);
         }
 
         body {
@@ -127,6 +155,34 @@ $lates_videos_info = $this->latest_videos_info;
             --border-color: #555;
         }
 
+        .modal-content {
+            background-color: var(--modal-bg);
+            color: var(--modal-text);
+        }
+
+        .modal-header {
+            background-color: var(--modal-header-bg);
+            color: var(--modal-header-text);
+        }
+
+        .modal-footer .btn-primary {
+            background-color: var(--btn-primary-bg);
+            color: var(--btn-primary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            border: 1px solid var(--text-color) !important;
+
+            &:hover {
+                background-color: var(--text-color) !important;
+                color: var(--bg-color) !important;
+                border-color: var(--text-color) !important;
+
+            }
+        }
+
         .card {
             background-color: var(--card-bg);
             border-color: var(--border-color);
@@ -186,6 +242,24 @@ $lates_videos_info = $this->latest_videos_info;
             }
         }
 
+        /* Report Toast */
+        .toast {
+            background-color: var(--toast-bg);
+            color: var(--toast-text);
+            border-color: var(--border-color);
+        }
+
+        .toast-header {
+            background-color: var(--toast-header-bg);
+            color: var(--toast-header-text);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toast-body {
+            color: var(--toast-text);
+        }
+
+
         @media (max-width: 768px) {
             .controls button {
                 font-size: 1rem;
@@ -216,10 +290,16 @@ $lates_videos_info = $this->latest_videos_info;
                                 <button id="stopBtn"><i class="fas fa-stop"></i></button>
                                 <button id="muteBtn"><i class="fas fa-volume-up"></i></button>
                                 <span class="like-dislike-container ">
-                                    <button class="like-dislike-btn me-0" id="likeBtn"><i class="fas fa-thumbs-up"></i>
-                                        <span id="likeCount">0</span></button>
-                                    <button class="like-dislike-btn" id="dislikeBtn"><i class="fas fa-thumbs-down"></i>
-                                        <span id="dislikeCount">0</span></button>
+                                    <button class="like-dislike-btn me-0
+                                    <?= $is_user_like ?>
+                                    " id="likeBtn"><i class="fas fa-thumbs-up"></i>
+                                        <span
+                                            id="likeCount"><?= htmlspecialchars($this->current_video_info['likes_count']) ?></span></button>
+                                    <button class="like-dislike-btn
+                                    <?= $is_user_dislike ?>
+                                    " id="dislikeBtn"><i class="fas fa-thumbs-down"></i>
+                                        <span
+                                            id="dislikeCount"><?= htmlspecialchars($this->current_video_info['dislikes_count']) ?></span></button>
                                 </span>
                             </div>
                             <div class="col-4 d-flex align-items-center justify-content-end gap-2">
@@ -249,7 +329,7 @@ $lates_videos_info = $this->latest_videos_info;
                     } else
                         echo $tags ?>
                             </span></p>
-                        <button id="reportBtn" class="btn btn-light mt-2 d-block ms-auto">Report Video</button>
+                        <button id="reportBtn" class="btn btn-primary mt-2 d-block ms-auto">Report Video</button>
                     </div>
 
                     <div class="comment-section">
@@ -263,25 +343,31 @@ $lates_videos_info = $this->latest_videos_info;
                         </form>
                         <div id="commentList">
                             <!-- Existing comments -->
-                            <div class="comment">
-                                <p><strong>JohnDoe</strong>: Great video! Very informative.</p>
-                                <small>2 hours ago</small>
-                            </div>
-                            <div class="comment">
-                                <p><strong>Jane123</strong>: I learned a lot from this. Thanks for sharing!</p>
-                                <small>1 day ago</small>
-                            </div>
-                            <div class="comment">
-                                <p><strong>TechEnthusiast</strong>: Could you make a follow-up video on advanced techniques?
-                                </p>
-                                <small>3 days ago</small>
-                            </div>
-                        </div>
+                        <?php if (empty($comments)): ?>
+                            <p>No comments yet.</p>
+                        <?php else: ?>
+                            <?php foreach ($comments as $comment): ?>
+                                <div class="comment">
+                                    <p><strong>
+                                            <?php
+                                            if ($comment['commenter_name'] === $_COOKIE['user_name'] || $comment['commenter_name'] === $this->current_video_info['user_id']) {
+                                                echo "You";
+                                            } else {
+                                                echo htmlspecialchars($comment['commenter_name']);
+                                            }
+                                            ?>
+                                        </strong>: <?= htmlspecialchars($comment['comment_text']) ?>
+                                    </p>
+                                    <small><?= htmlspecialchars($comment['comment_created_at']) ?></small>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <h3>Related Videos</h3>
-                    <div id="relatedVideos">
+            </div>
+            <div class="col-md-4">
+                <h3>Related Videos</h3>
+                <div id="relatedVideos">
                     <?php foreach ($lates_videos_info as $video): ?>
                         <div class="card mb-3">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">
@@ -304,6 +390,43 @@ $lates_videos_info = $this->latest_videos_info;
                         </div>
                     <?php endforeach; ?>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!----------- Report Modal ----------->
+
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="reportModalLabel">Report message</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"
+                                placeholder="E.g. The video contin some inappropriate content"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="sendReportBtn">Send Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Report Toast -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="reportToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">YoYo Tube</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+
             </div>
         </div>
     </div>
@@ -373,12 +496,6 @@ $lates_videos_info = $this->latest_videos_info;
                 const seekTime = (e.offsetX / this.offsetWidth) * video.duration;
                 video.currentTime = seekTime;
             });
-
-            // Report button
-            $('#reportBtn').click(function () {
-                alert('Thank you for reporting this video. We will review it shortly.');
-            });
-            // Simulated playback stats tracking
 
             // Utility function to debounce the button clicks
             function debounce(func, delay) {
@@ -470,7 +587,7 @@ $lates_videos_info = $this->latest_videos_info;
             function addComment(commenttext) {
                 const commentHtml = `
                     <div class="comment">
-                        <p><strong>CurrentUser</strong>: ${commenttext}</p>
+                        <p><strong>You</strong>: ${commenttext}</p>
                         <small>Just now</small>
                     </div>
                 `;
@@ -498,6 +615,40 @@ $lates_videos_info = $this->latest_videos_info;
                 })
             }
         });
+        // ------------ Report Modal ------------
+        // Report button
+        $('#reportBtn').click(function () {
+            $('#reportModal').modal('show');
+        });
+        // Send reportBtn
+        $("#sendReportBtn").on("click", function () {
+            const message = $("#message-text").val();
+
+            if (message) {
+                $.ajax({
+                    url: "<?= BASE_URL . '/' . 'videos/watch/report' ?>",
+                    type: "POST",
+                    dataType: "json",  // Ensure server returns JSON
+                    data: {
+                        message: message,
+                        video_id: "<?= $this->current_video_info['id'] ?>",
+                        user_id: "<?= $this->user_id ?>"
+                    },
+                    success: function (data) {
+                        if (!data.success) {
+                            console.error(data.error);
+                        }
+                        // Update toast message and show it
+                        $('#reportToast .toast-body').text(data.message);
+                        $('#reportToast').toast('show');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+
     </script>
 </body>
 

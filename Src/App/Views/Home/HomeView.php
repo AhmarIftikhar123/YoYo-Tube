@@ -272,7 +272,6 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
     </footer>
 
     <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const adultContentSwitch = $('#adultContentSwitch');
         const darkModeToggle = $('#darkModeToggle');

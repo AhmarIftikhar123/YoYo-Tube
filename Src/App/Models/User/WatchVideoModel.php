@@ -1,5 +1,6 @@
 <?php
 namespace Src\App\Models\User;
+use PDO;
 use Src\App\Modle;
 class WatchVideoModel extends Modle
 {
@@ -10,10 +11,12 @@ class WatchVideoModel extends Modle
         }
         try {
             $this->db->beginTransaction();
-            $current_video_info = $this->get_current_video_info($data);
-            $latest_videos_info = $this->get_lates_videos();
+            $current_video_info = $this->get_current_video_and_likes_info($data);
+            $latest_videos_info = $this->get_lates_videos($data);
+            $comments = $this->get_video_comments($data['video_id']);
+            $is_user_like_video = $this->get_user_like_status($data);
             $this->db->commit();
-            return ['current_video_info' => $current_video_info, 'latest_videos_info' => $latest_videos_info];
+            return ["user_id" => static::$user_id, 'current_video_info' => $current_video_info, 'latest_videos_info' => $latest_videos_info, 'comments' => $comments, "is_user_like_video" => $is_user_like_video,];
         } catch (\PDOException $e) {
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();
@@ -22,27 +25,36 @@ class WatchVideoModel extends Modle
         }
 
     }
-    public function get_current_video_info($data)
+    private function get_current_video_and_likes_info($data)
     {
         if (!static::$user_registered) {
             $this->redirect_user_to_login();
         }
         try {
-            $sql = "SELECT * FROM videos WHERE id = :video_id AND is_paid = :is_paid";
+            $sql = "SELECT 
+        v.id, v.title, v.description, v.file_path, v.category, v.tags, 
+        v.is_paid, v.created_at, v.updated_at, v.thumbnail_path, v.price,
+        SUM(CASE WHEN vld.is_liked = 1 THEN 1 ELSE 0 END) AS likes_count,
+        SUM(CASE WHEN vld.is_liked = 0 THEN 1 ELSE 0 END) AS dislikes_count
+        FROM videos v
+        LEFT JOIN video_likes_dislikes vld ON v.id = vld.video_id
+        WHERE v.id = :video_id
+        GROUP BY v.id;
+        ";
+
             $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':video_id', $data['video_id']);
-            $stmt->bindParam(':is_paid', $data['is_paid']);
-            $stmt->execute();
+            $stmt->execute(['video_id' => $data['video_id']]);
             $result = $stmt->fetch();
             return !empty($result) ? $result : throw new \Exception("Video not found");
         } catch (\PDOException $e) {
             throw $e;
         }
     }
-    public function get_lates_videos()
+
+    public function get_lates_videos($limit = 6)
     {
         try {
-            $sql = "SELECT * FROM videos ORDER BY created_at DESC LIMIT 6";
+            $sql = "SELECT id, user_id, title, is_paid, thumbnail_path FROM videos ORDER BY created_at DESC LIMIT " . (int) $limit;
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll();
@@ -50,6 +62,52 @@ class WatchVideoModel extends Modle
             throw $e;
         }
     }
+    public function get_video_comments($videoId, $limit = 10, $offset = 0)
+    {
+        try {
+            $sql = "SELECT 
+                        c.comment AS comment_text, 
+                        c.created_at AS comment_created_at, 
+                        u.username AS commenter_name
+                    FROM comments c
+                    JOIN users u ON c.user_id = u.id
+                    WHERE c.video_id = :video_id
+                    ORDER BY c.created_at DESC
+                    LIMIT :limit OFFSET :offset";
+
+            $stmt = $this->db->prepare($sql);
+
+            // Bind parameters
+            $stmt->bindParam(':video_id', $videoId, PDO::PARAM_INT);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (\PDOException $e) {
+            throw $e;
+        }
+    }
+    public function get_user_like_status($data)
+    {
+        try {
+            $sql = "SELECT is_liked 
+                FROM video_likes_dislikes 
+                WHERE video_id = :video_id AND user_id = :user_id 
+                LIMIT 1";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['video_id' => $data['video_id'], 'user_id' => static::$user_id]);
+
+            // Fetch the like status
+            $likeStatus = $stmt->fetchColumn(); // Use fetchColumn to get the value directly
+            // Return the like status (1 = liked, 0 = disliked, null = no action)
+            return $likeStatus !== false ? $likeStatus : null;
+        } catch (\PDOException $e) {
+            throw $e;
+        }
+    }
+
     public function is_payment_history_exist($user_id, $video_id)
     {
         try {
@@ -161,6 +219,31 @@ class WatchVideoModel extends Modle
             $stmt->bindParam(':comment', $data['comment']);
             $stmt->execute();
             return $stmt->rowCount() > 0 ? true : false;
+        } catch (\PDOException $e) {
+            throw $e;
+        }
+    }
+    //-------------------- Report video code--------------------
+    // fromat report data
+    public function format_report_post_data(array $data)
+    {
+        return [
+            "user_id" => filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT),
+            "video_id" => filter_input(INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT),
+            "message" => filter_input(INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+        ];
+    }
+    public function report_video(array $data)
+    {
+        $sql = "INSERT INTO reports (user_id, video_id, message) VALUES (:user_id, :video_id, :message)";
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':user_id', $data['user_id']);
+            $stmt->bindParam(':video_id', $data['video_id']);
+            $stmt->bindParam(':message', $data['message']);
+            $stmt->execute();
+            // Check if rows were affected and return true or false
+            return $stmt->rowCount() > 0;
         } catch (\PDOException $e) {
             throw $e;
         }

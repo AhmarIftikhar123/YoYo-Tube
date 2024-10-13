@@ -14,13 +14,12 @@ class WatchVideoController
           public function load_video_watch_page(string $path = "User/WatchVideoView", array $data = []): Views
           {
                     $video_info = [
-                              "user_id" => $_GET['user_id'],
-                              "video_id" => $_GET['video_id'],
+                              "user_id" => (int) $_GET['user_id'],
+                              "video_id" => (int) $_GET['video_id'],
                               "is_paid" => $_GET['is_paid']
                     ];
 
                     $data = $this->WatchVideoModel->get_current_latest_video_info($video_info);
-
                     // Start the session if it has not been started.
                     if (session_status() === PHP_SESSION_NONE) {
                               session_start();
@@ -37,7 +36,6 @@ class WatchVideoController
                     // Check if the user is the video owner.
                     if (!empty($appUser_id) && $this->WatchVideoModel->is_video_owner($video_info, $appUser_id)) {
                               $path = "User/WatchVideoView";
-                              var_dump("true");
                     } else {
                               // Check if the video is free.
                               if ($data['current_video_info']['price'] <= 0) {
@@ -66,10 +64,22 @@ class WatchVideoController
                     $is_comment_stored = $this->WatchVideoModel->add_video_comments($data);
                     if ($is_comment_stored) {
                               http_response_code(200);
-                              echo json_encode(['message' => 'Comment added successfully.', "success" => true,"error" => "Error"]);
+                              echo json_encode(['message' => 'Comment added successfully.', "success" => true, "error" => "Error"]);
                               exit();
                     }
                     http_response_code(400);
                     echo json_encode(['error' => 'Failed to add comment.', "success" => false]);
+          }
+          public function report_video()
+          {
+                    $data = $this->WatchVideoModel->format_report_post_data($_POST);
+                    $is_report_stored = $this->WatchVideoModel->report_video($data);
+                    if ($is_report_stored) {
+                              http_response_code(200);
+                              echo json_encode(['message' => 'Report Sent successfully.', "success" => true, "error" => "Error"]);
+                              exit();
+                    }
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Failed to add report.', "success" => false]);
           }
 }

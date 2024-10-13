@@ -351,6 +351,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
             console.log('Error removing isOnPaymentPage from localStorage:', error);
         }
     });
+    
 </script>
 
 
