@@ -14,9 +14,9 @@ class UploadController
           public function upload_video()
           {
                     $video = $_FILES['video'];
-
                     if (empty($video['name'])) {
-                              return $this->load_upload_page(data: ["upload_video_error" => "No video was uploaded"]);
+                              echo json_encode(["success" => false, "message" => "No video was uploaded"]);
+                              exit;
                     }
                     $uploadModel = new UploadModel();
 
@@ -56,7 +56,6 @@ class UploadController
                     if (array_key_exists('upload_video_error', $is_video_uploaded)) {
                               return $this->load_upload_page(data: $is_video_uploaded);
                     }
-
                     /* -------- Upload Video Code Fininsh Here  --------*/
 
                     $video_data = [
@@ -67,13 +66,26 @@ class UploadController
                               'videoTags' => $post_values['videoTags'],
                               "category" => $post_values['videoCategory'],
                               "is_paid" => $post_values['isPaid'],
-                              "price" => explode("$",$post_values['price'])[1],
+                              "price" => $post_values['price'],
                     ];
                     $is_video_uploaded_success = $uploadModel->add_video_to_database($video_data);
+                    ob_start(); // Start output buffering
+                    header('Content-Type: application/json');
+
                     if (is_string($is_video_uploaded_success)) {
-                              return $this->load_upload_page("upload/UploadSuccessView", data: ["file_name" => $video_info['name'], "video_category" => $post_values['videoCategory']]);
+                              echo json_encode([
+                                        "success" => true,
+                                        "message" => "Video Uploaded Successfully",
+                                        "file_name" => $video_info['name'],
+                                        "video_category" => $post_values['videoCategory']
+                              ]);
                     } else {
-                              return $this->load_upload_page(data: $is_video_uploaded_success);
+                              echo json_encode([
+                                        "success" => "error",
+                                        "message" => "Failed to Upload Video"
+                              ]);
                     }
+                    ob_end_flush(); // Flush the output buffer and send output
+
           }
 }

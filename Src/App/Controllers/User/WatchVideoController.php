@@ -76,7 +76,7 @@ class WatchVideoController
                     $is_report_stored = $this->WatchVideoModel->report_video($data);
                     if ($is_report_stored) {
                               http_response_code(200);
-                              echo json_encode(['message' => 'Report Sent successfully.', "success" => true, "error" => "Error"]);
+                              echo json_encode(['message' => 'Report Sent successfully.We will review it shortly', "success" => true, "error" => "Error"]);
                               exit();
                     }
                     http_response_code(400);

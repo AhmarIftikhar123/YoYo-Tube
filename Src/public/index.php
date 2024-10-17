@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-// Make /admin/posts page dynamic
-//  login with fb
+// update front end for proper inputs of the video upload
+// improve UploadController for handling ajax properly.
 
 use Src\App\{
     App,

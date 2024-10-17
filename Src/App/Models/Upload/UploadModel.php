@@ -27,8 +27,8 @@ class UploadModel extends Modle
             $sanitizedData['isPaid'] = 0;
         }
         if (!array_key_exists('price', $postData) || !is_numeric($sanitizedData['price'])) {
-            $sanitizedData['price'] = "$0";
-        } 
+            $sanitizedData['price'] = "0";
+        }
         return $sanitizedData;
     }
 
@@ -194,9 +194,9 @@ class UploadModel extends Modle
             );
 
             // assume user id is 1 
-            $userId = $_SESSION["user_id"];
+            $userId = static::$user_id;
             if (!$userId) {
-                throw new Exception("User id not found");
+                $this->redirect_user_to_login();
             }
             $isInserted = $stmt->execute([
                 ':user_id' => $userId,

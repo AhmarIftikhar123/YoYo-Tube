@@ -1,5 +1,6 @@
 <?php
 $tags = json_decode($this->current_video_info['tags']);
+$current_video_id = $this->current_video_info['id'];
 $lates_videos_info = $this->latest_videos_info;
 $comments = $this->comments;
 $username = $_COOKIE['user_name'];
@@ -339,7 +340,7 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                                 <textarea class="form-control" id="commentText" rows="3"
                                     placeholder="Add a comment..."></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Post</button>
+                            <button type="submit" class="btn btn-primary">Post Comment</button>
                         </form>
                         <div id="commentList">
                             <!-- Existing comments -->
@@ -414,6 +415,7 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="sendReportBtn">Send Report</button>
+                    <?php include dirname(__DIR__) . "/partials/Loader.php"; ?>
                 </div>
             </div>
         </div>
@@ -561,7 +563,7 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                     url: "<?= BASE_URL . '/' . 'videos/watch/likes' ?>",
                     type: "POST",
                     data: {
-                        video_id: "<?= $this->current_video_info['id'] ?>",
+                        video_id: "<?= $current_video_id ?>",
                         like_status: like_status,
                         action: action
                     },
@@ -600,7 +602,7 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                     type: "POST",
                     dataType: "json",
                     data: {
-                        video_id: "<?= $this->current_video_info['id'] ?>",
+                        video_id: "<?= $current_video_id ?>",
                         comment: commenttext
                     },
                     success: function (data) {
@@ -623,15 +625,15 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
         // Send reportBtn
         $("#sendReportBtn").on("click", function () {
             const message = $("#message-text").val();
-
             if (message) {
+                $('.loader ').show();
                 $.ajax({
                     url: "<?= BASE_URL . '/' . 'videos/watch/report' ?>",
                     type: "POST",
                     dataType: "json",  // Ensure server returns JSON
                     data: {
                         message: message,
-                        video_id: "<?= $this->current_video_info['id'] ?>",
+                        video_id: "<?= $current_video_id ?>",
                         user_id: "<?= $this->user_id ?>"
                     },
                     success: function (data) {
@@ -640,6 +642,12 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                         }
                         // Update toast message and show it
                         $('#reportToast .toast-body').text(data.message);
+                        // hide the report Modal
+
+                        $('#reportModal').modal('hide');
+                        $('.loader ').hide();
+
+                        // show Toast 
                         $('#reportToast').toast('show');
                     },
                     error: function (xhr, status, error) {
