@@ -38,23 +38,25 @@ class UploadModel extends Modle
         $errors = [];
 
         if (empty($title)) {
-            $errors['upload_title_error'] = 'Title is required';
+            $errors['videoTitleError'] = 'Title is required';
         }
 
         if (empty($description)) {
-            $errors['upload_description_error'] = 'Description is required';
+            $errors['videoDescriptionError'] = 'Description is required';
         }
 
         if (strlen($description) < 100) {
-            $errors['upload_description_error'] = 'Description should be at least 100 words';
+            $errors['videoDescriptionError'] = 'Description should be at least 100 words';
         }
 
         if (strlen($title) < 20) {
-            $errors['upload_title_error'] = 'Title should be at least 20 words';
+            $errors['videoTitleError'] = 'Title should be at least 20 words';
         }
 
         if (empty($tags)) {
-            $errors['upload_tags_error'] = 'Tags are required';
+            $errors['videoTagsError'] = 'Tags are required';
+        } elseif (count(explode(",", $tags)) < 3) {
+            $errors['videoTagsError'] = "Please enter at least 3 tags.";
         }
 
         return $errors;
@@ -82,7 +84,7 @@ class UploadModel extends Modle
         ;
         if ($videoSize > 600000000) {
             return [
-                "upload_video_error" => "Video size should be less than 60mb"
+                "uploadError" => "Video size should be less than 60mb"
             ];
         }
         return [];
@@ -128,7 +130,7 @@ class UploadModel extends Modle
             ];
         }
         return [
-            'upload_video_error' => 'Failed to upload video'
+            'uploadError' => 'Failed to upload video'
         ];
     }
 

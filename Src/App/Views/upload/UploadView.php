@@ -21,7 +21,6 @@
             --modal-header-bg: #f8f9fa;
             --modal-header-text: #212529;
             --loader-color: rgba(0, 0, 0, 0.5);
-            --toast-bg: var(--card-bg);
             --toast-text: var(--text-color);
             --toast-header-bg: var(--modal-header-bg);
             --toast-header-text: var(--modal-header-text);
@@ -37,7 +36,6 @@
             --modal-header-bg: #212529;
             --modal-header-text: #f8f9fa;
             --loader-color: rgba(255, 255, 255, 0.5);
-            --toast-bg: var(--modal-bg);
             --toast-text: var(--modal-text);
             --toast-header-bg: var(--modal-header-bg);
             --toast-header-text: var(--modal-header-text);
@@ -76,7 +74,6 @@
         }
 
         .toast {
-            background-color: var(--toast-bg);
             color: var(--toast-text);
             border-color: var(--border-color);
         }
@@ -150,7 +147,7 @@
             <!-- Video Upload Section -->
             <div class="mb-4">
                 <div class="file-drop-area" id="fileDropArea">
-                    <p class="m-0">Drag and drop your video file here or click to select</p>
+                    <p class="m-0" id="SelectVideo">Drag and drop your video file here or click to select</p>
                     <input type="file" id="videoFile" accept="video/*" name="video" style="display: none;">
                     <small class="text-danger" id="uploadError"><?= $this->upload_video_error ?? "" ?></small>
                 </div>
@@ -166,14 +163,15 @@
                 </div>
                 <div class="mb-3">
                     <label for="videoDescription" class="form-label">Description</label>
-                    <textarea class="form-control" id="videoDescription" rows="3" name="videoDescription" placeholder="Enter video description"></textarea>
+                    <textarea class="form-control" id="videoDescription" rows="3" name="videoDescription"
+                        placeholder="Enter video description"></textarea>
                     <small class="text-danger"
                         id="videoDescriptionError"><?= $this->upload_description_error ?? "" ?></small>
                 </div>
                 <div class="mb-3">
                     <label for="videoTags" class="form-label">Tags</label>
                     <input type="text" class="form-control" id="videoTags" name="videoTags"
-                        placeholder="Enter tags separated by commas">
+                        placeholder="Enter At least 3 tags separated by commas" >
                     <small class="text-danger" id="videoTagsError"><?= $this->upload_tags_error ?? "" ?></small>
                 </div>
                 <div id="selectedTags" class="mb-3"></div>
@@ -236,7 +234,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <strong>Message:</strong>
-                        <p id="uploadModalBody" class="text-danger"></p>
+                        <p id="uploadModalBody" class="text-Success"></p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -247,7 +245,7 @@
     </div>
     <!-- Upload Toast -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="uploadToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="uploadToast" class="toast bg-success" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">YoYo Tube</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -312,9 +310,9 @@
                 if (getFile.type.startsWith('video/')) {
                     // Here you would typically handle the file, e.g., prepare it for upload
                     $('#uploadError').text('');
-                    console.log('Video file selected:', getFile.name);
+                    $('#SelectVideo').text(getFile.name);
                 } else {
-                    alert('Please select a valid video file.');
+                    $('#uploadError').text('Please select a valid video file.');
                 }
             }
         }
@@ -329,12 +327,17 @@
             $('#price').prop('required', this.checked);
         });
 
-        // Upload video with Ajax on clicking submit btn
+        // ------- Upload video with Ajax on clicking submit btn ----------
+        let uploadSuccess = false;
+        function handleUploadErrors(errors) {
+            $.each(errors, function (key, value) {
+                $(`#${key}`).text(value);
+            });
+        }
         $('#uploadBtn').on("click", function (e) {
             // Prevent default form submission
             e.preventDefault();
-            // $('#uploadModal').modal('show');
-            // return;
+
             const formData = new FormData();
             const videoFile = $('#videoFile')[0].files[0];
 
@@ -365,6 +368,7 @@
                 url: '<?= BASE_URL . "/upload" ?>',
                 type: 'POST',
                 data: formData,
+                dataType: "json",
                 contentType: false,
                 processData: false,
                 xhr: function () {
@@ -383,21 +387,23 @@
                 success: function (response) {
                     if (response.success) {
                         addUploadText("Video Uploading Completed");
-                        $('.toast-body').text(`${response.message}`);
-                        $('#uploadToast').show();
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
+                        $('#uploadModalBody').html(`${response.message}! </br> <strong style="color: var(--toast-text);">Go To Home Page Click  <a href="/home" class="underline">here</a></strong>`);
+                        $('#uploadModal').modal("show");
+                        uploadSuccess = true;
                     } else {
-                        console.log(response.message);
+                        if (typeof response.message === 'object') {
+                            handleUploadErrors(response.message);
+                            addUploadText("Upload Video");
+                            return;
+                        }
                         $('#uploadModalBody').text(`${response.message}`);
                         $('#uploadModal').modal("show");
-                        addUploadText("Upload Video");
+                        return;
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     addUploadText("Upload Video");
-                    $('#uploadMsg').text(`${response.message}`);
+                    $('#uploadModalBody').text(`Error occurred during upload: ${errorThrown}`);
                     $('#uploadModal').modal('show');
                     $('.text-danger').text('');
                 }
@@ -446,11 +452,17 @@
 
             // Validate tags
             const videoTags = $('#videoTags').val().trim();
-            if (!videoTags) {
+            console.log(`Tags input: ${videoTags}`);
+            const isValidTags = processVideoTags(videoTags);
+            if (videoTags.length <= 0) {
                 $('#videoTagsError').text("Tags are required.");
                 isValid = false;
-            } else {
-                formData.append('videoTags', videoTags);
+            } else if (typeof isValidTags === "string") {
+                isValid = false;
+                $('#videoTagsError').text(isValidTags);
+            }
+            else {
+                formData.append('videoTags', isValidTags);
             }
 
             // Validate category
@@ -484,6 +496,58 @@
             return isValid;
         }
 
+        // ---------- Video Tags Validation ----------
+        function debounce(cb, delay = 500) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => cb.apply(this, args), delay);
+            }
+        }
+        const tagsDebounce = debounce((videoTags) => {
+            const tagsArray = processVideoTags(videoTags);
+
+            if (!Array.isArray(tagsArray)) {
+                $('#videoTagsError').text(tagsArray);
+                return;
+            }
+            return tagsArray;
+        });
+        function processVideoTags(input) {
+            // Define the regex pattern
+            const pattern = /^[a-zA-Z]+(,[a-zA-Z]+)*$/;
+
+            // Validate the input
+            if (pattern.test(input)) {
+                // Sanitize input (trim spaces and remove unwanted characters)
+                const sanitizedInput = input.replace(/[^a-zA-Z,]/g, '');
+
+                // Convert the input to an array of tags
+                const tags = sanitizedInput.split(',');
+                // You can now store or further process the tags
+                return tags;
+            } else if (input.split(',').length < 3) {
+                return "Please enter at least 3 tags.";
+            }
+            else {
+                // If input is invalid, return an error message
+                return "Please enter alphabetic tags separated by commas.";
+            }
+        }
+        $('#videoTags').on("input", function () {
+            const videoTags = $('#videoTags').val().trim();
+            if (videoTags.length > 0) {
+                $('#videoTagsError').text("");
+            };
+            tagsDebounce(videoTags);
+        });
+        $('#uploadModal').on("hidden.bs.modal", function () {
+            if (uploadSuccess) {
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+        });
     </script>
 </body>
 

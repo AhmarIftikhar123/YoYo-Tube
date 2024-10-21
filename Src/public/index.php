@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
-// update front end for proper inputs of the video upload
-// improve UploadController for handling ajax properly.
+// add proper search bar on uploading video.
+// Find a proper Theme & apply on the website.
 
 use Src\App\{
     App,

@@ -4,7 +4,7 @@ abstract class Modle
 {
           protected DB $db;
           public static bool $user_registered;
-          public static int $user_id;
+          public static ?int $user_id;
           public function __construct()
           {
                     $this->db = App::$db;
@@ -44,10 +44,10 @@ abstract class Modle
                     }
                     $user_id = $_SESSION['user_id'] ?? $_COOKIE['user_id'] ?? null;
 
-                    if(!$user_id){
-                              $this->redirect_user_to_login();
-                    }
-                    
+                    // if (!$user_id) {
+                    //           $this->redirect_user_to_login();
+                    // }
+
                     if (session_status() === PHP_SESSION_ACTIVE) {
                               session_write_close();
                     }
