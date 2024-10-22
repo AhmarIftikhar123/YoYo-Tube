@@ -48,6 +48,30 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
             color: #ff6b6b !important;
         }
 
+        input,
+        #searchInput {
+            padding: .575rem;
+            color: var(--text-color);
+            background: var(--bg-color);
+            transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s ease-in-out;
+            border-radius: 1rem 0 0 1rem;
+
+            &::placeholder {
+                color: var(--text-color);
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 .25rem var(--text-color);
+                border: 1px solid var(--text-color);
+            }
+        }
+
+        #searchBtn
+        {
+        padding: .5rem 1.25rem;
+        border-radius: 0 1rem 1rem 0;
+        }
+
         .card {
             transition: transform 0.2s;
             background-color: var(--card-bg);
@@ -155,33 +179,23 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
 
     <!-- Main Content -->
     <div class="container my-3">
-        <!-- Filter Panel -->
-        <form method="get" id="filterForm" class="row mb-2 align-items-center" id="form">
-            <div class="col-md-4 mb-4">
-                <select class="form-select" id="categoryFilter">
-                    <option selected>Action</option>
-                    <option>Comedy</option>
-                    <option>Drama</option>
-                    <option>Horror</option>
-                </select>
+        <!-- Search Iput -->
+        <div class="container w-50">
+
+            <div class="input-group mt-3 mx-auto">
+                <input type="text" name="search" class="form-control" id="searchInput" placeholder="Search Videos..."
+                    list="filterDetails">
+                <button class="btn btn-light" type="button" id="searchBtn"><i class="bi bi-search"></i></button>
+                <datalist id="filterDetails">
+                </datalist>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" <?= $filter_type == "18+" ? "checked" : "" ?> type="checkbox"
-                        id="adultContentSwitch">
-                    <label class="form-check-label" for="adultContentSwitch">18+
-                        Content</label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <a href="/home?filter=<?= $filter_type ?>" class="btn btn-light w-100" id="applyFilters">Apply
-                    Filters</a>
-            </div>
-        </form>
+            <small class="text-danger d-block ms-2 mb-2" id="searchError"></small>
+        </div>
 
         <!-- Video Grid -->
-        <!-- Video cards will be dynamically inserted here -->
         <div id="videoGrid" class="row">
+            <!-- Video cards will be dynamically inserted here -->
+
             <?php foreach ($current_post_info as $post): ?>
 
                 <div class="col-md-3 mb-2">
@@ -273,44 +287,66 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
 
     <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
     <script>
-        const adultContentSwitch = $('#adultContentSwitch');
-        const darkModeToggle = $('#darkModeToggle');
-
-        // Function to set the dark mode
-        function setDarkMode(isDark) {
-            if (isDark) {
-                $('body').addClass('dark-mode');
-            } else {
-                $('body').removeClass('dark-mode');
+        function debounce(func, delay = 500) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+        const searchDebounce = debounce((query) => {
+            $.ajax({
+                url: "<?= BASE_URL . "/home/search" ?>",
+                method: "POST",
+                data: {
+                    query: query
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response.success && Array.isArray(response.suggestions)) {
+                        response.suggestions.forEach((suggestion) => {
+                            $('#filterDetails').append(`<option value='${suggestion}'></option>`);
+                        })
+                    } else {
+                        $('#searchError').text(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            })
+        }, 1000)
+        function redirectToSearch(query) {
+            if (query) {
+                window.location.href = `/home?filter=${query}`; // Redirect to search page with query
             }
-            localStorage.setItem('darkMode', isDark);
         }
-
-        // Check for saved dark mode preference
-        const savedDarkMode = localStorage.getItem('darkMode');
-        if (savedDarkMode !== null) {
-            setDarkMode(savedDarkMode === 'true');
-            darkModeToggle.prop('checked', savedDarkMode === 'true');
-        }
-
-        // Dark mode toggle event
-        darkModeToggle.on('change', function () {
-            setDarkMode(this.checked);
+        const searchInput = $("#searchInput");
+        const searchBtn = $('#searchBtn');
+        // Event listener for input changes
+        searchInput.on("input", function (event) {
+            event.preventDefault();
+            const query = searchInput.val();
+            if (query.length > 0) {
+                $('#filterDetails').empty();
+                $('#searchError').text(""); // Clear error message
+                searchDebounce(query.toLowerCase());
+            }
         });
 
-        $('#categoryFilter').on('change', function () {
-            if (adultContentSwitch.prop('checked')) return;
-            const filter = $(this).val().toLowerCase();
-            $('#applyFilters').attr("href", `/home?filter=${filter}`);
-        });
-
-        adultContentSwitch.on('change', function () {
-            if ($(this).prop('checked')) {
-                $('#applyFilters').attr("href", `/home?filter=18+`);
-            } else {
-                const filter = $('#categoryFilter').val().toLowerCase();
-                $('#applyFilters').attr("href", `/home?filter=${filter}`);
+        // Event listener for "Enter" key on the input field
+        searchInput.on("keypress", function (event) {
+            if (event.key === 'Enter') {
+                const query = searchInput.val().trim();
+                redirectToSearch(query);
             }
+        });
+        // Search Button
+        searchBtn.on('click', function () {
+            const query = searchInput.val().trim();
+            redirectToSearch(query);
         });
     </script>
 </body>

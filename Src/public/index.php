@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-// add proper search bar on uploading video.
+// adjust /upload route for storing proper tags of the video 
 // Find a proper Theme & apply on the website.
 
 use Src\App\{
@@ -20,7 +20,8 @@ use Src\App\Controllers\{
     Profile\ProfileController,
     Upload\UploadController,
     User\UserVideoController,
-    User\WatchVideoController
+    User\WatchVideoController,
+    Search\SearchSuggestionsController
 };
 use Src\App\{Router, Views};
 
@@ -73,6 +74,7 @@ $Router
 
     ->get("/videos/watch", [WatchVideoController::class, "load_video_watch_page"])
     ->get("/home/watch", [WatchVideoController::class, "load_video_watch_page"])
+    ->post("/home/search", [SearchSuggestionsController::class, "getSearchSuggestions"])
 
     ->post("/videos/watch/likes", [WatchVideoController::class, "like_dislike_video"])
     ->post("/videos/watch/comments", [WatchVideoController::class, "video_comments"])
