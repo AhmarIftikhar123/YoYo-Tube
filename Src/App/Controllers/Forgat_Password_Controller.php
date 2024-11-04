@@ -85,9 +85,13 @@ class Forgat_Password_Controller
 
                 $mailer->send($emailMessage);
 
-                session_start();
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
                 $_SESSION['email'] = $email;
-                session_write_close();
+                if (session_status() === PHP_SESSION_ACTIVE) {
+                    session_write_close();
+                }
 
                 return Views::make('Authentication/Password_Reset_Email_Sent');
             } catch (\Throwable $e) {

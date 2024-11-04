@@ -23,6 +23,10 @@ class Views
                     $view_file = VIEWS_PATH . "/" . $this->view . ".php";
                     if (file_exists($view_file)) {
                               ob_start();
+                              include_once VIEWS_PATH . "/partials/Bootstrap_js.php";
+                              include_once VIEWS_PATH . "/partials/Bootstrap_css.php";
+                              include_once VIEWS_PATH . "/partials/Font_Awesome.php";
+                              include_once VIEWS_PATH . "/partials/jquery_js.php";
                               include_once $view_file;
                               return ob_get_clean();
                     }
@@ -32,5 +36,5 @@ class Views
           {
                     return $this->data[$name] ?? "";
           }
-          
+
 }

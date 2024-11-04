@@ -1,0 +1,40 @@
+// Placeholder class for transitions
+%transition-opacity {
+  transition: opacity 0.3s ease;
+}
+
+%transition-transform {
+  transition: transform 0.3s ease;
+}
+
+%transition-background {
+  transition: background-color 0.3s ease;
+}
+
+%transition-color {
+  transition: color 0.3s ease;
+}
+
+%transition-height {
+  transition: height 0.3s ease;
+}
+
+%transition-width {
+  transition: width 0.3s ease;
+}
+
+%transition-margin {
+  transition: margin 0.3s ease;
+}
+
+%transition-padding {
+  transition: padding 0.3s ease;
+}
+
+%transition-border {
+  transition: border 0.3s ease;
+}
+
+%transition-box-shadow {
+  transition: box-shadow 0.3s ease;
+}

@@ -1,0 +1,7 @@
+@import "../partials/_input";
+@import "../partials/_button";
+
+#searchInput {
+  @extend .form-control;
+}
+

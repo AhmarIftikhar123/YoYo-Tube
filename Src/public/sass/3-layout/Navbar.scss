@@ -1,0 +1,186 @@
+@use "../Main.scss" as *;
+body {
+  @extend %Poppins;
+
+  background-color: var(--dark_gray);
+  color: var(--aqua);
+  @extend %fw-500;
+
+  @extend %transition-background;
+  @extend %transition-color;
+}
+
+.navbar {
+  @extend %transition-background;
+  border-bottom: 1px solid var(--teal);
+}
+
+.navbar-brand {
+  @include navbar-brand();
+}
+
+.navbar-nav {
+  @include respond-to(lg) {
+    padding: 10px;
+    border-radius: 5px;
+  }
+}
+
+.nav-link {
+  width: fit-content;
+  font-size: 0.9rem;
+  color: var(--light_gray);
+  @extend %transition-color;
+  @extend %relative;
+
+  &::after {
+    @extend %nav-link-pseudo-after;
+  }
+
+  &:hover,
+  &:active,
+  &.active {
+    color: var(--aqua) !important;
+    background-color: none !important;
+
+    &::after {
+      width: 100% !important;
+    }
+  }
+  @include respond-to(lg) {
+    width: 100%;
+    margin-inline: auto;
+  }
+}
+
+.nav-item a .profile_image {
+  max-width: 3rem;
+  max-height: 2.25rem;
+}
+
+.profile_image_container {
+  @extend %transition-border;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  position: relative;
+  &::before {
+    @extend %theme-pseudo-before;
+  }
+  &::after {
+    @extend %profile-pseudo-after;
+  }
+  &:hover {
+    &::after,
+    &::before {
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+}
+.navbar-toggler {
+  border-color: var(--aqua);
+  &:focus {
+    color: var(--aqua);
+  }
+  .navbar-toggler-icon {
+    > i {
+      color: var(--aqua);
+      &::before {
+        font-size: 1.8rem;
+      }
+    }
+  }
+}
+
+button[data-text="Switch-Theme"] {
+  position: relative;
+  &::before {
+    @extend %theme-pseudo-before;
+  }
+  &::after {
+    @extend %theme-pseudo-after;
+  }
+  &:hover {
+    &::after,
+    &::before {
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+}
+
+#themeToggler {
+  border: none;
+  background: transparent;
+  @extend %grid_center;
+}
+
+i {
+  @extend %transition-color;
+  &::before {
+    font-size: 1.25rem;
+  }
+  &.fa-moon::before {
+    color: var(--theme-icon);
+  }
+  &.fa-sun::before {
+    color: var(--theme-icon);
+  }
+  &.fa-bars::before {
+    color: var(--aqua);
+  }
+}
+.fa-xmark {
+  &:hover {
+    @extend %base_close;
+  }
+}
+.profile_info {
+  > div {
+    &:nth-child(1) {
+      @extend %grid_center;
+      > img {
+        @include respond-to(sm) {
+          margin-bottom: 0.25rem;
+        }
+      }
+    }
+    &:nth-child(2) {
+      @include respond-to(sm) {
+        text-align: center;
+      }
+    }
+  }
+}
+
+.dropdown-menu {
+  @extend %base_drop_down;
+}
+// Off-Canvas
+.offcanvas-body {
+  img {
+    max-width: map-get($map: $sizes, $key: _2_5);
+  }
+
+  .dropdown {
+    button {
+      @include respond-to(sm) {
+        width: 100%;
+      }
+    }
+  }
+  .dropdown-menu {
+    border: 1px solid currentColor;
+    @include respond-to(sm) {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  .dropdown-item {
+    @extend %transition-background;
+    &:hover {
+      background-color: var(--darkest_black);
+      color: var(--aqua);
+    }
+  }
+}

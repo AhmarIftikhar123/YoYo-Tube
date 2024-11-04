@@ -1,0 +1,19 @@
+@mixin button($bg: var(--darkest_black), $color: var(--teal)) {
+  background-color: $bg;
+  color: $color;
+  border: 1px solid var(--aqua);
+  @extend %transition-background;
+
+  &:hover {
+    background-color: $color;
+    color: $bg;
+    border: 1px solid $bg;
+  }
+
+  &:active,
+  &.show {
+    background-color: var(--aqua);
+    color: var(--darkest_black);
+    border: 1px solid var(--darkest_black);
+  }
+}

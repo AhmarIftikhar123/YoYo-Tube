@@ -1,0 +1,21 @@
+@use '../partials/transition' as *;
+.btn,
+.btn-primary {
+  background-color: var(--darkest_black);
+  color: var(--teal);
+  border: 1px solid var(--aqua) !important;
+  @extend %transition-background;
+
+  &:hover {
+    background-color: var(--teal);
+    color: var(--darkest_black);
+    border: 1px solid var(--darkest_black);
+  }
+
+  &:active,&.show {
+    background-color: var(--aqua) !important;
+    color: var(--darkest_black) !important;
+    border: 1px solid var(--darkest_black) !important;
+  }
+
+}

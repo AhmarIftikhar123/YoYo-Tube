@@ -13,65 +13,9 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoYo Tube - Video Listing</title>
-    <?php include dirname(__DIR__) . "/partials/Bootstrap_css.php"; ?>
-    <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <title>YoYo Tube</title>
+    <link rel="stylesheet" href="/css/4-pages/HomeView.css">
     <style>
-        :root {
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-            --card-bg: #fff;
-            --card-text: #333;
-            --footer-bg: #343a40;
-            --footer-text: #fff;
-        }
-
-        .dark-mode {
-            --bg-color: #333;
-            --text-color: #f8f9fa;
-            --card-bg: #444;
-            --card-text: #f8f9fa;
-            --footer-bg: #222;
-            --footer-text: #f8f9fa;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: #ff6b6b !important;
-        }
-
-        input,
-        #searchInput {
-            padding: .575rem;
-            color: var(--text-color);
-            background: var(--bg-color);
-            transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s ease-in-out;
-            border-radius: 1rem 0 0 1rem;
-
-            &::placeholder {
-                color: var(--text-color);
-            }
-
-            &:focus {
-                box-shadow: 0 0 0 .25rem var(--text-color);
-                border: 1px solid var(--text-color);
-            }
-        }
-
-        #searchBtn
-        {
-        padding: .5rem 1.25rem;
-        border-radius: 0 1rem 1rem 0;
-        }
-
         .card {
             transition: transform 0.2s;
             background-color: var(--card-bg);
@@ -180,16 +124,17 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
     <!-- Main Content -->
     <div class="container my-3">
         <!-- Search Iput -->
-        <div class="container w-50">
+        <div class="container">
 
-            <div class="input-group mt-3 mx-auto">
-                <input type="text" name="search" class="form-control" id="searchInput" placeholder="Search Videos..."
-                    list="filterDetails">
-                <button class="btn btn-light" type="button" id="searchBtn"><i class="bi bi-search"></i></button>
+            <div class="input-group my-3 mx-auto align-items-ceter justify-content-center">
+                <input type="text" name="search" class="form-control rounded-start
+                bg_darkest_black clr_aqua" id="searchInput" placeholder="Search Videos..." list="filterDetails">
+                <button class="btn btn-primary rounded-end" type="button" id="searchBtn"><i
+                        class="fa-solid fa-magnifying-glass"></i></i></button>
                 <datalist id="filterDetails">
                 </datalist>
             </div>
-            <small class="text-danger d-block ms-2 mb-2" id="searchError"></small>
+            <small class="text-danger text-center d-block ms-2 mb-2 fs_75" id="searchError"></small>
         </div>
 
         <!-- Video Grid -->
@@ -284,8 +229,6 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
             </div>
         </div>
     </footer>
-
-    <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
     <script>
         function debounce(func, delay = 500) {
             let timer;
@@ -317,7 +260,7 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
                     console.error(error);
                 }
             })
-        }, 1000)
+        }, 500)
         function redirectToSearch(query) {
             if (query) {
                 window.location.href = `/home?filter=${query}`; // Redirect to search page with query

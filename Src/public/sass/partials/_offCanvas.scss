@@ -1,0 +1,10 @@
+@import "../partials/_Theme";
+.offcanvas,
+.offcanvas-end {
+  background-color: var(--darkest_black);
+  color: var(--light_gray);
+}
+
+.offcanvas-title {
+  font-family: $font-family-Kablammo;
+}

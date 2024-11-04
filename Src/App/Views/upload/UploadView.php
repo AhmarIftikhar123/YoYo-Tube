@@ -515,12 +515,12 @@
         });
         function processVideoTags(input) {
             // Define the regex pattern
-            const pattern = /^[a-zA-Z]+(,[a-zA-Z]+)*$/;
+            const pattern = /^[a-zA-Z\-]+(,[a-zA-Z\-]+)*$/;
 
             // Validate the input
             if (pattern.test(input)) {
                 // Sanitize input (trim spaces and remove unwanted characters)
-                const sanitizedInput = input.replace(/[^a-zA-Z,]/g, '');
+                const sanitizedInput = input.replace(/[^a-zA-Z,\-]/g, '');
 
                 // Convert the input to an array of tags
                 const tags = sanitizedInput.split(',');

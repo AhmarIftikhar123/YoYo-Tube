@@ -4,14 +4,13 @@ namespace Src\App\Models\Search;
 use Src\App\Modle;
 class SearchSuggestionModal extends Modle
 {
-          public function getSuggestions($query):array
+          public function getSuggestions($query): array
           {
                     try {
-                              $sql = "SELECT DISTINCT tags FROM videos WHERE tags LIKE :query";
+                              $sql = "SELECT DISTINCT tags FROM videos WHERE LOWER(tags) LIKE LOWER(:query)";
                               $stmt = $this->db->prepare($sql);
                               $stmt->execute(['query' => "%$query%"]);
                               $tags = $stmt->fetchAll();
-
                               if (!$tags) {
                                         throw new \Exception("No Suggestions found");
                               }
@@ -26,7 +25,9 @@ class SearchSuggestionModal extends Modle
                                          *
                                          * @return array
                                          */
-                                        $tagList = explode(',', trim($tagRow['tags'], '"'));
+
+                                        $tagList = json_decode($tagRow['tags']);
+                                        
                                         foreach ($tagList as $tag) {
                                                   if (stripos($tag, $query) !== false) {
                                                             $suggestions[] = trim($tag);

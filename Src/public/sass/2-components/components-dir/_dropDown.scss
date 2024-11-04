@@ -1,0 +1,18 @@
+@use "../../0-abstract/abstract-dir/transition" as *;
+// Drop-Down
+@mixin dropDown($bg: var(--light_gray), $color: var(--dark_gray)) {
+  .dropdown-menu {
+    background-color: $bg;
+    color: $color;
+    @extend %transition-background;
+
+    li a:hover {
+      background-color: $bg;
+      color: $color;
+    }
+  }
+}
+
+%base_drop_down {
+  @include dropDown();
+}

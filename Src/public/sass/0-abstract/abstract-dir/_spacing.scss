@@ -1,0 +1,54 @@
+// Define the base spacing unit
+$base-spacing-unit: 1rem;
+
+$sizes: (
+  _125: $base-spacing-unit * 0.125,
+  _25: $base-spacing-unit * 0.25,
+  _35: $base-spacing-unit * 0.35,
+  _4: $base-spacing-unit * 0.4,
+  _5: $base-spacing-unit * 0.5,
+  _6: $base-spacing-unit * 0.6,
+  _75: $base-spacing-unit * 0.75,
+  _80: $base-spacing-unit * 0.8,
+  _85: $base-spacing-unit * 0.85,
+  _90: $base-spacing-unit * 0.9,
+  _1: $base-spacing-unit * 1,
+  _1_125: $base-spacing-unit * 1.125,
+  _1_25: $base-spacing-unit * 1.25,
+  _1_35: $base-spacing-unit * 1.35,
+  _1_4: $base-spacing-unit * 1.4,
+  _1_5: $base-spacing-unit * 1.5,
+  _2: $base-spacing-unit * 2,
+  _2_5: $base-spacing-unit * 2.5,
+  _3: $base-spacing-unit * 3,
+);
+$sides: (inline, inline-start, inline-end, block, block-start, block-end);
+
+@each $key, $value in $sizes {
+  // Padding
+  .p#{$key} {
+    padding: $value;
+  }
+  @each $side in $sides {
+    .p_#{$side}#{$key} {
+      padding-#{$side}: $value;
+    }
+  }
+  // Margin
+  .m#{$key} {
+    padding: $value;
+  }
+  @each $side in $sides {
+    .m_#{$side}#{$key} {
+      padding-#{$side}: $value;
+    }
+  }
+  // Font Size
+  .fs#{$key} {
+    font-size: $value;
+  }
+}
+
+.fs_inherit{
+  font-size: inherit;
+}

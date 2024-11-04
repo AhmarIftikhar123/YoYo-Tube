@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Kablammo&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+$ff-Poppins: "Poppins", "Oswald", sans-serif;
+$ff-Oswald: "Oswald", sans-serif;
+$ff-Kablammo: "Kablammo", sans-serif;
+
+$font-weight-300: 300;
+$font-weight-400: 400;
+$font-weight-500: 500;
+$font-weight-600: 600;
+$font-weight-700: 700;
+$font-weight-800: 800;
+$font-weight-900: 900;
+
+%fw-300 {
+  font-weight: $font-weight-300 !important;
+}
+%fw-400 {
+  font-weight: $font-weight-400 !important;
+}
+%fw-500 {
+  font-weight: $font-weight-500 !important;
+}
+%fw-600 {
+  font-weight: $font-weight-600 !important;
+}
+%fw-700 {
+  font-weight: $font-weight-700 !important;
+}
+%fw-800 {
+  font-weight: $font-weight-800 !important;
+}
+%fw-900 {
+  font-weight: $font-weight-900 !important;
+}
+
+%Poppins {
+  font-family: $ff-Poppins;
+}
+
+%Oswald {
+  font-family: $ff-Oswald;
+}
+
+%Kablammo {
+  font-family: $ff-Kablammo;
+}
+
+%border-circle {
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}

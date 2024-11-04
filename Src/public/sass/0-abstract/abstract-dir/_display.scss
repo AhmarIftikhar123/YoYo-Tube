@@ -1,0 +1,7 @@
+@mixin grid_center($postion: center) {
+  display: grid;
+  place-content: center;
+}
+%grid_center {
+  @include grid_center();
+}

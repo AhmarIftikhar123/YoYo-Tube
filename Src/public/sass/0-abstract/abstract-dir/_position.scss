@@ -1,0 +1,9 @@
+$absolute: absolute;
+$relative: relative;
+
+%relative {
+  position: $relative;
+}
+%absolute {
+  position: $absolute;
+}

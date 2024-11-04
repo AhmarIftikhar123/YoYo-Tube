@@ -1,0 +1,15 @@
+@import "../partials/_Theme";
+
+.fa-exclamation {
+  color: $alert;
+}
+.toast {
+  background: var(--darkest_black);
+  color: var(--light_gray);
+  a {
+    color: var(--aqua);
+  }
+}
+.toast-header {
+  background: var(--dark_gray);
+}

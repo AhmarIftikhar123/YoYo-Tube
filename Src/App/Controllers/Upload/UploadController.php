@@ -72,7 +72,7 @@ class UploadController
                                         "thumbnail_path" => $is_video_uploaded['thumbnail_path'],
                                         'title' => $post_values['videoTitle'],
                                         'videoDescription' => $post_values['videoDescription'],
-                                        'videoTags' => $post_values['videoTags'],
+                                        'videoTags' => explode(',',$post_values['videoTags']),
                                         "category" => $post_values['videoCategory'],
                                         "is_paid" => $post_values['isPaid'],
                                         "price" => $post_values['price'],

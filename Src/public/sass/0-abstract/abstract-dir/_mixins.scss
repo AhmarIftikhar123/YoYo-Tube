@@ -1,0 +1,142 @@
+@forward "transition";
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+// Media query mixin
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint #{$breakpoint} not found in map.";
+  }
+}
+
+// Navbar-brand
+@mixin navbar-brand(
+  $f-w: "fw-700",
+  $f-f: "Kablammo",
+  $transition: "transition-transform"
+) {
+  @extend %#{$f-w};
+  @extend %#{$f-f};
+  @extend %#{$transition};
+  &:hover {
+    transform: scale(1.1);
+    color: var(--aqua);
+  }
+}
+
+// Pseudo
+@mixin theme-pseudo-after(
+  $display: block,
+  $pos: absolute,
+  $content: " ",
+  $left: -125%,
+  $bottom: -180%,
+  $width: auto,
+  $height: auto,
+  $bg: var(--darkest_black),
+  $color: var(--aqua),
+  $padding: 0.5rem,
+  $border-radius: 0.25rem,
+  $f-s: 0.75rem,
+  $transition: "transition-opacity",
+  $opacity: 0
+) {
+  content: $content;
+  display: $display;
+  position: $pos;
+  left: $left;
+  bottom: $bottom;
+  background-color: $bg;
+  color: $color;
+  width: $width;
+  height: $height;
+  padding: $padding;
+  border-color: currentColor;
+  white-space: nowrap;
+  font-size: $f-s;
+  border-radius: $border-radius;
+  opacity: $opacity;
+  @extend %#{$transition};
+}
+
+@mixin theme-pseudo-before(
+  $content: " ",
+  $cursor: pointer,
+  $pos: absolute,
+  $bg: transparent,
+  $top: 75%,
+  $left: 20%,
+  $color: var(--aqua),
+  $border-width: 0.5rem,
+  $border-style: solid,
+  $border-color: transparent transparent currentColor transparent,
+  $opacity: 0,
+  $transition: "transition-opacity"
+) {
+  content: $content;
+  position: $pos;
+  background: $bg;
+  top: $top;
+  left: $left;
+  color: $color;
+  border-width: $border-width;
+  border-style: $border-style;
+  border-color: $border-color;
+  opacity: $opacity;
+  cursor: $cursor;
+  @extend %#{$transition};
+}
+// Theme Pseudo
+%theme-pseudo-before {
+  @include theme-pseudo-before();
+}
+%theme-pseudo-after {
+  @include theme-pseudo-after($content: attr(data-text));
+}
+// Profile Pseudo
+%profile-pseudo-before {
+  @include theme-pseudo-before($top: 85%, $left: 25%);
+}
+%profile-pseudo-after {
+  @include theme-pseudo-after(
+    $content: attr(data-text),
+    $left: -70%,
+    $bottom: -110%
+  );
+}
+// nav-link pseudo
+%nav-link-pseudo-after {
+  @include theme-pseudo-after(
+    $display: block,
+    $pos: absolute,
+    $left: 0,
+    $bottom: 0,
+    $width: 0,
+    $height: 2px,
+    $bg: var(--aqua),
+    $color: var(--aqua),
+    $padding: 0,
+    $border-radius: 0.25rem,
+    $f-s: 0.75rem,
+    $transition: "transition-width",
+    $opacity: 1
+  );
+}
+
+@mixin close($clr: var(--aqua)) {
+  color: $clr;
+}
+
+%base_close {
+  @extend %transition-color;
+  @include close();
+}
