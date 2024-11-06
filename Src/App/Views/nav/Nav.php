@@ -38,7 +38,7 @@ bg_darkest_black fs_1_5 clr_aqua
     <div class="container">
 
         <a class="navbar-brand
-        clr_aqua
+        clr_teal
         " href="/home">YoYo Tube</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -84,7 +84,7 @@ bg_darkest_black fs_1_5 clr_aqua
                         <a class="nav-link px-0" href="/authentication" id="admin">Log-In</a>
                     </li>
                 <?php endif; ?>
-                <button id="themeToggler" aria-label="lime-theme" data-text="Switch-Theme">
+                <button id="themeToggler" aria-label="" data-text="Switch-Theme">
                     <i class="fa-solid fa-sun"></i> <!-- Default to sun icon -->
                 </button>
                 <!--  Profile img -->
@@ -174,14 +174,14 @@ bg_darkest_black fs_1_5 clr_aqua
     })
     // Check for saved theme preference
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'lime') {
+    if (savedTheme === 'lime-theme') {
         document.body.classList.add('lime-theme');
-        $('#themeToggler').prop('checked', true);
+        $('#themeToggler').attr("aria-label","lime-theme");
     }
 
     // Save theme preference
     $('#themeToggler').on("click", function () {
-        $('body').toggleClass('lime-theme aqua-theme');
+        $('body').toggleClass('lime-theme');
         $(this).children('i').toggleClass('fa-sun fa-moon');
         if ($(this).attr("aria-label") === "lime-theme") {
             // Reset aria-label
@@ -191,7 +191,7 @@ bg_darkest_black fs_1_5 clr_aqua
 
         } else {
             $(this).attr("aria-label", "lime-theme");
-            localStorage.setItem('theme', 'light');
+            localStorage.setItem('theme', 'lime-theme');
         }
 
         const isOnPaymentPage = localStorage.getItem('isOnPaymentPage')

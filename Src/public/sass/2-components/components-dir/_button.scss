@@ -1,19 +1,23 @@
+@use "../../0-abstract/abstract-dir/transition" as *;
 @mixin button($bg: var(--darkest_black), $color: var(--teal)) {
-  background-color: $bg;
-  color: $color;
-  border: 1px solid var(--aqua);
+  background-color: $color;
+  color: $bg;
+  border: 1px solid currentColor;
   @extend %transition-background;
 
   &:hover {
-    background-color: $color;
-    color: $bg;
-    border: 1px solid $bg;
+    background-color: $bg;
+    color: $color;
+    border: 1px solid currentColor;
   }
 
   &:active,
   &.show {
-    background-color: var(--aqua);
-    color: var(--darkest_black);
-    border: 1px solid var(--darkest_black);
+    background-color: var(--aqua) !important;
+    color: var(--darkest_black) !important;
+    border: 1px solid currentColor !important;
   }
+}
+%btn-primary {
+  @include button();
 }

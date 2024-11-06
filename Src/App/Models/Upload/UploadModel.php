@@ -39,6 +39,8 @@ class UploadModel extends Modle
 
         if (empty($title)) {
             $errors['videoTitleError'] = 'Title is required';
+        } elseif (strlen($title) < 40) {
+            $errors['videoTitleError'] = 'Title should be at least 40 words';
         }
 
         if (empty($description)) {

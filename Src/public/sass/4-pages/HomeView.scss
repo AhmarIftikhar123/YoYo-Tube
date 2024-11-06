@@ -1,20 +1,54 @@
 @use "../Main" as *;
 .input-group {
   > input[type="text"] {
-    transition: max-width 0.3s ease;
-    max-width: 50%;
-    @include respond-to(md) {
-      max-width: 75%;
-    }
-    &:focus {
-      color: var(--aqua);
-      accent-color: currentColor;
-      box-shadow: 0 0 0 0.125rem currentColor;
-      border: 1px solid currentColor;
-      max-width: 75%;
-      @include respond-to(md) {
-        max-width: 100%;
-      }
+    @extend %search_input;
+  }
+}
+.btn-primary {
+  @extend %btn-primary;
+}
+.fa-play::before,
+.fa-circle-check::before {
+  font-size: map-get($map: $sizes, $key: _90);
+}
+.card {
+  @extend %base-border;
+
+  .card-img-top {
+    height: 10rem;
+    @include respond-to(sm) {
+      height: 13rem;
     }
   }
+  .card-img-overlay {
+    background: rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    @extend %transition-opacity;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  // Breakpoint
+  @include respond-to(lg) {
+    text-align: center;
+  }
+}
+
+.card-body {
+  & > .card-title {
+    @extend %two_line_ellipsis;
+    @extend %Oswald;
+  }
+  & > .card-text {
+    font-variant: small-caps;
+    @extend %one_line_ellipsis;
+  }
+}
+.price_time {
+  // .price {
+  //   @include respond-to(lg) {
+  //     width: 80%;
+  //     text-align: center;
+  //   }
+  // }
 }

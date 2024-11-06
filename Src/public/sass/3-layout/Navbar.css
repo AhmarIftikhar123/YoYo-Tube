@@ -2,19 +2,19 @@
 :root {
   --teal: #45a29e; /* Teal */
   --aqua: #66fcf1; /* Aqua */
-  --theme-icon: #c9356c;
+  --theme-icon: #fafafa;
   --light_gray: #c5c6c7; /* Light Gray */
   --dark_gray: #1b1b1b; /* Dark Gray */
   --darkest_black: #101010; /* Darkest Color */
-  interpolate-size: allow-keywords;
+  --interpolate-size: allow-keywords;
 }
 
 .lime-theme {
-  --teal: #ff347f; /* Blue Dark */
+  --teal: #373937; /* Blue Dark */
   --theme-icon: #66fcf1;
-  --aqua: #c9356c; /* Blue Medium */
-  --light_gray: #f48db4; /* Blue Light */
-  --dark_gray: #adb8da; /* Gray Light */
+  --aqua: #aaadb1; /* Blue Medium */
+  --light_gray: #0f0c0c; /* Blue Light */
+  --dark_gray: #aaadb1; /* Gray Light */
   --darkest_black: #fafafa; /* Gray Lighter */
 }
 
@@ -64,6 +64,102 @@
 
 .bg_darkest_black {
   background-color: var(--darkest_black);
+}
+
+.profile_image_container::before, button[data-text=Switch-Theme]::before, .profile_image_container::after, button[data-text=Switch-Theme]::after {
+  transition: opacity 0.3s ease;
+}
+
+.navbar-brand {
+  transition: transform 0.3s ease;
+}
+
+body, .navbar, .offcanvas-body .dropdown-item, .dropdown-menu .dropdown-menu {
+  transition: background-color 0.3s ease;
+}
+
+body, .nav-link, i, .fa-xmark:hover {
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  transition: width 0.3s ease;
+}
+
+.profile_image_container {
+  transition: border 0.3s ease;
+}
+
+.profile_image_container::before, button[data-text=Switch-Theme]::before {
+  content: " ";
+  position: absolute;
+  background: transparent;
+  top: 75%;
+  left: 20%;
+  color: var(--aqua);
+  border-width: 0.5rem;
+  border-style: solid;
+  border-color: transparent transparent currentColor transparent;
+  opacity: 0;
+  cursor: pointer;
+}
+
+button[data-text=Switch-Theme]::after {
+  content: attr(data-text);
+  display: block;
+  position: absolute;
+  left: -125%;
+  bottom: -180%;
+  background-color: var(--darkest_black);
+  color: var(--teal);
+  width: auto;
+  height: auto;
+  padding: 0.5rem;
+  border-color: currentColor;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  opacity: 0;
+}
+
+.profile_image_container::after {
+  content: attr(data-text);
+  display: block;
+  position: absolute;
+  left: -70%;
+  bottom: -110%;
+  background-color: var(--darkest_black);
+  color: var(--teal);
+  width: auto;
+  height: auto;
+  padding: 0.5rem;
+  border-color: currentColor;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  opacity: 0;
+}
+
+.nav-link::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-color: var(--aqua);
+  color: var(--aqua);
+  width: 0;
+  height: 2px;
+  padding: 0;
+  border-color: currentColor;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  opacity: 1;
+}
+
+.fa-xmark:hover {
+  color: var(--aqua);
 }
 
 .p_125 {
@@ -1226,30 +1322,6 @@ body {
   font-family: "Kablammo", sans-serif;
 }
 
-.profile_image_container::before, button[data-text=Switch-Theme]::before, .profile_image_container::after, button[data-text=Switch-Theme]::after {
-  transition: opacity 0.3s ease;
-}
-
-.navbar-brand {
-  transition: transform 0.3s ease;
-}
-
-body, .navbar, .offcanvas-body .dropdown-item, .dropdown-menu .dropdown-menu {
-  transition: background-color 0.3s ease;
-}
-
-body, .nav-link, i, .fa-xmark:hover {
-  transition: color 0.3s ease;
-}
-
-.nav-link::after {
-  transition: width 0.3s ease;
-}
-
-.profile_image_container {
-  transition: border 0.3s ease;
-}
-
 .nav-link {
   position: relative;
 }
@@ -1257,78 +1329,6 @@ body, .nav-link, i, .fa-xmark:hover {
 #themeToggler, .profile_info > div:nth-child(1) {
   display: grid;
   place-content: center;
-}
-
-.profile_image_container::before, button[data-text=Switch-Theme]::before {
-  content: " ";
-  position: absolute;
-  background: transparent;
-  top: 75%;
-  left: 20%;
-  color: var(--aqua);
-  border-width: 0.5rem;
-  border-style: solid;
-  border-color: transparent transparent currentColor transparent;
-  opacity: 0;
-  cursor: pointer;
-}
-
-button[data-text=Switch-Theme]::after {
-  content: attr(data-text);
-  display: block;
-  position: absolute;
-  left: -125%;
-  bottom: -180%;
-  background-color: var(--darkest_black);
-  color: var(--aqua);
-  width: auto;
-  height: auto;
-  padding: 0.5rem;
-  border-color: currentColor;
-  white-space: nowrap;
-  font-size: 0.75rem;
-  border-radius: 0.25rem;
-  opacity: 0;
-}
-
-.profile_image_container::after {
-  content: attr(data-text);
-  display: block;
-  position: absolute;
-  left: -70%;
-  bottom: -110%;
-  background-color: var(--darkest_black);
-  color: var(--aqua);
-  width: auto;
-  height: auto;
-  padding: 0.5rem;
-  border-color: currentColor;
-  white-space: nowrap;
-  font-size: 0.75rem;
-  border-radius: 0.25rem;
-  opacity: 0;
-}
-
-.nav-link::after {
-  content: " ";
-  display: block;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background-color: var(--aqua);
-  color: var(--aqua);
-  width: 0;
-  height: 2px;
-  padding: 0;
-  border-color: currentColor;
-  white-space: nowrap;
-  font-size: 0.75rem;
-  border-radius: 0.25rem;
-  opacity: 1;
-}
-
-.fa-xmark:hover {
-  color: var(--aqua);
 }
 
 .dropdown-menu .dropdown-menu {
@@ -1341,7 +1341,7 @@ button[data-text=Switch-Theme]::after {
 }
 
 body {
-  background-color: var(--dark_gray);
+  background-color: var(--darkest_black);
   color: var(--aqua);
 }
 

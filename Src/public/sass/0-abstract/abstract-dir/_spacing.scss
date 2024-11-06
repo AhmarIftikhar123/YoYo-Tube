@@ -1,3 +1,4 @@
+@use "mixins" as *;
 // Define the base spacing unit
 $base-spacing-unit: 1rem;
 
@@ -49,6 +50,13 @@ $sides: (inline, inline-start, inline-end, block, block-start, block-end);
   }
 }
 
-.fs_inherit{
+.fs_inherit {
   font-size: inherit;
+}
+
+%one_line_ellipsis {
+  @include text_ellipsis();
+}
+%two_line_ellipsis {
+  @include text_ellipsis($line: 2);
 }

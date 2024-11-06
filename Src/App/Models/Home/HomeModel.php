@@ -5,7 +5,15 @@ class HomeModel extends Modle
 {
     public function get_current_post_info(int $offset, int $limit = 8, string $tag = "action"): array
     {
-        $sql = "SELECT * FROM videos WHERE JSON_CONTAINS(tags, :tag) ORDER BY created_at DESC LIMIT :offset, :limit";
+        $sql = "
+        SELECT videos.*, users.username 
+        FROM videos 
+        JOIN users ON videos.user_id = users.id
+        WHERE JSON_CONTAINS(tags, :tag) 
+        ORDER BY videos.created_at DESC 
+        LIMIT :offset, :limit
+    ";
+
         try {
             $stmt = $this->db->prepare($sql);
 

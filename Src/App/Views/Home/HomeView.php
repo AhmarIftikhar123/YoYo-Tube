@@ -1,4 +1,31 @@
 <?php
+// Function to Format the Date of Upload
+function timeAgo($time)
+{
+    $time_difference = time() - strtotime($time);
+
+    if ($time_difference < 1) {
+        return 'Just now';
+    }
+
+    $condition = array(
+        12 * 30 * 24 * 60 * 60 => 'year',
+        30 * 24 * 60 * 60 => 'month',
+        24 * 60 * 60 => 'day',
+        60 * 60 => 'hour',
+        60 => 'minute',
+        1 => 'second'
+    );
+
+    foreach ($condition as $secs => $str) {
+        $d = $time_difference / $secs;
+
+        if ($d >= 1) {
+            $t = round($d);
+            return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+        }
+    }
+}
 $HomeModel = $this->HomeModel;
 
 $filter_type = isset($_GET["filter"]) ? str_replace(' ', '+', $_GET["filter"]) : "action";
@@ -16,42 +43,6 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
     <title>YoYo Tube</title>
     <link rel="stylesheet" href="/css/4-pages/HomeView.css">
     <style>
-        .card {
-            transition: transform 0.2s;
-            background-color: var(--card-bg);
-            color: var(--card-text);
-        }
-
-        .card:hover {
-            transform: scale(1.03);
-        }
-
-        .card-img-overlay {
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .card:hover .card-img-overlay {
-            opacity: 1;
-        }
-
-        .card-body {
-
-            &>.card-title,
-            .card-text {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                -webkit-line-clamp: 2;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-            }
-
-            .card-title {
-                min-height: 3rem;
-            }
-        }
-
         .card-text:nth-child(3) {
             min-height: 7.5rem;
             -webkit-line-clamp: 5 !important;
@@ -128,13 +119,13 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
 
             <div class="input-group my-3 mx-auto align-items-ceter justify-content-center">
                 <input type="text" name="search" class="form-control rounded-start
-                bg_darkest_black clr_aqua" id="searchInput" placeholder="Search Videos..." list="filterDetails">
+                bg_darkest_black  clr_teal" id="searchInput" placeholder="Search Videos..." list="filterDetails">
                 <button class="btn btn-primary rounded-end" type="button" id="searchBtn"><i
                         class="fa-solid fa-magnifying-glass"></i></i></button>
                 <datalist id="filterDetails">
                 </datalist>
             </div>
-            <small class="text-danger text-center d-block ms-2 mb-2 fs_75" id="searchError"></small>
+            <small class="text-danger text-center d-block ms-2 mb-1 fs_75" id="searchError"></small>
         </div>
 
         <!-- Video Grid -->
@@ -142,27 +133,43 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
             <!-- Video cards will be dynamically inserted here -->
 
             <?php foreach ($current_post_info as $post): ?>
-
-                <div class="col-md-3 mb-2">
-                    <div class="card">
-                        <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
+                <div class="col-md-4 col-lg-3 mb-2">
+                    <div class="card clr_light_gray bg_darkest_black fs_1">
+                        <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" class="card-img-top">
                         <div class="card-img-overlay d-flex align-items-center justify-content-center">
                             <a href="/videos/watch?video_id=<?= $post['id'] ?>&user_id=<?= $post['user_id'] ?>&is_paid=<?= $post['is_paid'] ?>"
-                                target="_blank" class="btn btn-light btn-lg rounded-circle">
-                                <i class="bi bi-play-fill"></i>
-                            </a>
+                                target="_blank" class="btn btn-primary p_1 rounded-circle">
+                                <i class="fa-solid fa-play"></i> </a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title"><?= $post['title'] ?></h5>
-                            <p class="card-text text-uppercase d-flex gap-2">
-                                <span class="badge bg-secondary"><?= $post['category'] ?></span>
-                                <span
-                                    class="badge badge-<?= $post['is_paid'] ? 'paid' : 'free' ?>"><?= $post['is_paid'] ? 'Paid' : 'Free' ?></span>
-                            </p>
-                            <p class="card-text"><?= $post['description'] ?></p>
+                            <h5 class="card-title mb-1 fs_1"><?= htmlspecialchars($post['title']) ?></h5>
+
+                            <p class="card-text mb-1 clr_teal fs_85"><?= $post['description'] ?></p>
+                            <!-----------------  Channel ----------------->
+                        <p class="channel mb-2"><span class="channel_name clr_light_gray">
+                                <?= substr(htmlspecialchars($post['username']), 0, 20) ?>...
+                                <i class="fa-solid fa-circle-check clr_aqua"></i>
+                            </span></p>
+                        <!--------------- Price & Time of Upload --------------->
+                        <div
+                            class="price_time d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+                            <?php if ($post['price'] <= 0): ?>
+                            <span
+                                class="price fs_75 clr_darkest_black bg_light_gray mb-1 p_inline_75 p_block_25 rounded">Free</span>
+                            <?php else: ?>
+                            <span class="price fs_75 clr_darkest_black bg_teal mb-1 p_inline_75 p_block_25 rounded">
+                                $
+                                <?= $post['price'] ?>
+                            </span>
+                            <?php endif; ?>
+
+                            <span class="fs_75 clr_light_gray  mb-1 p_inline_75 p_block_25">
+                                <?= timeAgo($post['updated_at']) ?>
+                            </span>
                         </div>
                     </div>
                 </div>
+            </div>
             <?php endforeach; ?>
         </div>
     </div>
