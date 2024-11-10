@@ -10,27 +10,22 @@
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Login & Signup</title>
-          <?php include dirname(__DIR__) . "/partials/Font_Awesome.php"; ?>
-          <?php include dirname(__DIR__) . "/partials/Bootstrap_css.php"; ?>
-          <?php if ($uri === "/auth/login" || $uri === "/auth/register"): ?>
-                    <link rel="stylesheet" href="../css/Auth.css">
-          <?php else: ?>
-                    <link rel="stylesheet" href="/css/Auth.css">
-          <?php endif; ?>
+          <link rel="stylesheet" href="/css/4-pages/authentication.css">
 </head>
 
-<body class="d-grid">
-          <div class="container-md" style="max-width: 768px;">
-                    <ul class="nav nav-tabs" id="authTabs" role="tablist">
+<body>
+          <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
+          <div class="container d-grid form_wrapper">
+                    <ul class="nav nav-tabs justify-content-between" id="authTabs" role="tablist">
                               <li class="nav-item" role="presentation">
-                                        <a class="nav-link 
+                                        <a class="nav-link w-100 border-0
                                         <?= $uri === "/auth/login" || $uri === "/authentication" ? "active" : "" ?>
                                                                                " id="login-tab" data-bs-toggle="tab"
                                                   href="#login" role="tab" aria-controls="login"
                                                   aria-selected="true">Login</a>
                               </li>
                               <li class="nav-item" role="presentation">
-                                        <a class="nav-link 
+                                        <a class="nav-link w-100 border-0
                                         <?= $uri === "/auth/register" ? "active" : "" ?>
                                         " id="register-tab" data-bs-toggle="tab" href="#register" role="tab"
                                                   aria-controls="register" aria-selected="false">Register</a>
@@ -42,8 +37,8 @@
                               <div class="tab-pane 
                               <?= $uri === "/auth/login" || $uri === "/authentication" ? "show active" : "" ?>"
                                         id="login" role="tabpanel" aria-labelledby="login-tab">
-                                        <form action="/auth/login" method="POST">
-                                                  <div class="mb-3 form-group">
+                                        <form action="/auth/login" method="POST" class="m_block_125">
+                                                  <div class="mb-1 form-group">
                                                             <label for="login-email" class="form-label">Email</label>
                                                             <input type="email" class="form-control" id="login-email"
                                                                       name="email" placeholder="Enter your email"
@@ -73,11 +68,12 @@
                                                   </div>
 
                                                   <button type="submit" name="login"
-                                                            class="btn btn-secondary w-100">Login</button>
+                                                            class="btn btn-primary w-100 fs_90">Login</button>
 
                                                   <div class="text-center mt-2">
                                                             <a href="/auth/forgot-password"
-                                                                      class="text-underline">Forgot password?</a>
+                                                                      class="text-underline nav-link mx-auto">Forgot
+                                                                      password?</a>
                                                   </div>
                                         </form>
                               </div>
@@ -86,8 +82,8 @@
                               <div class="tab-pane fade
                               <?= $uri === "/auth/register" ? "show active" : "" ?>
                               " id="register" role="tabpanel" aria-labelledby="register-tab">
-                                        <form action="/auth/register" method="POST">
-                                                  <div class="mb-3">
+                                        <form action="/auth/register" method="POST" class="m_block_125">
+                                                  <div class="mb-3 form-group">
                                                             <label for="register-username"
                                                                       class="form-label">Username</label>
                                                             <input type="text" class="form-control"
@@ -100,7 +96,7 @@
                                                             </div>
                                                   </div>
 
-                                                  <div class="mb-3">
+                                                  <div class="mb-3 form-group">
                                                             <label for="register-email" class="form-label">Email</label>
                                                             <input type="email" class="form-control" id="register-email"
                                                                       name="email" placeholder="Enter your email"
@@ -111,7 +107,7 @@
                                                             </div>
                                                   </div>
 
-                                                  <div class="mb-3">
+                                                  <div class="mb-3 form-group">
                                                             <label for="register-password"
                                                                       class="form-label">Password</label>
                                                             <input type="password" class="form-control"
@@ -123,7 +119,7 @@
                                                             </div>
                                                   </div>
 
-                                                  <div class="mb-3">
+                                                  <div class="mb-3 form-group">
                                                             <label for="confirm-password" class="form-label">Confirm
                                                                       Password</label>
                                                             <input type="password" class="form-control"
@@ -136,7 +132,7 @@
 
                                                   </div>
 
-                                                  <div class="mb-3">
+                                                  <div class="mb-3 form-group">
                                                             <label for="confirm-password"
                                                                       class="form-label">Role</label>
                                                             <input type="text" class="form-control" id="role"
@@ -162,24 +158,19 @@
                                                   </div>
 
                                                   <button type="submit"
-                                                            class="btn btn-secondary w-100">Register</button>
+                                                            class="btn btn-primary w-100 fs_90">Register</button>
                                         </form>
                               </div>
                     </div>
 
                     <!-- Social Login Buttons -->
-                    <div class="mt-4">
+                    <div class="mt-2">
                               <a href="<?= $this->google_client_config ?? '' ?>"
-                                        class="btn btn-success w-100 mb-2 mx-1">
-                                        <i class="fa-brands fa-google me-2"></i> Continue 'with 'Google
-                              </a>
-                              <a class="btn btn-primary w-100 mx-1" href="<?= $this->facebook_client_config ?? '' ?>">
-                                        <i class="fa-brands fa-facebook me-2"></i> Continue with Facebook
+                                        class="btn btn-secondary w-100 mb-2 mx-1 fs_90">
+                                        <img src="/images/google.png" class="me-2 google_icon" alt="loading-google-icon"> Continue with Google
                               </a>
                     </div>
           </div>
-
-          <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
 </body>
 
 </html>

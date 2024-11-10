@@ -152,9 +152,9 @@ bg_darkest_black fs_1_5 clr_aqua
             <strong class="me-auto navbar-brand">YOYO Tube</strong>
             <i class="fa-solid fa-xmark ms-1" type="button" data-bs-dismiss="toast" aria-label="Close"></i>
         </div>
-        <div class="toast-body">
-            <p class="text-center">You are not login or registered, please <a href="/authentication">login</a> or <a
-                    href="/authentication?register=true">register</a> first.</p>
+        <div class="toast-body bg_darkest_black">
+            <p class="text-center">You are not login or registered, please <a href="/authentication" class="nav-link d-inline">login</a> or <a
+                    href="/authentication?register=true" class="nav-link d-inline">register</a> first.</p>
         </div>
     </div>
 </div>
@@ -176,7 +176,7 @@ bg_darkest_black fs_1_5 clr_aqua
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'lime-theme') {
         document.body.classList.add('lime-theme');
-        $('#themeToggler').attr("aria-label","lime-theme");
+        $('#themeToggler').attr("aria-label", "lime-theme");
     }
 
     // Save theme preference

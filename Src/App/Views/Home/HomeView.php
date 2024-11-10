@@ -42,70 +42,6 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YoYo Tube</title>
     <link rel="stylesheet" href="/css/4-pages/HomeView.css">
-    <style>
-        .card-text:nth-child(3) {
-            min-height: 7.5rem;
-            -webkit-line-clamp: 5 !important;
-        }
-
-        .badge-paid {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-        .badge-free {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .star-rating {
-            color: #ffc107;
-        }
-
-        .footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-        }
-
-        .footer a {
-            color: var(--footer-text);
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .page-link {
-            background: var(--card-bg) !important;
-            color: var(--text-color) !important;
-            border: gray 1px solid !important;
-
-            &.active {
-                background: var(--text-color) !important;
-                color: var(--bg-color) !important;
-                border: gray 1px solid !important;
-            }
-        }
-
-        .form-select,
-        .form-check-input {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-color: var(--text-color);
-        }
-
-        .btn-light {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-color: var(--text-color);
-        }
-
-        .btn-light:hover {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-        }
-    </style>
 </head>
 
 <body>
@@ -152,12 +88,12 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
                             </span></p>
                         <!--------------- Price & Time of Upload --------------->
                         <div
-                            class="price_time d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+                            class="d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
                             <?php if ($post['price'] <= 0): ?>
                             <span
-                                class="price fs_75 clr_darkest_black bg_light_gray mb-1 p_inline_75 p_block_25 rounded">Free</span>
+                                class="fs_75 clr_darkest_black bg_light_gray mb-1 p_inline_75 p_block_25 rounded">Free</span>
                             <?php else: ?>
-                            <span class="price fs_75 clr_darkest_black bg_teal mb-1 p_inline_75 p_block_25 rounded">
+                            <span class="fs_75 clr_darkest_black bg_teal mb-1 p_inline_75 p_block_25 rounded">
                                 $
                                 <?= $post['price'] ?>
                             </span>
@@ -195,11 +131,11 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
             <?php for ($i = 1; $i <= $number_of_pages; $i++): ?>
                 <li class="page-item" aria-current="page">
                     <a href="/home?page=<?= $i ?>&filter=<?= $filter_type ?>"
-                        class="page-link <?= $i == $current_page ? "active" : "" ?>"><?= $i ?></a>
+                        class="page-link rounded <?= $i == $current_page ? "active" : "" ?>"><?= $i ?></a>
                 </li>
             <?php endfor; ?>
             <li class="page-item">
-                <a href="/home?page=<?= $current_page + 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
+                <a href="/home?page=<?= $current_page + 1 ?>" class="page-link " tabindex="-1" aria-disabled="true"
                     style="<?= $current_page < $number_of_pages ? "" : "display: none" ?>">
                     <span class="visually-hidden">Next</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -212,30 +148,7 @@ $current_post_info = $HomeModel->get_current_post_info($offset, 8, $filter_type)
         </ul>
     </nav>
     </div>
-    <!-- Footer -->
-    <footer class="footer mt-5 py-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>YoYo Tube</h5>
-                    <p>Share and enjoy amazing home!</p>
-                </div>
-                <div class="col-md-3">
-                    <h5>Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Follow Us</h5>
-                    <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="me-2"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include dirname(__DIR__) . "/partials/footer.php"; ?>
     <script>
         function debounce(func, delay = 500) {
             let timer;

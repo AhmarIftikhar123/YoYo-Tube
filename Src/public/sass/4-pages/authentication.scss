@@ -1,0 +1,46 @@
+@use "../Main" as *;
+body {
+  min-height: 100dvh;
+}
+.form_wrapper {
+  @extend %grid_center;
+  min-height: 80dvh;
+}
+.form_wrapper:has(> ul > li:nth-child(2) > .active) {
+  min-height: 90dvh;
+}
+
+.nav-tabs {
+  width: 75dvh;
+  @include respond-to(lg) {
+    width: 55dvh;
+  }
+  @include respond-to(sm) {
+    width: auto;
+  }
+  border-bottom: 1px solid currentColor;
+  > li {
+    flex: 1;
+    &:has(> a.active.w-100) {
+      background: var(--dark_gray);
+    }
+  }
+}
+.form-group,
+.form-check {
+  @extend %form_group;
+}
+
+.btn-primary {
+  @extend %btn-primary;
+}
+
+.text-danger {
+  color: $alert !important;
+}
+.google_icon {
+  max-width: map-get($map: $sizes, $key: _1_5);
+}
+.btn-secondary {
+  @extend %btn-secondary;
+}

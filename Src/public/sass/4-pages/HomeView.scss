@@ -44,11 +44,7 @@
     @extend %one_line_ellipsis;
   }
 }
-.price_time {
-  // .price {
-  //   @include respond-to(lg) {
-  //     width: 80%;
-  //     text-align: center;
-  //   }
-  // }
+
+.page-link {
+  @extend %btn-primary;
 }

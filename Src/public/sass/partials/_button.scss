@@ -10,9 +10,10 @@
     background-color: var(--teal);
     color: var(--darkest_black);
     border: 1px solid var(--darkest_black);
+    opacity: .9;
   }
 
-  &:active,&.show {
+  &:active,&.show, &.active {
     background-color: var(--aqua) !important;
     color: var(--darkest_black) !important;
     border: 1px solid var(--darkest_black) !important;

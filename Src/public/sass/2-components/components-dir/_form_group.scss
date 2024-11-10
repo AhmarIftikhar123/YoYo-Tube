@@ -1,0 +1,33 @@
+@use "../../0-abstract/abstract" as *;
+@use "../../2-components/components-dir/border" as *;
+
+@mixin form_group(
+  $color: var(--light_gray),
+  $bg: var(--darkest_black),
+  $border: var(--teal)
+) {
+  > label {
+    @extend %fw-600;
+    color: $color;
+  }
+  input {
+    @extend %fw-600;
+    @extend %base-border;
+//     font-size: map-get($map: $sizes, $key: _90);
+    background-color: $bg;
+    color: $color;
+    &:focus {
+      background-color: var(--darkest_black);
+      color: $color;
+      box-shadow: 0 0 0 0.15rem $border;
+      border-color: $border;
+    }
+    &::placeholder {
+      color: $color;
+    }
+  }
+}
+
+%form_group {
+  @include form_group();
+}

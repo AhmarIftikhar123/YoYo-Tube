@@ -40,8 +40,8 @@ body {
   &:hover,
   &:active,
   &.active {
-    color: var(--aqua) !important;
-    background-color: none !important;
+    color: var(--teal) !important;
+    background-color: transparent !important;
 
     &::after {
       width: 100% !important;
@@ -68,6 +68,7 @@ body {
   }
   &::after {
     @extend %profile-pseudo-after;
+    @extend %base-border;
   }
   &:hover {
     &::after,
@@ -99,6 +100,7 @@ button[data-text="Switch-Theme"] {
   }
   &::after {
     @extend %theme-pseudo-after;
+    @extend %base-border;
   }
   &:hover {
     &::after,
@@ -181,6 +183,9 @@ i {
     &:hover {
       background-color: var(--darkest_black);
       color: var(--aqua);
+      @include respond-to(md) {
+        min-width: 100%;
+      }
     }
   }
 }

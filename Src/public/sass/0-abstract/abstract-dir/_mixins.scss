@@ -39,7 +39,7 @@ $breakpoints: (
   $pos: absolute,
   $content: " ",
   $left: -125%,
-  $bottom: -180%,
+  $bottom: -200%,
   $width: auto,
   $height: auto,
   $bg: var(--darkest_black),
@@ -110,7 +110,7 @@ $breakpoints: (
   @include theme-pseudo-after(
     $content: attr(data-text),
     $left: -70%,
-    $bottom: -110%
+    $bottom: -105%
   );
 }
 // nav-link pseudo

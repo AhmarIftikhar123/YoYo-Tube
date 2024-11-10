@@ -37,11 +37,11 @@ $sides: (inline, inline-start, inline-end, block, block-start, block-end);
   }
   // Margin
   .m#{$key} {
-    padding: $value;
+    margin: $value;
   }
   @each $side in $sides {
     .m_#{$side}#{$key} {
-      padding-#{$side}: $value;
+      margin-#{$side}: $value;
     }
   }
   // Font Size

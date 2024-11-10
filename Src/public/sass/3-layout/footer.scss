@@ -1,0 +1,61 @@
+@use "../Main" as *;
+footer {
+  .container {
+    .row {
+      border-top: 1px solid var(--aqua);
+      @include respond-to(md) {
+        gap: map-get($map: $sizes, $key: _1); // .25rem
+        position: relative;
+      }
+      @extend %absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      > div {
+        align-self: center;
+      }
+    }
+  }
+}
+.list-unstyled li a {
+  max-width: fit-content;
+}
+.social_media_icons {
+  a {
+    @extend %transition-color;
+
+    position: relative;
+    &::before {
+      @extend %theme-pseudo-before;
+      top: -75% !important;
+      border-color: currentColor transparent transparent transparent !important;
+    }
+    &::after {
+      @extend %theme-pseudo-after;
+      bottom: 160% !important;
+      @extend %base-border;
+    }
+    &:hover {
+      &::after,
+      &::before {
+        cursor: pointer;
+        opacity: 1;
+      }
+    }
+    i {
+      color: var(--light_gray);
+
+      &.fa-twitter:hover {
+        color: #1da1f2; /* Twitter blue */
+      }
+
+      &.fa-instagram:hover {
+        color: #f58529; /* Default Instagram color */
+      }
+
+      &.fa-facebook:hover {
+        color: #1877f2; /* Facebook blue */
+      }
+    }
+  }
+}
