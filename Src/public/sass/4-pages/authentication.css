@@ -1319,6 +1319,17 @@ body {
   background: var(--dark_gray);
 }
 
+.password_wrapper {
+  grid-auto-flow: column;
+  gap: 1.25rem;
+}
+@media (max-width: 576px) {
+  .password_wrapper {
+    grid-auto-flow: row;
+    gap: 0;
+  }
+}
+
 .text-danger {
   color: #ff0000 !important;
 }

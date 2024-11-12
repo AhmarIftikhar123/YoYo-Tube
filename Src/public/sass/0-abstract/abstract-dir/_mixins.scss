@@ -18,6 +18,15 @@ $breakpoints: (
   }
 }
 
+@mixin respond-to-heigth($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-height: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint #{$breakpoint} not found in map.";
+  }
+}
 // Navbar-brand
 @mixin navbar-brand(
   $f-w: "fw-700",

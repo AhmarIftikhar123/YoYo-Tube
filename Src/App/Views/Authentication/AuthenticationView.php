@@ -20,14 +20,14 @@
                               <li class="nav-item" role="presentation">
                                         <a class="nav-link w-100 border-0
                                         <?= $uri === "/auth/login" || $uri === "/authentication" ? "active" : "" ?>
-                                                                               " id="login-tab" data-bs-toggle="tab"
+                                                                               p_block_75" id="login-tab" data-bs-toggle="tab"
                                                   href="#login" role="tab" aria-controls="login"
                                                   aria-selected="true">Login</a>
                               </li>
                               <li class="nav-item" role="presentation">
                                         <a class="nav-link w-100 border-0
                                         <?= $uri === "/auth/register" ? "active" : "" ?>
-                                        " id="register-tab" data-bs-toggle="tab" href="#register" role="tab"
+                                        p_block_75" id="register-tab" data-bs-toggle="tab" href="#register" role="tab"
                                                   aria-controls="register" aria-selected="false">Register</a>
                               </li>
                     </ul>
@@ -106,8 +106,8 @@
                                                                       <?= $this->emailError ?? "" ?>
                                                             </div>
                                                   </div>
-
-                                                  <div class="mb-3 form-group">
+                                                  <div class="password_wrapper d-grid">
+                                                  <div class="mb-2 form-group">
                                                             <label for="register-password"
                                                                       class="form-label">Password</label>
                                                             <input type="password" class="form-control"
@@ -119,7 +119,7 @@
                                                             </div>
                                                   </div>
 
-                                                  <div class="mb-3 form-group">
+                                                  <div class="mb-2 form-group">
                                                             <label for="confirm-password" class="form-label">Confirm
                                                                       Password</label>
                                                             <input type="password" class="form-control"
@@ -131,7 +131,7 @@
                                                             </div>
 
                                                   </div>
-
+                                                  </div>
                                                   <div class="mb-3 form-group">
                                                             <label for="confirm-password"
                                                                       class="form-label">Role</label>

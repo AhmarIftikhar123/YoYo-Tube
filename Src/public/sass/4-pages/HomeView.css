@@ -70,7 +70,7 @@
   transition: opacity 0.3s ease;
 }
 
-.btn-primary, .page-link {
+.btn-primary, .pagination .page-item a, .page-link {
   transition: background-color 0.3s ease;
 }
 
@@ -1240,17 +1240,17 @@
   font-family: "Oswald", sans-serif;
 }
 
-.btn-primary, .page-link {
+.btn-primary, .pagination .page-item a, .page-link {
   background-color: var(--teal);
   color: var(--darkest_black);
   border: 1px solid currentColor;
 }
-.btn-primary:hover, .page-link:hover {
+.btn-primary:hover, .pagination .page-item a:hover, .page-link:hover {
   background-color: var(--darkest_black);
   color: var(--teal);
   border: 1px solid currentColor;
 }
-.btn-primary:active, .page-link:active, .show.btn-primary, .show.page-link, .active.btn-primary, .active.page-link {
+.btn-primary:active, .pagination .page-item a:active, .page-link:active, .show.btn-primary, .pagination .page-item a.show, .show.page-link, .active.btn-primary, .pagination .page-item a.active, .active.page-link {
   background-color: var(--aqua) !important;
   color: var(--darkest_black) !important;
   border: 1px solid currentColor !important;

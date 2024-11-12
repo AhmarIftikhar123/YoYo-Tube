@@ -30,7 +30,14 @@ body {
 .form-check {
   @extend %form_group;
 }
-
+.password_wrapper {
+  grid-auto-flow: column;
+  gap: 1.25rem;
+  @include respond-to(sm) {
+    grid-auto-flow: row;
+    gap: 0;
+  }
+}
 .btn-primary {
   @extend %btn-primary;
 }

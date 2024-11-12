@@ -44,7 +44,11 @@
     @extend %one_line_ellipsis;
   }
 }
-
+.pagination {
+  .page-item  a {
+    @extend %btn-primary;
+  }
+}
 .page-link {
   @extend %btn-primary;
 }

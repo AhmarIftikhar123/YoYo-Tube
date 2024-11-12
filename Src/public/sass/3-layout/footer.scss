@@ -7,6 +7,9 @@ footer {
         gap: map-get($map: $sizes, $key: _1); // .25rem
         position: relative;
       }
+      @include respond-to-heigth(lg) {
+        position: relative;
+      }
       @extend %absolute;
       bottom: 0;
       left: 0;

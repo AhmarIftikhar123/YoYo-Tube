@@ -1270,6 +1270,11 @@ footer .container .row {
     position: relative;
   }
 }
+@media (max-height: 992px) {
+  footer .container .row {
+    position: relative;
+  }
+}
 footer .container .row > div {
   align-self: center;
 }

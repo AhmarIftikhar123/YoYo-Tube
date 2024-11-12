@@ -1,4 +1,30 @@
 <?php
+function timeAgo($time)
+{
+    $time_difference = time() - strtotime($time);
+
+    if ($time_difference < 1) {
+        return 'Just now';
+    }
+
+    $condition = array(
+        12 * 30 * 24 * 60 * 60 => 'year',
+        30 * 24 * 60 * 60 => 'month',
+        24 * 60 * 60 => 'day',
+        60 * 60 => 'hour',
+        60 => 'minute',
+        1 => 'second'
+    );
+
+    foreach ($condition as $secs => $str) {
+        $d = $time_difference / $secs;
+
+        if ($d >= 1) {
+            $t = round($d);
+            return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+        }
+    }
+}
 $user_video_model = $this->user_video_model;
 
 $user_id = $_SESSION["user_id"];
@@ -15,139 +41,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YoYo Tube - Video Listing</title>
-    <?php include dirname(__DIR__) . "/partials/Bootstrap_css.php"; ?>
-    <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-            --card-bg: #fff;
-            --card-text: #333;
-            --footer-bg: #343a40;
-            --footer-text: #fff;
-        }
-
-        .dark-mode {
-            --bg-color: #333;
-            --text-color: #f8f9fa;
-            --card-bg: #444;
-            --card-text: #f8f9fa;
-            --footer-bg: #222;
-            --footer-text: #f8f9fa;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: #ff6b6b !important;
-        }
-
-        .card {
-            transition: transform 0.2s;
-            background-color: var(--card-bg);
-            color: var(--card-text);
-        }
-
-        .card:hover {
-            transform: scale(1.03);
-        }
-
-        .card-img-overlay {
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .card:hover .card-img-overlay {
-            opacity: 1;
-        }
-
-        .card-body {
-
-            &>.card-title,
-            .card-text {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                -webkit-line-clamp: 2;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-            }
-
-            .card-title {
-                min-height: 3rem;
-            }
-        }
-
-        .card-text:nth-child(3) {
-            min-height: 7.5rem;
-            -webkit-line-clamp: 5 !important;
-        }
-
-        .badge-paid {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-        .badge-free {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .star-rating {
-            color: #ffc107;
-        }
-
-        .footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-        }
-
-        .footer a {
-            color: var(--footer-text);
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .page-link {
-            background: var(--card-bg) !important;
-            color: var(--text-color) !important;
-            border: gray 1px solid !important;
-
-            &.active {
-                background: var(--text-color) !important;
-                color: var(--bg-color) !important;
-                border: gray 1px solid !important;
-            }
-        }
-
-        .form-select,
-        .form-check-input {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-color: var(--text-color);
-        }
-
-        .btn-light {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-color: var(--text-color);
-        }
-
-        .btn-light:hover {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-        }
-    </style>
+    <link rel="stylesheet" href="/css/4-pages/HomeView.css">
 </head>
 
 <body>
@@ -155,58 +49,60 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
     <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
 
     <!-- Main Content -->
-    <div class="container my-5">
-        <!-- Filter Panel -->
-        <form method="get" id="filterForm" class="row mb-4 align-items-center" id="form">
-            <div class="col-md-4 mb-4">
-                <select class="form-select" id="categoryFilter">
-                    <option selected>Action</option>
-                    <option>Comedy</option>
-                    <option>Drama</option>
-                    <option>Horror</option>
-                </select>
+    <div class="container my-2">
+        <!-- Search Iput -->
+        <div class="container">
+
+            <div class="input-group my-3 mx-auto align-items-ceter justify-content-center">
+                <input type="text" name="search" class="form-control rounded-start
+    bg_darkest_black  clr_teal" id="searchInput" placeholder="Search Videos..." list="filterDetails">
+                <button class="btn btn-primary rounded-end" type="button" id="searchBtn"><i
+                        class="fa-solid fa-magnifying-glass"></i></i></button>
+                <datalist id="filterDetails">
+                </datalist>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" <?= $filter_type == "18+" ? "checked" : "" ?> type="checkbox"
-                        id="adultContentSwitch">
-                    <label class="form-check-label" for="adultContentSwitch">18+
-                        Content</label>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <a href="/videos?filter=<?= $filter_type ?>" class="btn btn-light w-100" id="applyFilters">Apply
-                    Filters</a>
-            </div>
-        </form>
+
+            <small class="text-danger text-center d-block ms-2 mb-1 fs_75" id="searchError"></small>
+        </div>
 
         <!-- Video Grid -->
-        <div class="row" id="videoGrid">
+        <div class="row" class="videoGrid_warpper">
             <!-- Video cards will be dynamically inserted here -->
 
             <div id="videoGrid" class="row">
                 <?php foreach ($get_user_posts as $post): ?>
-
-                    <div class="col-md-3 mb-4">
-                        <div class="card">
-                            <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" style="height: 200px;">
+                    <div class="col-md-4 col-lg-3 mb-2">
+                        <div class="card clr_light_gray bg_darkest_black fs_1">
+                            <img src="<?= $post['thumbnail_path'] ?>" alt="vidoe_thumbnail" class="card-img-top">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">
                                 <a href="/videos/watch?video_id=<?= $post['id'] ?>&user_id=<?= $post['user_id'] ?>&is_paid=<?= $post['is_paid'] ?>"
-                                    target="_blank" class="btn btn-light btn-lg rounded-circle">
-                                    <i class="bi bi-play-fill"></i>
-                                </a>
+                                    target="_blank" class="btn btn-primary p_1 rounded-circle">
+                                    <i class="fa-solid fa-play"></i> </a>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title"><?= $post['title'] ?></h5>
-                                <p class="card-text text-uppercase d-flex gap-2">
-                                    <span class="badge bg-secondary"><?= $post['category'] ?></span>
-                                    <span
-                                        class="badge badge-<?= $post['is_paid'] ? 'paid' : 'free' ?>"><?= $post['is_paid'] ? 'Paid' : 'Free' ?></span>
-                                </p>
-                                <p class="card-text"><?= $post['description'] ?></p>
+                                <h5 class="card-title mb-1 fs_1"><?= htmlspecialchars($post['title']) ?></h5>
+
+                                <p class="card-text mb-1 clr_teal fs_85"><?= $post['description'] ?></p>
+                            <!--------------- Price & Time of Upload --------------->
+                            <div
+                                class="d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+                                <?php if ($post['price'] <= 0): ?>
+                                <span
+                                    class="fs_75 clr_darkest_black bg_light_gray mb-1 p_inline_75 p_block_25 rounded">Free</span>
+                                <?php else: ?>
+                                <span class="fs_75 clr_darkest_black bg_teal mb-1 p_inline_75 p_block_25 rounded">
+                                    $
+                                    <?= $post['price'] ?>
+                                </span>
+                                <?php endif; ?>
+
+                                <span class="fs_75 clr_light_gray  mb-1 p_inline_75 p_block_25">
+                                    <?= timeAgo($post['updated_at']) ?>
+                                </span>
                             </div>
                         </div>
                     </div>
+                </div>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -215,8 +111,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
         $number_of_pages = ceil(count($get_all_user_posts) / 8);
         ?>
 
-        <nav aria-label="Video pagination"
-            class="pagination pagination-dark align-items-center justify-content-center ">
+        <nav aria-label="Video pagination" class="pagination pagination-dark align-items-center justify-content-center">
             <ul class="pagination">
                 <li class="page-item">
                     <a href="/videos?page=<?= $current_page - 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
@@ -230,10 +125,12 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
                     </a>
                 </li>
                 <?php for ($i = 1; $i <= $number_of_pages; $i++): ?>
-                    <li class="page-item" aria-current="page">
-                        <a href="/videos?page=<?= $i ?>&filter=<?= $filter_type ?>"
-                            class="page-link <?= $i == $current_page ? "active" : "" ?>"><?= $i ?></a>
-                    </li>
+                <li class="page-item" aria-current="page">
+                    <a href="/videos?page=<?= $i ?>&filter=<?= $filter_type ?>"
+                        class="page-link rounded <?= $i == $current_page ? "active" : "" ?>">
+                        <?= $i ?>
+                    </a>
+                </li>
                 <?php endfor; ?>
                 <li class="page-item">
                     <a href="/videos?page=<?= $current_page + 1 ?>" class="page-link" tabindex="-1" aria-disabled="true"
@@ -250,32 +147,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
         </nav>
     </div>
     <!-- Footer -->
-    <footer class="footer mt-5 py-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>YoYo Tube</h5>
-                    <p>Share and enjoy amazing videos!</p>
-                </div>
-                <div class="col-md-3">
-                    <h5>Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Follow Us</h5>
-                    <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="me-2"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include dirname(__DIR__) . "/partials/footer.php"; ?>
     <script>
         const adultContentSwitch = $('#adultContentSwitch');
         const darkModeToggle = $('#darkModeToggle');

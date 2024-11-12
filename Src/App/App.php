@@ -29,7 +29,7 @@ class App
                               header("HTTP/1.0 404 Not Found");
                               http_response_code(404);
                               // echo Views::make("Exception_Views/404", ["message" => $e->getMessage() . " " . $this->request["request_uri"]]);
-                              echo $e->getMessage() . " " . $this->request["request_uri"];
+                              echo $e->getMessage() . " " . $this->request["request_uri"] . "" . $e->getFile() . "" . $e->getLine();
                     }
 
           }
