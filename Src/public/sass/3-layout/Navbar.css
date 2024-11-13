@@ -109,6 +109,7 @@ button[data-text=Switch-Theme]::after {
   display: block;
   position: absolute;
   left: -125%;
+  right: auto;
   bottom: -200%;
   background-color: var(--darkest_black);
   color: var(--teal);
@@ -127,6 +128,7 @@ button[data-text=Switch-Theme]::after {
   display: block;
   position: absolute;
   left: -70%;
+  right: auto;
   bottom: -105%;
   background-color: var(--darkest_black);
   color: var(--teal);
@@ -145,6 +147,7 @@ button[data-text=Switch-Theme]::after {
   display: block;
   position: absolute;
   left: 0;
+  right: 0;
   bottom: 0;
   background-color: var(--aqua);
   color: var(--aqua);
@@ -1182,6 +1185,66 @@ button[data-text=Switch-Theme]::after {
   font-size: 2rem;
 }
 
+.p_2_25 {
+  padding: 2.25rem;
+}
+
+.p_inline_2_25 {
+  padding-inline: 2.25rem;
+}
+
+.p_inline-start_2_25 {
+  padding-inline-start: 2.25rem;
+}
+
+.p_inline-end_2_25 {
+  padding-inline-end: 2.25rem;
+}
+
+.p_block_2_25 {
+  padding-block: 2.25rem;
+}
+
+.p_block-start_2_25 {
+  padding-block-start: 2.25rem;
+}
+
+.p_block-end_2_25 {
+  padding-block-end: 2.25rem;
+}
+
+.m_2_25 {
+  margin: 2.25rem;
+}
+
+.m_inline_2_25 {
+  margin-inline: 2.25rem;
+}
+
+.m_inline-start_2_25 {
+  margin-inline-start: 2.25rem;
+}
+
+.m_inline-end_2_25 {
+  margin-inline-end: 2.25rem;
+}
+
+.m_block_2_25 {
+  margin-block: 2.25rem;
+}
+
+.m_block-start_2_25 {
+  margin-block-start: 2.25rem;
+}
+
+.m_block-end_2_25 {
+  margin-block-end: 2.25rem;
+}
+
+.fs_2_25 {
+  font-size: 2.25rem;
+}
+
 .p_2_5 {
   padding: 2.5rem;
 }
@@ -1370,6 +1433,9 @@ body {
   width: fit-content;
   font-size: 0.9rem;
   color: var(--light_gray);
+}
+.nav-link::after {
+  margin: 0 auto;
 }
 .nav-link:hover, .nav-link:active, .nav-link.active {
   color: var(--teal) !important;

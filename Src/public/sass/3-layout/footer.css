@@ -93,6 +93,7 @@
   display: block;
   position: absolute;
   left: -125%;
+  right: auto;
   bottom: -200%;
   background-color: var(--darkest_black);
   color: var(--teal);
@@ -1126,6 +1127,66 @@
   font-size: 2rem;
 }
 
+.p_2_25 {
+  padding: 2.25rem;
+}
+
+.p_inline_2_25 {
+  padding-inline: 2.25rem;
+}
+
+.p_inline-start_2_25 {
+  padding-inline-start: 2.25rem;
+}
+
+.p_inline-end_2_25 {
+  padding-inline-end: 2.25rem;
+}
+
+.p_block_2_25 {
+  padding-block: 2.25rem;
+}
+
+.p_block-start_2_25 {
+  padding-block-start: 2.25rem;
+}
+
+.p_block-end_2_25 {
+  padding-block-end: 2.25rem;
+}
+
+.m_2_25 {
+  margin: 2.25rem;
+}
+
+.m_inline_2_25 {
+  margin-inline: 2.25rem;
+}
+
+.m_inline-start_2_25 {
+  margin-inline-start: 2.25rem;
+}
+
+.m_inline-end_2_25 {
+  margin-inline-end: 2.25rem;
+}
+
+.m_block_2_25 {
+  margin-block: 2.25rem;
+}
+
+.m_block-start_2_25 {
+  margin-block-start: 2.25rem;
+}
+
+.m_block-end_2_25 {
+  margin-block-end: 2.25rem;
+}
+
+.fs_2_25 {
+  font-size: 2.25rem;
+}
+
 .p_2_5 {
   padding: 2.5rem;
 }
@@ -1270,7 +1331,7 @@ footer .container .row {
     position: relative;
   }
 }
-@media (max-height: 992px) {
+@media (max-height: 900px) {
   footer .container .row {
     position: relative;
   }

@@ -13,11 +13,11 @@
   input {
     @extend %fw-600;
     @extend %base-border;
-//     font-size: map-get($map: $sizes, $key: _90);
+    //     font-size: map-get($map: $sizes, $key: _90);
     background-color: $bg;
     color: $color;
     &:focus {
-      background-color: var(--darkest_black);
+      background-color: $bg;
       color: $color;
       box-shadow: 0 0 0 0.15rem $border;
       border-color: $border;
@@ -30,4 +30,7 @@
 
 %form_group {
   @include form_group();
+}
+%profile_form_group {
+  @include form_group($bg: var(--dark_gray));
 }

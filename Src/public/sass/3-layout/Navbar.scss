@@ -35,6 +35,7 @@ body {
 
   &::after {
     @extend %nav-link-pseudo-after;
+    margin: 0 auto;
   }
 
   &:hover,

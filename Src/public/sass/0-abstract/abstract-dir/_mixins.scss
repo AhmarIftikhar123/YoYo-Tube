@@ -3,6 +3,7 @@ $breakpoints: (
   xs: 0,
   sm: 576px,
   md: 768px,
+  md-max: 900px,
   lg: 992px,
   xl: 1200px,
   xxl: 1400px,
@@ -49,6 +50,7 @@ $breakpoints: (
   $content: " ",
   $left: -125%,
   $bottom: -200%,
+  $right: auto,
   $width: auto,
   $height: auto,
   $bg: var(--darkest_black),
@@ -63,6 +65,7 @@ $breakpoints: (
   display: $display;
   position: $pos;
   left: $left;
+  right: $right;
   bottom: $bottom;
   background-color: $bg;
   color: $color;
@@ -115,6 +118,22 @@ $breakpoints: (
 %profile-pseudo-before {
   @include theme-pseudo-before($top: 85%, $left: 25%);
 }
+// Upload Pseudo start
+%upload-pseudo-after {
+  @include theme-pseudo-after(
+    $content: attr(data-text),
+    $left: 33%,
+    $bottom: 125%,
+  );
+}
+%upload-pseudo-before {
+  @include theme-pseudo-before(
+    $border-color: currentColor transparent transparent transparent,
+    $top: -25%,
+    $left: 47%
+  );
+}
+// Upload Pseudo end
 %profile-pseudo-after {
   @include theme-pseudo-after(
     $content: attr(data-text),
@@ -128,6 +147,7 @@ $breakpoints: (
     $display: block,
     $pos: absolute,
     $left: 0,
+    $right: 0,
     $bottom: 0,
     $width: 0,
     $height: 2px,
@@ -157,4 +177,3 @@ $breakpoints: (
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
-

@@ -1,0 +1,57 @@
+@use "../Main" as *;
+
+body {
+  @extend %transition-background;
+}
+h1 {
+  @extend %h1_Oswald;
+}
+.profile-form {
+  max-width: 500px;
+  box-shadow: 8px 8px 15px var(--teal);
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 3px solid var(--teal);
+  @include respond-to(sm) {
+    width: auto !important;
+    height: auto !important;
+  }
+}
+.file-input-wrapper {
+  @extend %btn-primary;
+  @extend %pointer;
+  input[type="file"] {
+    inset: 0;
+    opacity: 0;
+  }
+}
+[data-text="Upload Img"] {
+  &::before {
+    @extend %upload-pseudo-before;
+  }
+  &::after {
+    @extend %upload-pseudo-after;
+    @extend %base-border;
+  }
+  &:hover {
+    &::after,
+    &::before {
+      cursor: pointer;
+      opacity: 1;
+    }
+  }
+}
+#saveProfile {
+  @extend %btn-primary;
+  @extend %Oswald;
+}
+.form-group {
+  @extend %profile_form_group;
+  &::placeholder {
+    font-size: 0.85rem;
+  }
+}
