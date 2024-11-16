@@ -147,12 +147,12 @@ bg_darkest_black fs_1_5 clr_aqua
 
 <div class="toast-container position-fixed top-25 end-0 p-3">
     <div id="profileToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
+        <div class="toast-header bg_light_gray clr_darkest_black">
             <i class="fa-solid fa-exclamation me-2"></i>
             <strong class="me-auto navbar-brand">YOYO Tube</strong>
             <i class="fa-solid fa-xmark ms-1" type="button" data-bs-dismiss="toast" aria-label="Close"></i>
         </div>
-        <div class="toast-body bg_darkest_black">
+        <div class="toast-body bg_darkest_black clr_light_gray">
             <p class="text-center">You are not login or registered, please <a href="/authentication" class="nav-link d-inline">login</a> or <a
                     href="/authentication?register=true" class="nav-link d-inline">register</a> first.</p>
         </div>

@@ -74,6 +74,11 @@ body, .file-input-wrapper, #saveProfile {
   transition: background-color 0.3s ease;
 }
 
+.form-group input,
+.form-group textarea {
+  transition: box-shadow 0.3s ease;
+}
+
 [data-text="Upload Img"]::after {
   content: attr(data-text);
   display: block;
@@ -1311,7 +1316,17 @@ body, .file-input-wrapper, #saveProfile {
   font-size: inherit;
 }
 
-.form-group > label, .form-group input {
+.form-group input::-moz-placeholder, .form-group textarea::-moz-placeholder {
+  font-weight: 400 !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  font-weight: 400 !important;
+}
+
+.form-group > label, .form-group input,
+.form-group textarea {
   font-weight: 600 !important;
 }
 
@@ -1344,27 +1359,32 @@ h1 {
   border: 1px solid currentColor !important;
 }
 
-[data-text="Upload Img"]::after, .form-group input {
+[data-text="Upload Img"]::after, .form-group input,
+.form-group textarea {
   border: 1px solid currentColor;
 }
 
 .form-group > label {
   color: var(--light_gray);
 }
-.form-group input {
+.form-group input,
+.form-group textarea {
+  accent-color: var(--teal);
   background-color: var(--dark_gray);
   color: var(--light_gray);
 }
-.form-group input:focus {
+.form-group input:focus,
+.form-group textarea:focus {
   background-color: var(--dark_gray);
   color: var(--light_gray);
   box-shadow: 0 0 0 0.15rem var(--teal);
   border-color: var(--teal);
 }
-.form-group input::-moz-placeholder {
+.form-group input::-moz-placeholder, .form-group textarea::-moz-placeholder {
   color: var(--light_gray);
 }
-.form-group input::placeholder {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
   color: var(--light_gray);
 }
 

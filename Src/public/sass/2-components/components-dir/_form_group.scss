@@ -10,10 +10,12 @@
     @extend %fw-600;
     color: $color;
   }
-  input {
+  input,
+  textarea {
     @extend %fw-600;
     @extend %base-border;
-    //     font-size: map-get($map: $sizes, $key: _90);
+    @extend %transition-box-shadow;
+    accent-color: $border;
     background-color: $bg;
     color: $color;
     &:focus {
@@ -24,6 +26,7 @@
     }
     &::placeholder {
       color: $color;
+      @extend %fw-400;
     }
   }
 }
@@ -33,4 +36,54 @@
 }
 %profile_form_group {
   @include form_group($bg: var(--dark_gray));
+}
+// form_control
+@mixin form_control(
+  $bg: var(--darkest_black),
+  $color: var(--light_gray),
+  $border-color: var(--teal)
+) {
+  @extend %base-border;
+  box-shadow: 0 0 0 0.05rem $border-color;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+
+  &:focus {
+    background: $bg;
+    color: $color;
+    box-shadow: 0 0 0 0.125rem $border-color;
+  }
+
+  &::placeholder {
+    color: $color;
+  }
+}
+
+%form_control {
+  @include form_control();
+}
+
+@mixin fomr_check(
+  $accent-color: var(--teal),
+  $bg: var(--dark_gray),
+  $color: var(--light_gray),
+  $border-color: var(--teal)
+) {
+  accent-color: $accent-color;
+  background-color: #101010;
+  color: $color;
+  &:checked {
+    accent-color: var(--aqua);
+    background-color:#101010;
+    color: $color;
+    border-color: $border-color;
+  }
+  &:focus{
+    border-color: currentColor;
+    outline: 0;
+    box-shadow: 0 0 0 .125rem var(--aqua);
+  }
+}
+%form_check {
+  @include fomr_check();
 }

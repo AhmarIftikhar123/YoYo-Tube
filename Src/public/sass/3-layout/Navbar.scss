@@ -190,3 +190,7 @@ i {
     }
   }
 }
+
+.btn-primary {
+  @extend %btn-primary;
+}

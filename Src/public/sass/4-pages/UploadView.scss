@@ -1,0 +1,64 @@
+@use "../Main" as *;
+h1 {
+  @extend %h1_Oswald;
+}
+body {
+  @extend %transition-background;
+}
+
+// -------- upload_form_wrapper z--------
+.upload_form_wrapper {
+  max-width: 768px;
+  margin-top: max(5%, 2rem);
+
+  .video_details_section {
+    // form-group
+    .form-group {
+      @extend %form_group;
+      input[type="checkbox"] {
+        height: map-get($map: $sizes, $key: _1);
+      }
+    }
+  }
+}
+//
+.form-check-input {
+  @extend %form_check;
+}
+// -------- file-drop-area --------
+.file-drop-area {
+  border: 2px dashed var(--dark_gray);
+  border-radius: map-get($map: $sizes, $key: _5);
+  @extend %pointer;
+  background-color: var(--darkest_black);
+  @extend %transition-background;
+}
+
+.file-drop-area.dragover {
+  border-color: var(--aqua);
+}
+
+#SelectVideo .nav-link {
+  text-underline-offset: 4px;
+  color: var(--aqua) !important;
+  @extend %fw-600;
+}
+// -------- i fa-cloud-arrow-up --------
+i.fa-cloud-arrow-up {
+  color: var(--aqua);
+  &::before {
+    font-size: map-get($map: $sizes, $key: _3);
+  }
+}
+
+.tags_catogery_wrapper {
+  grid-auto-flow: column;
+  gap: map-get($map: $sizes, $key: _1);
+  @include respond-to(sm) {
+    gap: map-get($map: $sizes, $key: _1_5);
+  }
+}
+
+.btn-primary {
+  @extend %btn-primary;
+}

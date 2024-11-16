@@ -74,7 +74,7 @@
   transition: transform 0.3s ease;
 }
 
-body, .navbar, .offcanvas-body .dropdown-item, .dropdown-menu .dropdown-menu {
+body, .navbar, .offcanvas-body .dropdown-item, .dropdown-menu .dropdown-menu, .btn-primary {
   transition: background-color 0.3s ease;
 }
 
@@ -1392,6 +1392,22 @@ body {
 #themeToggler, .profile_info > div:nth-child(1) {
   display: grid;
   place-content: center;
+}
+
+.btn-primary {
+  background-color: var(--teal);
+  color: var(--darkest_black);
+  border: 1px solid currentColor;
+}
+.btn-primary:hover {
+  background-color: var(--darkest_black);
+  color: var(--teal);
+  border: 1px solid currentColor;
+}
+.btn-primary:active, .show.btn-primary, .active.btn-primary {
+  background-color: var(--aqua) !important;
+  color: var(--darkest_black) !important;
+  border: 1px solid currentColor !important;
 }
 
 .dropdown-menu .dropdown-menu {

@@ -70,6 +70,13 @@
   transition: background-color 0.3s ease;
 }
 
+.form-group input,
+.form-check input,
+.form-group textarea,
+.form-check textarea {
+  transition: box-shadow 0.3s ease;
+}
+
 .p_125 {
   padding: 0.125rem;
 }
@@ -1274,9 +1281,22 @@
   font-size: inherit;
 }
 
+.form-group input::-moz-placeholder, .form-check input::-moz-placeholder, .form-group textarea::-moz-placeholder, .form-check textarea::-moz-placeholder {
+  font-weight: 400 !important;
+}
+
+.form-group input::placeholder,
+.form-check input::placeholder,
+.form-group textarea::placeholder,
+.form-check textarea::placeholder {
+  font-weight: 400 !important;
+}
+
 .form-group > label,
 .form-check > label, .form-group input,
-.form-check input {
+.form-check input,
+.form-group textarea,
+.form-check textarea {
   font-weight: 600 !important;
 }
 
@@ -1318,7 +1338,9 @@
 }
 
 .form-group input,
-.form-check input {
+.form-check input,
+.form-group textarea,
+.form-check textarea {
   border: 1px solid currentColor;
 }
 
@@ -1327,22 +1349,29 @@
   color: var(--light_gray);
 }
 .form-group input,
-.form-check input {
+.form-check input,
+.form-group textarea,
+.form-check textarea {
+  accent-color: var(--teal);
   background-color: var(--darkest_black);
   color: var(--light_gray);
 }
 .form-group input:focus,
-.form-check input:focus {
+.form-check input:focus,
+.form-group textarea:focus,
+.form-check textarea:focus {
   background-color: var(--darkest_black);
   color: var(--light_gray);
   box-shadow: 0 0 0 0.15rem var(--teal);
   border-color: var(--teal);
 }
-.form-group input::-moz-placeholder, .form-check input::-moz-placeholder {
+.form-group input::-moz-placeholder, .form-check input::-moz-placeholder, .form-group textarea::-moz-placeholder, .form-check textarea::-moz-placeholder {
   color: var(--light_gray);
 }
 .form-group input::placeholder,
-.form-check input::placeholder {
+.form-check input::placeholder,
+.form-group textarea::placeholder,
+.form-check textarea::placeholder {
   color: var(--light_gray);
 }
 
