@@ -1,11 +1,39 @@
 <?php
-$tags = json_decode($this->current_video_info['tags']);
 $current_video_id = $this->current_video_info['id'];
 $lates_videos_info = $this->latest_videos_info;
 $comments = $this->comments;
-$username = $_COOKIE['user_name'];
+$username = $_COOKIE['user_name'] ?? "";
 $is_user_like = !empty($this->is_user_like_video['is_liked']) ? "active" : "";
 $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_user_like_video['is_liked'] === 0) ? "active" : "";
+
+// Format the Time
+function timeAgo($time)
+{
+    $time_difference = time() - strtotime($time);
+
+    if ($time_difference < 1) {
+        return 'Just now';
+    }
+
+    $condition = array(
+        12 * 30 * 24 * 60 * 60 => 'year',
+        30 * 24 * 60 * 60 => 'month',
+        24 * 60 * 60 => 'day',
+        60 * 60 => 'hour',
+        60 => 'minute',
+        1 => 'second'
+    );
+
+    foreach ($condition as $secs => $str) {
+        $d = $time_difference / $secs;
+
+        if ($d >= 1) {
+            $t = round($d);
+            return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+        }
+    }
+}
+;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,177 +41,9 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoYo Tube </title>
-    <?php include dirname(__DIR__) . "/partials/Bootstrap_css.php"; ?>
-    <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
-    <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-
+    <title>YoYo Tube</title>
+    <link rel="stylesheet" href="/css/4-pages/videosWatch.css">
     <style>
-        :root {
-            --primary-color: #ff6b6b;
-            --secondary-color: #4ecdc4;
-            --text-color: #333;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --border-color: #dee2e6;
-            --modal-bg: #ffffff;
-            --modal-text: #212529;
-            --modal-header-bg: #f8f9fa;
-            --modal-header-text: #212529;
-            --loader-color: rgba(0, 0, 0, 0.5);
-            /* Light theme for toast */
-            --toast-bg: var(--card-bg);
-            --toast-text: var(--text-color);
-            --toast-header-bg: var(--modal-header-bg);
-            --toast-header-text: var(--modal-header-text);
-
-        }
-
-        .dark-mode {
-            --modal-bg: #343a40;
-            --modal-text: #f8f9fa;
-            --modal-header-bg: #212529;
-            --modal-header-text: #f8f9fa;
-            --loader-color: rgba(255, 255, 255, 0.5);
-            /* Dark theme for toast */
-            --toast-bg: var(--modal-bg);
-            --toast-text: var(--modal-text);
-            --toast-header-bg: var(--modal-header-bg);
-            --toast-header-text: var(--modal-header-text);
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%;
-            /* 16:9 Aspect Ratio */
-        }
-
-        #videoPlayer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .controls {
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-
-        .controls button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            margin-right: 10px;
-        }
-
-        .seek-bar {
-            width: 100%;
-            height: 5px;
-            background-color: #666;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-
-        .seek-bar-progress {
-            height: 100%;
-            background-color: var(--primary-color);
-            width: 0;
-        }
-
-        .yoyo-rating {
-            font-size: 1.5rem;
-        }
-
-        .yoyo-rating .fa-yoyo {
-            color: var(--primary-color);
-        }
-
-        .card-img-overlay {
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .card:hover .card-img-overlay {
-            opacity: 1;
-        }
-
-        .paywall,
-        .age-verification {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            color: white;
-        }
-
-        #relatedVideos {
-            .col-4 {
-                >img {
-                    object-fit: cover;
-                    height: 100%;
-                }
-            }
-        }
-
-        .dark-mode {
-            --text-color: #f8f9fa;
-            --bg-color: #333;
-            --card-bg: #444;
-            --border-color: #555;
-        }
-
-        .modal-content {
-            background-color: var(--modal-bg);
-            color: var(--modal-text);
-        }
-
-        .modal-header {
-            background-color: var(--modal-header-bg);
-            color: var(--modal-header-text);
-        }
-
-        .modal-footer .btn-primary {
-            background-color: var(--btn-primary-bg);
-            color: var(--btn-primary-color);
-        }
-
-        .btn-primary {
-            background-color: var(--bg-color) !important;
-            color: var(--text-color) !important;
-            border: 1px solid var(--text-color) !important;
-
-            &:hover {
-                background-color: var(--text-color) !important;
-                color: var(--bg-color) !important;
-                border-color: var(--text-color) !important;
-
-            }
-        }
-
         .card {
             background-color: var(--card-bg);
             border-color: var(--border-color);
@@ -200,13 +60,7 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
             color: var(--primary-color);
         }
 
-        .comment-section {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.25rem;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
+
 
         .comment {
             border-bottom: 1px solid var(--border-color);
@@ -215,19 +69,6 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
 
         .comment:last-child {
             border-bottom: none;
-        }
-
-        .btn-primary {
-            background-color: var(--bg-color) !important;
-            color: var(--text-color) !important;
-            border: 1px solid var(--text-color) !important;
-
-            &:hover {
-                background-color: var(--text-color) !important;
-                color: var(--bg-color) !important;
-                border-color: var(--text-color) !important;
-
-            }
         }
 
         .form-control {
@@ -259,31 +100,23 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
         .toast-body {
             color: var(--toast-text);
         }
-
-
-        @media (max-width: 768px) {
-            .controls button {
-                font-size: 1rem;
-                margin-right: 5px;
-            }
-        }
     </style>
 </head>
 
-<body>
+<body class="clr_light_gray">
     <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <div class="video-container mb-4">
-                    <video id="videoPlayer">
+                    <video id="videoPlayer" class="w-100 h-100 rounded">
                         <source src="<?= htmlspecialchars($this->current_video_info['file_path']) ?? "" ?>"
                             type="video/mp4">
                     </video>
-                    <div class="controls">
+                    <div class="controls p_6">
 
-                        <div class="seek-bar">
-                            <div class="seek-bar-progress"></div>
+                        <div class="seek-bar w-100 m_block-end_6">
+                            <div class="seek-bar-progress h-100 bg_aqua"></div>
                         </div>
                         <div class="row">
                             <div class="col-8">
@@ -315,40 +148,55 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <h2 id="videoTitle"><?= htmlspecialchars($this->current_video_info['title']) ?? "" ?></h2>
-                    <p id="videoDescription" class="mb-2">
-                        <?= htmlspecialchars($this->current_video_info['description']) ?? "" ?>
-                    </p>
-                    <p><strong>Category:</strong> <span
-                            id="videoCategory"><?= htmlspecialchars($this->current_video_info['category']) ?? "" ?></span>
-                    </p>
-                    <p><strong>Tags:</strong> <span id="videoTags"><?php if (isset($tags) && is_array($tags) || is_object($tags)) {
-                        foreach ($tags as $tag) {
-                            echo $tag . " ";
-                        }
-                    } else
-                        echo $tags ?>
-                            </span></p>
-                        <button id="reportBtn" class="btn btn-primary mt-2 d-block ms-auto">Report Video</button>
-                    </div>
+                <div class="mb-2">
 
-                    <div class="comment-section">
-                        <h3>Comments</h3>
-                        <form id="commentForm" class="mb-3">
-                            <div class="mb-3">
-                                <textarea class="form-control" id="commentText" rows="3"
-                                    placeholder="Add a comment..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Post Comment</button>
-                        </form>
-                        <div id="commentList">
-                            <!-- Existing comments -->
+                    <h4 class="video_title" id="videoTitle">
+                        <?= htmlspecialchars($this->current_video_info['title']) ?? "" ?>
+                    </h4>
+                    <div class="position-relative">
+                        <div id="videoDescription" class="videoDescription mb-1 bg_dark_gray rounded">
+                            <span class="upload_time fs_75 fw-bold clr_teal my-1">
+                                <?php
+                                $uploadTime = htmlspecialchars(string: $this->current_video_info['created_at']) ?? "";
+                                $formated_time = timeAgo($uploadTime);
+                                echo $formated_time;
+                                ?>
+                            </span>
+                            <p class="my-2"> <?= htmlspecialchars($this->current_video_info['description']) ?? "" ?>
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-chevron-down rounded-circle position-absolute"></i>
+                    </div>
+                    <button id="reportBtn" class="btn btn-primary my-2 fw-medium">Report Video</button>
+                </div>
+
+                <div class="comment-section p_1 rounded">
+                    <h6> Comments: <strong class="clr_teal"><?= count($comments) ?? 0 ?></strong></h6>
+                    <form id="commentForm" class="mb-3 form-group">
+                        <div class="my-3 d-grid position-relative">
+                            <!-- Profile img -->
+                            <?php if (!empty($user['profile_image'])): ?>
+                                <img src="data:image/jpeg;base64,<?= $user['profile_image'] ?>" alt="Profile Image"
+                                    class="profile_image rounded-circle">
+
+                            <?php else: ?>
+                                <i class="fa-solid fa-user"></i>
+                            <?php endif; ?>
+
+                            <input class="form-control" id="commentText" rows="3"
+                                placeholder="Share your thoughts..."></input>
+                            <!-- Submit Comment -->
+                            <button type="submit"
+                                class="btn btn-primary fs_85 my_2 position-absolute top-0 end-0">Comment</button>
+                        </div>
+                    </form>
+                    <div id="commentList">
+                        <!-- Existing comments -->
                         <?php if (empty($comments)): ?>
-                            <p>No comments yet.</p>
+                            <p class="fs_90">No comments yet.</p>
                         <?php else: ?>
                             <?php foreach ($comments as $comment): ?>
-                                <div class="comment">
+                                <div class="comment position-relative">
                                     <p><strong>
                                             <?php
                                             if ($comment['commenter_name'] === $_COOKIE['user_name'] || $comment['commenter_name'] === $this->current_video_info['user_id']) {
@@ -357,34 +205,44 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                                                 echo htmlspecialchars($comment['commenter_name']);
                                             }
                                             ?>
-                                        </strong>: <?= htmlspecialchars($comment['comment_text']) ?>
+                                        </strong>: <?= html_entity_decode(
+                                            $comment['comment_text'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
                                     </p>
-                                    <small><?= htmlspecialchars($comment['comment_created_at']) ?></small>
+                                    <small class="position-absolute end-0 top-0"><?php
+                                    $comment_txt = htmlspecialchars($comment['comment_created_at']);
+                                    $date = timeAgo($comment_txt);
+                                    echo $date;
+                                    ?></small>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <h3>Related Videos</h3>
+            <div class="col-lg-4 mt-1">
+                <h5>Related Videos</h5>
                 <div id="relatedVideos">
                     <?php foreach ($lates_videos_info as $video): ?>
                         <div class="card mb-3">
                             <div class="card-img-overlay d-flex align-items-center justify-content-center">
                                 <a href="/videos/watch?video_id=<?= $video['id'] ?>&user_id=<?= $video['user_id'] ?>&is_paid=<?= $video['is_paid'] ?>"
-                                    target="_blank" class="btn btn-light btn-lg rounded-circle" aria-label="Play video">
-                                    <i class="bi bi-play-fill"></i>
+                                    target="_blank" class="btn btn-primary btn-md rounded-circle" aria-label="Play video">
+                                    <i class="fa-solid fa-play"></i>
                                 </a>
                             </div>
                             <div class="row g-0">
-                                <div class="col-4">
+                                <div class="col-4 col-md-3 col-lg-4 p-1 rounded">
                                     <img src="<?= $video['thumbnail_path'] ?>" class="img-fluid rounded-start"
                                         alt="Thumbnail of <?= htmlspecialchars($video['title']) ?>">
                                 </div>
                                 <div class="col-8">
                                     <div class="card-body">
-                                        <h6 class="card-title"><?= htmlspecialchars($video['title']) ?></h6>
+                                        <h6 class="card-title clr_light_gray fs_85 my-1">
+                                            <?= substr(htmlspecialchars($video['title']), 0, 40) ?>
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
@@ -396,16 +254,20 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
     </div>
     <!----------- Report Modal ----------->
 
-    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal fade h-100" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="reportModalLabel">Report message</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h1 class="modal-title fs-5" id="reportModalLabel">Report</h1>
+                    <button type="button" class="ms-auto bg-transparent border-0" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <i class="fa-solid fa-xmark clr_light_gray" type="button" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="mb-3">
+                        <div class="mb-3 form-group">
                             <label for="message-text" class="col-form-label">Message:</label>
                             <textarea class="form-control" id="message-text"
                                 placeholder="E.g. The video contin some inappropriate content"></textarea>
@@ -421,202 +283,197 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
         </div>
     </div>
     <!-- Report Toast -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="reportToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <strong class="me-auto">YoYo Tube</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div class="toast-container position-fixed end-0 p-3">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="reportToast">
+            <div class="toast-header bg_light_gray clr_darkest_black">
+                <i class="fa-solid fa-exclamation me-2"></i>
+                <strong class="me-auto navbar-brand">YOYO Tube</strong>
+                <i class="fa-solid fa-xmark ms-1" type="button" data-bs-dismiss="toast" aria-label="Close"></i>
             </div>
-            <div class="toast-body">
-
+            <div class="toast-body bg_darkest_black clr_light_gray text-center">
             </div>
         </div>
     </div>
     <script>
-        $(document).ready(function () {
-            if ($('#darkModeToggle').prop('checked')) {
-                $('body').addClass('dark-mode');
-            }
-            const video = $('#videoPlayer')[0];
-            const seekBar = $('.seek-bar')[0];
-            const seekBarProgress = $('.seek-bar-progress')[0];
-            let isPlaying = false;
+        const video = $('#videoPlayer')[0];
+        const seekBar = $('.seek-bar')[0];
+        const seekBarProgress = $('.seek-bar-progress')[0];
+        let isPlaying = false;
 
-            // Play/Pause button
-            $('#playPauseBtn').click(function () {
-                if (isPlaying) {
-                    video.pause();
-                    $(this).html('<i class="fas fa-play"></i>');
-                } else {
-                    video.play();
-                    $(this).html('<i class="fas fa-pause"></i>');
-                }
-                isPlaying = !isPlaying;
-            });
-
-            // Stop button
-            $('#stopBtn').click(function () {
+        // Play/Pause button
+        $('#playPauseBtn').click(function () {
+            if (isPlaying) {
                 video.pause();
-                video.currentTime = 0;
-                isPlaying = false;
-                $('#playPauseBtn').html('<i class="fas fa-play"></i>');
-            });
-
-            // Mute/Unmute button
-            $('#muteBtn').click(function () {
-                video.muted = !video.muted;
-                $(this).html(video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>');
-            });
-
-            // Fullscreen button
-            $('#fullscreenBtn').click(function () {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.mozRequestFullScreen) {
-                    video.mozRequestFullScreen();
-                } else if (video.webkitRequestFullscreen) {
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                }
-            });
-
-            // Quality switcher
-            $('#qualitySelect').change(function () {
-                const quality = $(this).val();
-                // In a real implementation, you would switch the video source here
-                console.log(`Switching to ${quality}p quality`);
-            });
-
-            // Seek bar functionality
-            video.addEventListener('timeupdate', function () {
-                const value = (100 / video.duration) * video.currentTime;
-                seekBarProgress.style.width = value + '%';
-            });
-
-            seekBar.addEventListener('click', function (e) {
-                const seekTime = (e.offsetX / this.offsetWidth) * video.duration;
-                video.currentTime = seekTime;
-            });
-
-            // Utility function to debounce the button clicks
-            function debounce(func, delay) {
-                let timer;
-                return function (...args) {
-                    clearTimeout(timer);
-                    timer = setTimeout(() => func.apply(this, args), delay);
-                };
+                $(this).html('<i class="fas fa-play"></i>');
+            } else {
+                video.play();
+                $(this).html('<i class="fas fa-pause"></i>');
             }
+            isPlaying = !isPlaying;
+        });
 
-            let likeCount = parseInt($('#likeCount').text(), 10);
-            let dislikeCount = parseInt($("#dislikeCount").text(), 10);
+        // Stop button
+        $('#stopBtn').click(function () {
+            video.pause();
+            video.currentTime = 0;
+            isPlaying = false;
+            $('#playPauseBtn').html('<i class="fas fa-play"></i>');
+        });
 
-            $('#likeBtn').on("click", debounce(function () {
-                if ($(this).hasClass('active')) {
-                    // Remove like if already active
-                    $(this).removeClass('active');
-                    // Prevent negative count
-                    likeCount = Math.max(likeCount - 1, 0);
-                    sendDataToServer(1, "DELETE"); // Remove the like from db
-                } else {
-                    // Add like, remove dislike if active
-                    likeCount++;
-                    $(this).addClass('active');
+        // Mute/Unmute button
+        $('#muteBtn').click(function () {
+            video.muted = !video.muted;
+            $(this).html(video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>');
+        });
 
-                    if ($('#dislikeBtn').hasClass('active')) {
-                        $('#dislikeBtn').removeClass('active');
-                        dislikeCount = Math.max(dislikeCount - 1, 0); // Prevent negative count
-                    }
-                    sendDataToServer(1, "INSERT"); // Add the like
-                }
-                updateLikeDislikeCounts();
-            }, 300)); // 500ms debounce delay
+        // Fullscreen button
+        $('#fullscreenBtn').click(function () {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.mozRequestFullScreen) {
+                video.mozRequestFullScreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        });
 
-            $('#dislikeBtn').on("click", debounce(function () {
-                if ($(this).hasClass('active')) {
-                    // Remove dislike if already active
-                    $(this).removeClass('active');
+        // Quality switcher
+        $('#qualitySelect').change(function () {
+            const quality = $(this).val();
+            // In a real implementation, you would switch the video source here
+            console.log(`Switching to ${quality}p quality`);
+        });
+
+        // Seek bar functionality
+        video.addEventListener('timeupdate', function () {
+            const value = (100 / video.duration) * video.currentTime;
+            seekBarProgress.style.width = value + '%';
+        });
+
+        seekBar.addEventListener('click', function (e) {
+            const seekTime = (e.offsetX / this.offsetWidth) * video.duration;
+            video.currentTime = seekTime;
+        });
+
+        // Utility function to debounce the button clicks
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        let likeCount = parseInt($('#likeCount').text(), 10);
+        let dislikeCount = parseInt($("#dislikeCount").text(), 10);
+
+        $('#likeBtn').on("click", debounce(function () {
+            if ($(this).hasClass('active')) {
+                // Remove like if already active
+                $(this).removeClass('active');
+                // Prevent negative count
+                likeCount = Math.max(likeCount - 1, 0);
+                sendDataToServer(1, "DELETE"); // Remove the like from db
+            } else {
+                // Add like, remove dislike if active
+                likeCount++;
+                $(this).addClass('active');
+
+                if ($('#dislikeBtn').hasClass('active')) {
+                    $('#dislikeBtn').removeClass('active');
                     dislikeCount = Math.max(dislikeCount - 1, 0); // Prevent negative count
-                    sendDataToServer(0, "DELETE"); // Remove the dislike
-                } else {
-                    // Add dislike, remove like if active
-                    dislikeCount++;
-                    $(this).addClass('active');
-
-                    if ($('#likeBtn').hasClass('active')) {
-                        $('#likeBtn').removeClass('active');
-                        likeCount = Math.max(likeCount - 1, 0); // Prevent negative count
-                        // sendDataToServer(1, "DELETE"); // Remove like if active
-                    }
-                    sendDataToServer(0, "INSERT"); // Add the dislike
                 }
-                updateLikeDislikeCounts();
-            }, 300)); // 500ms debounce delay
-
-
-            function updateLikeDislikeCounts() {
-                $('#likeCount').text(likeCount);
-                $('#dislikeCount').text(dislikeCount);
+                sendDataToServer(1, "INSERT"); // Add the like
             }
-            function sendDataToServer(like_status, action) {
-                $.ajax({
-                    url: "<?= BASE_URL . '/' . 'videos/watch/likes' ?>",
-                    type: "POST",
-                    data: {
-                        video_id: "<?= $current_video_id ?>",
-                        like_status: like_status,
-                        action: action
-                    },
-                    success: function (data) {
-                        console.log('Server Response:', data); // Handle the response
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error:', error); // Handle errors
-                    }
-                });
-            }
+            updateLikeDislikeCounts();
+        }, 300)); // 500ms debounce delay
 
-            // Comment functionality
-            $('#commentForm').submit(function (e) {
-                e.preventDefault();
-                const commentText = $('#commentText').val().trim();
-                if (commentText) {
-                    addComment(commentText);
-                    $('#commentText').val('');
+        $('#dislikeBtn').on("click", debounce(function () {
+            if ($(this).hasClass('active')) {
+                // Remove dislike if already active
+                $(this).removeClass('active');
+                dislikeCount = Math.max(dislikeCount - 1, 0); // Prevent negative count
+                sendDataToServer(0, "DELETE"); // Remove the dislike
+            } else {
+                // Add dislike, remove like if active
+                dislikeCount++;
+                $(this).addClass('active');
+
+                if ($('#likeBtn').hasClass('active')) {
+                    $('#likeBtn').removeClass('active');
+                    likeCount = Math.max(likeCount - 1, 0); // Prevent negative count
+                    // sendDataToServer(1, "DELETE"); // Remove like if active
+                }
+                sendDataToServer(0, "INSERT"); // Add the dislike
+            }
+            updateLikeDislikeCounts();
+        }, 300)); // 500ms debounce delay
+
+
+        function updateLikeDislikeCounts() {
+            $('#likeCount').text(likeCount);
+            $('#dislikeCount').text(dislikeCount);
+        }
+        function sendDataToServer(like_status, action) {
+            $.ajax({
+                url: "<?= BASE_URL . '/' . 'videos/watch/likes' ?>",
+                type: "POST",
+                data: {
+                    video_id: "<?= $current_video_id ?>",
+                    like_status: like_status,
+                    action: action
+                },
+                success: function (data) {
+                    console.log('Server Response:', data); // Handle the response
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error); // Handle errors
                 }
             });
+        }
 
-            function addComment(commenttext) {
-                const commentHtml = `
+        // Comment functionality
+        $('#commentForm').submit(function (e) {
+            e.preventDefault();
+            const commentText = $('#commentText').val().trim();
+            if (commentText) {
+                addComment(commentText);
+                $('#commentText').val('');
+            }
+        });
+
+        function addComment(commenttext) {
+            const commentHtml = `
                     <div class="comment">
                         <p><strong>You</strong>: ${commenttext}</p>
                         <small>Just now</small>
                     </div>
                 `;
-                $('#commentList').prepend(commentHtml);
-                saveCommentToDatabase(commenttext);
-            }
-            function saveCommentToDatabase(commenttext) {
-                $.ajax({
-                    url: "<?= BASE_URL . "/" . "videos/watch/comments" ?>",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        video_id: "<?= $current_video_id ?>",
-                        comment: commenttext
-                    },
-                    success: function (data) {
-                        if (!data.success) {
-                            console.error(data.error);
-                        }
-                        console.log('Server Response:', data.message);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error:', error);
+            $('#commentList').prepend(commentHtml);
+            saveCommentToDatabase(commenttext);
+        }
+        function saveCommentToDatabase(commenttext) {
+            $.ajax({
+                url: "<?= BASE_URL . "/" . "videos/watch/comments" ?>",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    video_id: "<?= $current_video_id ?>",
+                    comment: commenttext
+                },
+                success: function (data) {
+                    if (!data.success) {
+                        console.error(data.error);
                     }
-                })
-            }
-        });
+                    console.log('Server Response:', data.message);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            })
+        }
         // ------------ Report Modal ------------
         // Report button
         $('#reportBtn').click(function () {
@@ -624,6 +481,7 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
         });
         // Send reportBtn
         $("#sendReportBtn").on("click", function () {
+            $(this).focus();
             const message = $("#message-text").val();
             if (message) {
                 $('.loader ').show();
@@ -656,7 +514,11 @@ $is_user_dislike = (isset($this->is_user_like_video['is_liked']) && $this->is_us
                 });
             }
         });
-
+        // Toogle Description
+        $('.fa-chevron-down').on('click', function () {
+            $(this).toggleClass('rotate');
+            $('#videoDescription').toggleClass('animate');
+        })
     </script>
 </body>
 

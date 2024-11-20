@@ -1,4 +1,50 @@
 @import url("https://fonts.googleapis.com/css2?family=Kablammo&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+[data-text="Upload Img"]::before, [data-text="Upload Img"]::after {
+  transition: opacity 0.3s ease;
+}
+
+body, .file-input-wrapper, #saveProfile {
+  transition: background-color 0.3s ease;
+}
+
+.form-group input,
+.form-group textarea {
+  transition: box-shadow 0.3s ease;
+}
+
+[data-text="Upload Img"]::after {
+  content: attr(data-text);
+  display: block;
+  position: absolute;
+  left: 33%;
+  right: auto;
+  bottom: 125%;
+  background-color: var(--darkest_black);
+  color: var(--teal);
+  width: auto;
+  height: auto;
+  padding: 0.5rem;
+  border-color: currentColor;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  opacity: 0;
+}
+
+[data-text="Upload Img"]::before {
+  content: " ";
+  position: absolute;
+  background: transparent;
+  top: -25%;
+  left: 47%;
+  color: var(--aqua);
+  border-width: 0.5rem;
+  border-style: solid;
+  border-color: currentColor transparent transparent transparent;
+  opacity: 0;
+  cursor: pointer;
+}
+
 :root {
   --teal: #45a29e; /* Teal */
   --aqua: #66fcf1; /* Aqua */
@@ -6,7 +52,7 @@
   --light_gray: #c5c6c7; /* Light Gray */
   --dark_gray: #1b1b1b; /* Dark Gray */
   --darkest_black: #101010; /* Darkest Color */
-  --interpolate-size: allow-keywords;
+  interpolate-size: allow-keywords;
 }
 
 .lime-theme {
@@ -64,52 +110,6 @@
 
 .bg_darkest_black {
   background-color: var(--darkest_black);
-}
-
-[data-text="Upload Img"]::before, [data-text="Upload Img"]::after {
-  transition: opacity 0.3s ease;
-}
-
-body, .file-input-wrapper, #saveProfile {
-  transition: background-color 0.3s ease;
-}
-
-.form-group input,
-.form-group textarea {
-  transition: box-shadow 0.3s ease;
-}
-
-[data-text="Upload Img"]::after {
-  content: attr(data-text);
-  display: block;
-  position: absolute;
-  left: 33%;
-  right: auto;
-  bottom: 125%;
-  background-color: var(--darkest_black);
-  color: var(--teal);
-  width: auto;
-  height: auto;
-  padding: 0.5rem;
-  border-color: currentColor;
-  white-space: nowrap;
-  font-size: 0.75rem;
-  border-radius: 0.25rem;
-  opacity: 0;
-}
-
-[data-text="Upload Img"]::before {
-  content: " ";
-  position: absolute;
-  background: transparent;
-  top: -25%;
-  left: 47%;
-  color: var(--aqua);
-  border-width: 0.5rem;
-  border-style: solid;
-  border-color: currentColor transparent transparent transparent;
-  opacity: 0;
-  cursor: pointer;
 }
 
 .p_125 {
@@ -1130,6 +1130,66 @@ body, .file-input-wrapper, #saveProfile {
 
 .fs_2 {
   font-size: 2rem;
+}
+
+.p_2_125 {
+  padding: 2.125rem;
+}
+
+.p_inline_2_125 {
+  padding-inline: 2.125rem;
+}
+
+.p_inline-start_2_125 {
+  padding-inline-start: 2.125rem;
+}
+
+.p_inline-end_2_125 {
+  padding-inline-end: 2.125rem;
+}
+
+.p_block_2_125 {
+  padding-block: 2.125rem;
+}
+
+.p_block-start_2_125 {
+  padding-block-start: 2.125rem;
+}
+
+.p_block-end_2_125 {
+  padding-block-end: 2.125rem;
+}
+
+.m_2_125 {
+  margin: 2.125rem;
+}
+
+.m_inline_2_125 {
+  margin-inline: 2.125rem;
+}
+
+.m_inline-start_2_125 {
+  margin-inline-start: 2.125rem;
+}
+
+.m_inline-end_2_125 {
+  margin-inline-end: 2.125rem;
+}
+
+.m_block_2_125 {
+  margin-block: 2.125rem;
+}
+
+.m_block-start_2_125 {
+  margin-block-start: 2.125rem;
+}
+
+.m_block-end_2_125 {
+  margin-block-end: 2.125rem;
+}
+
+.fs_2_125 {
+  font-size: 2.125rem;
 }
 
 .p_2_25 {

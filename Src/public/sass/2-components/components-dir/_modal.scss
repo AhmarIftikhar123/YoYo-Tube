@@ -1,0 +1,15 @@
+@use "../../1-base/base";
+@mixin modal(
+  $overlay-bg: rgba(0, 0, 0, 0.5),
+  $content-bg: var(--darkest_black),
+  $content-text: var(--light_gray)
+) {
+  background-color: $overlay-bg;
+  .modal-content {
+    background-color: $content-bg;
+    color: $content-text;
+  }
+}
+%modal {
+  @include modal();
+}

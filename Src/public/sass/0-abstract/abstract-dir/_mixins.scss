@@ -169,6 +169,7 @@ $breakpoints: (
   @extend %transition-color;
   @include close();
 }
+
 @mixin text_ellipsis($line: 1) {
   text-overflow: ellipsis;
   overflow: hidden;

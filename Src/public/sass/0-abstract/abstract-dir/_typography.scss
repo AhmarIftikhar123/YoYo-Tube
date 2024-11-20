@@ -51,8 +51,17 @@ $font-weight-900: 900;
   border: 1px solid currentColor;
   border-radius: 50%;
 }
-// h1 
+// h1
 %h1_Oswald {
   font-family: $ff-Oswald;
   font-size: map-get($map: sp.$sizes, $key: _2_25);
+}
+
+%h4_Oswald {
+  font-family: $ff-Oswald;
+  font-size: map-get($map: sp.$sizes, $key: _1_5);
+}
+%h5_Oswald {
+  font-family: $ff-Oswald;
+  font-size: map-get($map: sp.$sizes, $key: _1_25);
 }
