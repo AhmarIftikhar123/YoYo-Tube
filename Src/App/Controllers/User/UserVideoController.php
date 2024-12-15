@@ -13,7 +13,7 @@ class UserVideoController
                     if (!UserVideoModel::$user_registered) {
                               $user_video_model->redirect_user_to_login();
                     }
-                    echo Views::make("User/UserVideoView", [
+                    return Views::make("User/UserVideoView", [
                               "user_video_model" => $user_video_model
                     ]);
           }

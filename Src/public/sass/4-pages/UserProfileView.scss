@@ -17,8 +17,8 @@ h1 {
   object-fit: cover;
   border: 3px solid var(--teal);
   @include respond-to(sm) {
-    width: auto !important;
-    height: auto !important;
+    width: 100px !important;
+    height: 100px !important;
   }
 }
 .file-input-wrapper {
@@ -45,6 +45,10 @@ h1 {
     }
   }
 }
+.custom-file-upload {
+  @extend %base-border;
+  @extend %pointer;
+}
 #saveProfile {
   @extend %btn-primary;
   @extend %Oswald;
@@ -54,4 +58,15 @@ h1 {
   &::placeholder {
     font-size: 0.85rem;
   }
+}
+.btn-secondary {
+  @extend %btn-secondary;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  padding: 15px;
+  border-radius: 5px;
 }

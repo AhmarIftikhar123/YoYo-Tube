@@ -5,91 +5,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Profile</title>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/4-pages/UserProfileView.css">
-    <style>
-        .custom-file-upload {
-            border: 1px solid var(--input-border);
-            display: inline-block;
-            padding: 6px 12px;
-            cursor: pointer;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border-radius: 4px;
-        }
+    <!-- Cropper CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css"
+        integrity="sha512-087vysR/jM0N5cp13Vlp+ZF9wx6tKbvJLwPO8Iit6J7R+n7uIMMjg37dEgexOshDmDITHYY5useeSmfD1MYiQA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        .form-control {
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border-color: var(--input-border);
-        }
+    <!-- Cropper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.js"
+        integrity="sha512-lR8d1BXfYQuiqoM/LeGFVtxFyspzWFTZNyYIiE5O2CcAGtTCRRUMLloxATRuLz8EmR2fYqdXYlrGh+D6TVGp3g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        .form-control:focus {
-            background-color: var(--input-bg);
-            color: var(--text-color);
-        }
-
-        .btn-primary {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
-        }
-
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            border-color: #0a58ca;
-        }
-
-        .theme-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        .alert-success {
-            color: #155724;
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            padding: 15px;
-            border-radius: 5px;
-        }
-    </style>
 </head>
-<?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
-<?php
-$profile_img = $_SESSION['profile_img'] ?? "https://via.placeholder.com/150";
-$username = $_SESSION['username'] ?? "";
-$success = $this->message ?? "";
-if (session_status() !== PHP_SESSION_ACTIVE)
-    session_write_close();
-?>
 
 <body>
-    <div class="alert alert-success" role="alert" style="display: <?= $success ? "block" : "none" ?>">
-        <?php echo htmlspecialchars($success . " We are redirecting you to Home page") ?? "" ?>
-        <?php if ($success)
-            echo "<script>
-                    setTimeout(() => {
-                        document.querySelector('.alert-success').style.display = 'none';
-                        window.location.href = '/home';
-                    }, 3000);
-                    </script>"
-                ?>
-        </div>
-        <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <!-- Include Navbar -->
+    <?php include dirname(__DIR__) . "/nav/Nav.php"; ?>
+    <!-- Include Profile Image -->
+    <?php
+    if (session_status() === PHP_SESSION_NONE)
+        session_start();
+    $profile_img = isset($_SESSION['profile_img']) ? isfromDB($_SESSION['profile_img']) : $_COOKIE['profile_img'] ?? "images/profile_img.png";
+    $username = $_COOKIE['username'] ?? $_SESSION['username'] ?? "";
+    if (session_status() !== PHP_SESSION_ACTIVE)
+        session_write_close();
+    ?>
 
-            <form class="profile-form p_3 m_block_3 mx-auto clr_light_gray bg_darkest_black rounded" id="profileForm"
-                action="/profile" method="POST" enctype="multipart/form-data">
-                <h1 class="text-center mb-4">Update Profile</h1>
+    <!-- Display success message -->
+    <div class="alert alert-success" role="alert" style="display:none;"> <span id="server_res" class="bg_teal clr_light_gray d-inline-block
+ p-1 rounded"></span> Changes Saved Successfully!. We are
+        redirecting you to Home page
+    </div>
+    <!-- Main Content -->
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
 
-                <!-- Profile Picture -->
-                <div class="text-center mb-4">
-                    <img src="data:image/jpeg;base64,<?= $profile_img ?>" alt="Profile Picture"
+        <form id="profileForm" class="profile-form p_3 m_block_3 mx-auto clr_light_gray bg_darkest_black rounded"
+            action="/profile" method="POST" enctype="multipart/form-data">
+            <h1 class="text-center mb-4">Update Profile</h1>
+
+            <!-- Profile Picture -->
+            <div class="text-center mb-4">
+                <img src="<?= $profile_img ?>" alt="Profile Picture"
                     class="profile-picture rounded-circle m_block-end_1_25" id="profilePicture">
-                    
+
                 <div class="mt-2 position-relative" data-text="Upload Img">
                     <div class="file-input-wrapper d-inline-block overflow-hidden position-relative rounded">
-                        <label for="profilePictureUpload" class="custom-file-upload">
+                        <!-- Label for File Input with Icon -->
+                        <label for="profilePictureUpload"
+                            class="custom-file-upload d-inline-block p_block_35 p_inline_75 rounded">
                             <i class="fa-solid fa-upload"></i>
                         </label>
+                        <!-- Hidden File Input -->
                         <input type="file" class="overflow-hidden position-absolute" id="profilePictureUpload"
                             accept="image/*" name="new_profile_img" autocomplete="off">
                     </div>
@@ -98,8 +65,8 @@ if (session_status() !== PHP_SESSION_ACTIVE)
 
             <!-- Username Input -->
             <div class="mb-3 form-group">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="new_username" required maxlength="30"
+                <label for="new_username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="new_username" name="new_username" maxlength="30" required
                     placeholder="<?= "e.g: " . substr($username, 0, 15) ?? "" ?>">
                 <div class="invalid-feedback">
                     Please enter a valid username (max 30 characters).
@@ -112,24 +79,37 @@ if (session_status() !== PHP_SESSION_ACTIVE)
             </div>
         </form>
     </div>
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="cropperModal" tabindex="-1" aria-labelledby="cropperModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg_darkest_black clr_light_gray">
+                <!-- Apply background and text color -->
+                <div class="modal-header bg_darkest_black clr_aqua">
+                    <h5 class="modal-title navbar-brand" id="cropperModalLabel">Crop Image</h5>
+                    <i class="fa-solid fa-xmark d-block ms-auto clr_light_gray" type="button" data-bs-dismiss="modal"
+                        aria-label="Close"></i>
+                </div>
+                <div class="modal-body bg_clr_dark_gray text-clr_light_gray" style="max-width: 100%; padding: 0;">
+
+                    <img id="imageForCrop" src="" alt="Image for cropping" class="img-fluid"
+                        style="max-width: 100%; height: auto;">
+                </div>
+                <div class="modal-footer bg_clr_teal text-clr_aqua"> <!-- Footer with teal background and aqua text -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <!-- Cancel button with gray background -->
+                    <button type="button" id="saveCroppedImage"
+                        class="btn btn-primary bg_darkest_black clr_light_gray">Save Cropped Image</button>
+                    <!-- Save button with aqua background -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Include JS -->
     <script>
-        // Profile picture preview
-        $('#profilePictureUpload').change(function (event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                $('#profilePicture').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(file);
-        });
-        $('#darkModeToggle').change(function () {
-            if (this.checked) {
-                $('body').addClass('dark-theme');
-            } else {
-                $('body').removeClass('dark-theme');
-            }
-        });
+        const profileUrl = "<?php echo BASE_URL . '/profile'; ?>";
     </script>
+    <script src="/js/UserProfileView.js"></script>
 </body>
 
 </html>

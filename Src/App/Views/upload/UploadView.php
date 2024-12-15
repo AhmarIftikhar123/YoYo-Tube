@@ -6,57 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Upload Platform - Light/Dark Theme</title>
     <link rel="stylesheet" href="/css/4-pages/UploadView.css">
-    <style>
-        /* .toast {
-            color: var(--toast-text);
-            border-color: var(--border-color);
-        }
-
-        .toast-header {
-            background-color: var(--toast-header-bg);
-            color: var(--toast-header-text);
-            border-bottom: 1px solid var(--border-color);
-        } */
-        /* 
-        .form-control,
-        .form-select {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-color: var(--border-color);
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-
-            &::placeholder {
-                color: var(--text-color);
-            }
-        } */
-
-
-        .btn-light {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-color: var(--border-color);
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        .btn-light:hover {
-            background-color: var(--modal-header-bg);
-            color: var(--text-color);
-            border-color: var(--primary-color);
-        }
-
-        .alert-light {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            border-color: var(--border-color);
-        }
-
-        #themeToggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-    </style>
 </head>
 
 <body class="bg_darkest_black clr_light_gray">
@@ -119,7 +68,8 @@
                 <div class="mb-4">
                     <div class="my-3 form-check">
                         <input class="form-check-input" type="checkbox" value="1" id="paidContentSwitch" name="isPaid">
-                        <label class="form-check-label" for="paidContentSwitch">Make this content Paid (Default is Free)</label>
+                        <label class="form-check-label" for="paidContentSwitch">Make this content Paid (Default is
+                            Free)</label>
                     </div>
                     <div class="mb-3" id="prizeSection" style="display: none;">
                         <label for="price" class="form-label">Prize</label>
@@ -139,10 +89,12 @@
                         </datalist>
                         <small class="text-danger" id="priceError"><?= $this->price_error ?? "" ?></small>
                     </div>
-                    <div id="paidContentNotice" class="alert alert-light mt-2 clr_teal bg_dark_gray" style="display: none;">
+                    <div id="paidContentNotice" class="alert alert-light mt-2 clr_teal bg_dark_gray"
+                        style="display: none;">
                         Users will need to make a payment to view this content.
                     </div>
-                    <button type="submit" class="btn btn-primary d-flex align-items-center gap-1 mx-auto" id="uploadBtn">Upload
+                    <button type="submit" class="btn btn-primary d-flex align-items-center gap-1 mx-auto fw-semibold"
+                        id="uploadBtn">Upload
                         Video</button>
                 </div>
             </div>
@@ -217,14 +169,6 @@
             fileDropArea.classList.remove('dragover');
         }
 
-        // fileDropArea.addEventListener('drop', handleDrop, false);
-
-        // function handleDrop(e) {
-        //     const dt = e.dataTransfer;
-        //     const files = dt.files;
-        //     handleFiles(files);
-        // }
-
         fileDropArea.addEventListener('click', () => {
             videoFile.click();
         });
@@ -272,7 +216,7 @@
 
             // Add Loader HTML
             addLoader();
-
+            
             if (!videoFile) {
                 addUploadText("Upload Video");
                 $("#uploadError").text("Please select a video file.");

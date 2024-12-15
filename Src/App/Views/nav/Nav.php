@@ -1,19 +1,5 @@
 <!-- logout Logic  -->
 <?php
-if ($_SERVER['REQUEST_METHOD'] === "GET" & isset($_GET['logout'])) {
-    if (!session_id()) {
-        session_start();
-    }
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_destroy();
-    }
-    session_start();
-    session_destroy();
-    foreach ($_COOKIE as $cookie_name => $cookie_value) {
-        setcookie($cookie_name, "", time() - 3600, "/"); // Expire the cookie
-    }
-    session_write_close();
-}
 $post_data_address = explode("?", $_SERVER['REQUEST_URI'])[0];
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -21,14 +7,22 @@ if (session_status() === PHP_SESSION_NONE) {
 $user = [
     'username' => $_SESSION["username"] ?? "",
     'email' => $_SESSION["email"] ?? "",
-    'profile_image' => $_SESSION["profile_img"] ?? ""
+    'profile_image' => isset($_SESSION['profile_img']) ? isfromDB($_SESSION['profile_img']) : $_COOKIE['profile_img'] ?? "images/profile_img.png"
 ];
 if (session_status() === PHP_SESSION_ACTIVE) {
     session_write_close();
 }
-?>
-<?php $is_user_registered = $_COOKIE['user_name'] ?? "" ?>
 
+function isfromDB(string $path)
+{
+    if (!isset($path))
+        return "/images/profile_img.png";
+    if (strpos($path, "var/www") === false) {
+        return "data:image/jpeg;base64,$path";
+    }
+    return $path;
+}
+?>
 <link rel="stylesheet" href="/css/3-layout/Navbar.css">
 
 
@@ -47,7 +41,7 @@ bg_darkest_black fs_1_5 clr_aqua
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav gap-4 ms-auto align-items-center">
-                <?php if ($is_user_registered): ?>
+                <?php if ($user['username']): ?>
                     <li class="nav-item 
                     clr_light_gray
                     text-center">
@@ -63,8 +57,7 @@ bg_darkest_black fs_1_5 clr_aqua
                     <li class="nav-item 
                     clr_light_gray
                     text-center">
-                        <a class="nav-link px-0" href="/home" id="searchVideos">Search
-                            Videos</a>
+                        <a class="nav-link px-0" href="/home" id="home">Home</a>
                     </li>
                     <li class="nav-item 
                     clr_light_gray
@@ -74,10 +67,7 @@ bg_darkest_black fs_1_5 clr_aqua
                     <li class="nav-item 
                     clr_light_gray
                     text-center">
-                        <form action="<?= $post_data_address ?>" method="GET" class="mb-0">
-                            <button type="submit" id="admin" name="logout" value="true" class="nav-link px-0">Log
-                                Out</button>
-                        </form>
+                        <a class="nav-link px-0" href="/logout?logout=true" id="logOut">Log-Out</a>
                     </li>
                 <?php else: ?>
                     <li class="nav-item text-center">
@@ -93,7 +83,7 @@ bg_darkest_black fs_1_5 clr_aqua
                     <a id="profile">
 
                         <?php if (!empty($user['profile_image'])): ?>
-                            <img src="data:image/jpeg;base64,<?= $user['profile_image'] ?>" alt="Profile Image"
+                            <img src="<?= $user['profile_image'] ?>" alt="Profile Image"
                                 class="profile_image rounded-circle">
 
                         <?php else: ?>
@@ -153,8 +143,9 @@ bg_darkest_black fs_1_5 clr_aqua
             <i class="fa-solid fa-xmark ms-1" type="button" data-bs-dismiss="toast" aria-label="Close"></i>
         </div>
         <div class="toast-body bg_darkest_black clr_light_gray">
-            <p class="text-center">You are not login or registered, please <a href="/authentication" class="nav-link d-inline">login</a> or <a
-                    href="/authentication?register=true" class="nav-link d-inline">register</a> first.</p>
+            <p class="text-center">You are not login or registered, please <a href="/authentication"
+                    class="nav-link d-inline">login</a> or <a href="/authentication?register=true"
+                    class="nav-link d-inline">register</a> first.</p>
         </div>
     </div>
 </div>
@@ -164,6 +155,16 @@ bg_darkest_black fs_1_5 clr_aqua
         $(this).addClass('active');
     });
 
+    // Add active class to current page
+    (() => {
+        let currentUrl = window.location.pathname;
+        $('.nav-link').each(function () {
+            const link = $(this).attr('href');
+            if (link === currentUrl || link === currentUrl + '/') {
+                $(this).addClass('active');
+            }
+        });
+    })();
     $('.navbar-nav>li>a').on('click', function () {
         $('.navbar-collapse').collapse('hide');
     });
@@ -182,6 +183,7 @@ bg_darkest_black fs_1_5 clr_aqua
     // Save theme preference
     $('#themeToggler').on("click", function () {
         $('body').toggleClass('lime-theme');
+
         $(this).children('i').toggleClass('fa-sun fa-moon');
         if ($(this).attr("aria-label") === "lime-theme") {
             // Reset aria-label

@@ -33,4 +33,4 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user && \
     chown -R $user:$user /home/$user
 
 # Optionally set the user for the container (if running as a non-root user is desired)
-# USER $user
+USER $user

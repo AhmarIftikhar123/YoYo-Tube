@@ -40,7 +40,7 @@ $get_user_posts = $user_video_model->get_user_posts($user_id, $offset, 8, $filte
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YoYo Tube - Video Listing</title>
+    <title>YoYo Tube || Your Videos</title>
     <link rel="stylesheet" href="/css/4-pages/HomeView.css">
 </head>
 

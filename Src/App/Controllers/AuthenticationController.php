@@ -15,11 +15,11 @@ class AuthenticationController
                     if (isset($_GET['code'])) {
                               $data = $this->handle_google_login();
                               if (is_array($data)) {
-                                        $path = "Authentication/Login_Successful_View";
+                                        header("Location: /home");
+                                        exit;
                               }
                     } else {
                               $data['google_client_config'] = $this->google_client_config();
-                              $data['facebook_client_config'] = $this->facebook_client_config();
                     }
                     return Views::make($path, $data);
           }
@@ -215,30 +215,6 @@ class AuthenticationController
                               throw $e;
                     }
 
-          }
-          public function facebook_client_config()
-          {
-                    ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
-                    $fb = new Facebook([
-                              'app_id' => $_ENV['FB_CLIENT_ID'],
-                              'app_secret' => $_ENV['FB_CLIENT_SECRET'],
-                              'default_graph_version' => 'v15.0',
-                    ]);
-
-                    // Generate state and store it in session
-                    $state = bin2hex(random_bytes(16));
-                    if (!session_status()) {
-                              session_start();
-                    }
-                    $_SESSION['FBRLH_state'] = $state;
-                    if (session_status() === PHP_SESSION_ACTIVE) {
-                              session_write_close();
-                    }
-                    $helper = $fb->getRedirectLoginHelper();
-                    $permissions = ['email'];
-                    $loginUrl = $helper->getLoginUrl($_ENV['FB_REDIRECT_URL'], $permissions);
-
-                    return $loginUrl;
           }
 
 }

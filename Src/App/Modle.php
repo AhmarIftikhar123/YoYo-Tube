@@ -23,7 +23,7 @@ abstract class Modle
                     exit();
           }
 
-          private function is_user_registered()
+          public function is_user_registered()
           {
                     if (session_status() === PHP_SESSION_NONE) {
                               session_start();

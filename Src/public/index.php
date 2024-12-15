@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
-// adjust /upload route for storing proper tags of the video 
-// Find a proper Theme & apply on the website.
+// make each root serarate js files
+// design Loader.css
+// add profile_mg src in cookie
+// solve dir storage premission issue
 
 use Src\App\{
     App,
@@ -15,13 +17,13 @@ use Src\App\Controllers\{
 use Src\App\Controllers\{
     Payment\PaymentController,
     Admin\AdminController,
-    FacebookLoginController,
     Home\HomeController,
     Profile\ProfileController,
     Upload\UploadController,
     User\UserVideoController,
     User\WatchVideoController,
-    Search\SearchSuggestionsController
+    Search\SearchSuggestionsController,
+    Logout\LogoutController
 };
 use Src\App\{Router, Views};
 
@@ -63,8 +65,9 @@ $Router
 
     ->post("/auth/login", [AuthenticationController::class, "login"])
 
-    ->get("/facebook-login", [FacebookLoginController::class, "facebook_login"])
 
+    // Log-out
+    ->get("/logout", [logoutController::class  , "logout"])
 
     ->get("/upload", [UploadController::class, "load_upload_page"])
     ->post("/upload", [UploadController::class, "upload_video"])
@@ -92,7 +95,7 @@ $Router
     ->get("/admin", [AdminController::class, "load_Dashboard"])
     ->get("/admin/posts", [AdminController::class, "load_user_posts"])
     ->post("/admin/action", [AdminController::class, "admin_action"]);
-
+    // var_dump($Router->getRoutes());
 try {
     (new App(
         $Router,

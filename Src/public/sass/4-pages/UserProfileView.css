@@ -3,7 +3,7 @@
   transition: opacity 0.3s ease;
 }
 
-body, .file-input-wrapper, #saveProfile {
+body, .file-input-wrapper, #saveProfile, .btn-secondary {
   transition: background-color 0.3s ease;
 }
 
@@ -1399,7 +1399,7 @@ h1 {
   font-size: 2.25rem;
 }
 
-.file-input-wrapper:hover {
+.file-input-wrapper:hover, .custom-file-upload:hover {
   cursor: pointer;
 }
 
@@ -1419,7 +1419,23 @@ h1 {
   border: 1px solid currentColor !important;
 }
 
-[data-text="Upload Img"]::after, .form-group input,
+.btn-secondary {
+  background-color: var(--darkest_black);
+  color: var(--light_gray);
+  border: 1px solid currentColor;
+}
+.btn-secondary:hover {
+  background-color: var(--light_gray);
+  color: var(--darkest_black);
+  border: 1px solid currentColor;
+}
+.btn-secondary:active, .show.btn-secondary, .active.btn-secondary {
+  background-color: var(--dark_gray) !important;
+  color: var(--light_gray) !important;
+  border: 1px solid currentColor !important;
+}
+
+[data-text="Upload Img"]::after, .custom-file-upload, .form-group input,
 .form-group textarea {
   border: 1px solid currentColor;
 }
@@ -1462,8 +1478,8 @@ h1 {
 }
 @media (max-width: 576px) {
   .profile-picture {
-    width: auto !important;
-    height: auto !important;
+    width: 100px !important;
+    height: 100px !important;
   }
 }
 
@@ -1483,4 +1499,12 @@ h1 {
 
 .form-group::placeholder {
   font-size: 0.85rem;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  padding: 15px;
+  border-radius: 5px;
 }
