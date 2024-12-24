@@ -20,8 +20,8 @@
                               <li class="nav-item" role="presentation">
                                         <a class="nav-link w-100 border-0
                                         <?= $uri === "/auth/login" || $uri === "/authentication" ? "active" : "" ?>
-                                                                               p_block_75" id="login-tab" data-bs-toggle="tab"
-                                                  href="#login" role="tab" aria-controls="login"
+                                                                               p_block_75" id="login-tab"
+                                                  data-bs-toggle="tab" href="#login" role="tab" aria-controls="login"
                                                   aria-selected="true">Login</a>
                               </li>
                               <li class="nav-item" role="presentation">
@@ -107,30 +107,32 @@
                                                             </div>
                                                   </div>
                                                   <div class="password_wrapper d-grid">
-                                                  <div class="mb-2 form-group">
-                                                            <label for="register-password"
-                                                                      class="form-label">Password</label>
-                                                            <input type="password" class="form-control"
-                                                                      id="register-password" name="password"
-                                                                      placeholder="Create a password">
-                                                            <!-- Error Message for Password -->
-                                                            <div class="text-danger mt-2">
-                                                                      <?= $this->passwordError ?? "" ?>
-                                                            </div>
-                                                  </div>
-
-                                                  <div class="mb-2 form-group">
-                                                            <label for="confirm-password" class="form-label">Confirm
-                                                                      Password</label>
-                                                            <input type="password" class="form-control"
-                                                                      id="confirm-password" name="confirm_password"
-                                                                      placeholder="Confirm your password">
-                                                            <!-- Error Message for Confirm Password -->
-                                                            <div class="text-danger mt-2">
-                                                                      <?= $this->confirm_passwordError ?? "" ?>
+                                                            <div class="mb-2 form-group">
+                                                                      <label for="register-password"
+                                                                                class="form-label">Password</label>
+                                                                      <input type="password" class="form-control"
+                                                                                id="register-password" name="password"
+                                                                                placeholder="Create a password">
+                                                                      <!-- Error Message for Password -->
+                                                                      <div class="text-danger mt-2">
+                                                                                <?= $this->passwordError ?? "" ?>
+                                                                      </div>
                                                             </div>
 
-                                                  </div>
+                                                            <div class="mb-2 form-group">
+                                                                      <label for="confirm-password"
+                                                                                class="form-label">Confirm
+                                                                                Password</label>
+                                                                      <input type="password" class="form-control"
+                                                                                id="confirm-password"
+                                                                                name="confirm_password"
+                                                                                placeholder="Confirm your password">
+                                                                      <!-- Error Message for Confirm Password -->
+                                                                      <div class="text-danger mt-2">
+                                                                                <?= $this->confirm_passwordError ?? "" ?>
+                                                                      </div>
+
+                                                            </div>
                                                   </div>
                                                   <div class="mb-3 form-group">
                                                             <label for="confirm-password"
@@ -167,7 +169,8 @@
                     <div class="mt-2">
                               <a href="<?= $this->google_client_config ?? '' ?>"
                                         class="btn btn-secondary w-100 mb-2 mx-1 fs_90">
-                                        <img src="/images/google.png" class="me-2 google_icon" alt="loading-google-icon"> Continue with Google
+                                        <img src="/images/google.png" class="me-2 google_icon"
+                                                  alt="loading-google-icon"> Continue with Google
                               </a>
                     </div>
           </div>

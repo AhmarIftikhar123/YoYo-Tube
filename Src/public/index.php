@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-// make each root serarate js files
-// design Loader.css
+// Review each View File & style it Properly
 // add profile_mg src in cookie
 // solve dir storage premission issue
-
+// Solve the SSH related github issue.
+// Use Gulp with PurgeCSS to minify the css files
 use Src\App\{
     App,
     Config

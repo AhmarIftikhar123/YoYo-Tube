@@ -123,7 +123,7 @@ $breakpoints: (
   @include theme-pseudo-after(
     $content: attr(data-text),
     $left: 33%,
-    $bottom: 125%,
+    $bottom: 125%
   );
 }
 %upload-pseudo-before {

@@ -109,7 +109,7 @@
     <script>
         const profileUrl = "<?php echo BASE_URL . '/profile'; ?>";
     </script>
-    <script src="/js/UserProfileView.js"></script>
+    <script src="/js/UserProfileView/UserProfileView.js"></script>
 </body>
 
 </html>

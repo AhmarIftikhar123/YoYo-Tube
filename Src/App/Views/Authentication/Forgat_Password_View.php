@@ -39,16 +39,6 @@
           <!-- Include Bootstrap JS and dependencies -->
           <?php include dirname(__DIR__) . "/partials/Bootstrap_js.php"; ?>
           <?php include dirname(__DIR__) . "/partials/jquery_js.php"; ?>
-          <!-- <script>
-                    $('#forgotPasswordForm').on('submit', function (event) {
-                              event.preventDefault();
-                              let email = $('#email').val();
-                              if (email) {
-                                        // For now, just alert the email entered
-                                        alert('Password reset link sent to: ' + email);
-                              }
-                    });
-          </script> -->
 </body>
 
 </html>

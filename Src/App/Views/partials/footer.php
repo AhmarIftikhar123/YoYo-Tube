@@ -18,7 +18,8 @@
                               </div>
                               <div class="col-md-4">
                                         <h5 class="mb-1 fw-semibold">Follow Us</h5>
-                                        <div class="social_media_icons d-flex align-items-center justify-content-center gap-2 my-2">
+                                        <div
+                                                  class="social_media_icons d-flex align-items-center justify-content-center gap-2 my-2">
                                                   <a href="#" class="me-2 text-decoration-none" data-text="Facebook"><i
                                                                       class="fa-brands fa-facebook"></i></a>
                                                   <a href="#" class="me-2 text-decoration-none" data-text="Twitter"><i
