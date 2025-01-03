@@ -1,0 +1,41 @@
+.form-control, #searchInput {
+  padding: 0.575rem;
+  color: var(--darkest_black);
+  background: var(--light_gray);
+  transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s ease-in-out;
+  accent-color: var(--aqua);
+  caret-color: var(--aqua);
+}
+.form-control::placeholder, #searchInput::placeholder {
+  color: var(--darkest_black);
+}
+.form-control:focus, #searchInput:focus {
+  box-shadow: 0 0 0 0.25rem var(--aqua);
+}
+
+.btn,
+.btn-primary {
+  transition: background-color 0.3s ease;
+}
+
+.btn,
+.btn-primary {
+  background-color: var(--darkest_black);
+  color: var(--teal);
+  border: 1px solid var(--aqua) !important;
+}
+.btn:hover,
+.btn-primary:hover {
+  background-color: var(--teal);
+  color: var(--darkest_black);
+  border: 1px solid var(--darkest_black);
+  opacity: 0.9;
+}
+.btn:active, .btn.show, .btn.active,
+.btn-primary:active,
+.btn-primary.show,
+.btn-primary.active {
+  background-color: var(--aqua) !important;
+  color: var(--darkest_black) !important;
+  border: 1px solid var(--darkest_black) !important;
+}
